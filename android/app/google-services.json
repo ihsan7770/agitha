@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "679751784709",
+    "project_id": "agitha-ec69a",
+    "storage_bucket": "agitha-ec69a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:679751784709:android:ea82afb8b5f47386933f6c",
+        "android_client_info": {
+          "package_name": "com.example.agitha"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-46S9A8l4wGkFXvxtx85DcJFjO9ZYRwY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
