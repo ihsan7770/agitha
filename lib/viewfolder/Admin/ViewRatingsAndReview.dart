@@ -18,6 +18,8 @@ class ReviewsPage extends StatelessWidget {
      final RatingProviders = Provider.of<RatingProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
+        title:const Text("Ratings and Reviews"), 
+        centerTitle: true,
         
       ),
       body: 
@@ -35,40 +37,22 @@ class ReviewsPage extends StatelessWidget {
                     child: CircularProgressIndicator(),
                   ));
                 }
-                if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Padding(
-                    padding: EdgeInsets.only(top: 100),
-                    child: Text(
-                      "No user details found",
-                      style: TextStyle(fontSize: 18),
-                    ),
-                  );
-                }
+               
+
+                       if (!snapshot.hasData || snapshot.data!.isEmpty) {
+       return const Center(
+         child: Text(
+           "No ratings and reviews found",
+           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+         ),
+       );
+     }
+        
 
                 final ratingdata = snapshot.data!;
 
         return Column(
           children: [
-
-              Align(
-                alignment: Alignment.topLeft,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 16.0, bottom: 8.0),
-                  child: Text(
-                    "Ratings and Reviews",
-                    style: GoogleFonts.tinos(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-              ),
-
-
-
-
-
             Expanded(
               child: ListView.builder(
                 padding: const EdgeInsets.all(16),

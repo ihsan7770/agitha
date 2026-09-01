@@ -2,7 +2,7 @@ import 'package:agitha/ControllersFolder/AuthenticationContoller.dart';
 import 'package:agitha/ControllersFolder/CartController.dart';
 import 'package:agitha/ControllersFolder/UserRegistrationController.dart';
 import 'package:agitha/check.dart';
-import 'package:agitha/viewfolder/Screens/HomePage.dart';
+import 'package:agitha/viewfolder/Screens/UserMainPage.dart';
 import 'package:agitha/viewfolder/SubCompany/CompanyReservationFolder/ReservationDetailsPage.dart';
 import 'package:agitha/viewfolder/User/AboutUsPage.dart';
 import 'package:agitha/viewfolder/User/ContactUsPage.dart';
@@ -27,89 +27,155 @@ class CustomDrawer extends StatefulWidget {
 class _CustomDrawerState extends State<CustomDrawer> {
   @override
   Widget build(BuildContext context) {
-    final userInfo = Provider.of<UserRegistrationProvider>(context);
+  //  final userInfo = Provider.of<UserRegistrationProvider>(context);
 
-    final name = userInfo.name .toString();
-    final email = userInfo.email .toString();
-    final colorScheme = Theme.of(context).colorScheme;
-    bool  isloggedin= Provider.of<AuthenticationController>(context, listen: false).isLoggedIn;
+   String _capitalize(String text) {
+  if (text.isEmpty) return text;
+  return text[0].toUpperCase() + text.substring(1);
+}
+
+
+
+final colorScheme = Theme.of(context).colorScheme;
+
+    final userProvider = Provider.of<UserRegistrationProvider>(context);
+
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
-          isloggedin?
-          
-           UserAccountsDrawerHeader(
-            decoration: BoxDecoration(
-              color: colorScheme.primary  ,
-            ),
-            accountName:   Text(
-              name,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            accountEmail:  Text(email),
-            currentAccountPicture: const CircleAvatar(
-              radius: 50,
-              backgroundColor: Colors.white,
-              child: Icon(Icons.person, size: 40, color: Colors.redAccent),
-            ),
-           
-           
-                     )
+          // ✅ LOGGED IN USER WITH ROLE = User
+
+     // 🧪 DEBUG: log auth & role state
 
 
-         : Container(
+     
+
+   /// 🔄 Loading State
+  if (userProvider.isLoading) ...[
+    Builder(
+      builder: (context) {
+        debugPrint("⏳ Drawer: Loading state active");
+        return const Center(
+          child: Padding(
+            padding: EdgeInsets.all(20.0),
+            child: CircularProgressIndicator(),
+          ),
+        );
+      },
+    ),
+  ]
+
+  /// 🟢 Logged In User
+  else if (userProvider.email != null &&
+      userProvider.role == "User") ...[
+    Builder(
+      builder: (context) {
+        debugPrint("✅ Drawer: Logged in as USER");
+        debugPrint("👤 Name: ${userProvider.name}");
+        debugPrint("📧 Email: ${userProvider.email}");
+        debugPrint("🎭 Role: ${userProvider.role}");
+
+        return UserAccountsDrawerHeader(
+          decoration: BoxDecoration(
             color: colorScheme.primary,
-            padding: const EdgeInsets.only(top: 40, bottom: 20),
-            child: Column(
-              children: [
-               
-                const SizedBox(height: 10),
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left:8.0),
-                    child: Text(
-                      "Guest User",
-                      style:  GoogleFonts.tinos(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 5),
-                Padding(
-                  padding: const EdgeInsets.only(left:8.0,right: 8.0),
-                  child: Text(
-                    'You are currently a guest user. To access any services, please log in',
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                ),
-
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Align(
-                    alignment: Alignment.bottomLeft,
-                    child: ElevatedButton(
-                                  onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder:(context)=> const LoginPage()));
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: colorScheme.primary,
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                                  ),
-                                  child: const Text(
-                    "Login / Sign Up",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                  ),
-                ),
-              ],
+          ),
+          accountName: Text(
+            _capitalize(userProvider.name ?? "User"),
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
             ),
           ),
+          accountEmail: Text(userProvider.email ?? ""),
+          currentAccountPicture: const CircleAvatar(
+            radius: 50,
+            backgroundColor: Colors.white,
+            child: Icon(Icons.person,
+                size: 40, color: Colors.redAccent),
+          ),
+        );
+      },
+    ),
+  ]
+
+  /// 🔴 Guest UI
+  else ...[
+    Builder(
+      builder: (context) {
+        debugPrint("🚪 Drawer: Guest mode");
+        debugPrint("👤 Name: ${userProvider.name}");
+        debugPrint("📧 Email: ${userProvider.email}");
+        debugPrint("🎭 Role: ${userProvider.role}");
+
+        return Container(
+          color: colorScheme.primary,
+          padding: const EdgeInsets.only(top: 40, bottom: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 10),
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Text(
+                  "Guest User",
+                  style: GoogleFonts.tinos(
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 5),
+              const Padding(
+                padding:
+                    EdgeInsets.symmetric(horizontal: 8.0),
+                child: Text(
+                  'You are currently a guest user. To access any services, please log in',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+
+              Padding(
+                padding: const EdgeInsets.only(left: 16.0,right: 16.0,bottom:8.0,top:8.0),
+                child: SizedBox(
+                  width: double.infinity, // Full width
+                  height: 50, // Optional height
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white, // White button
+                      foregroundColor: colorScheme.primary, // Text color
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    onPressed: () {
+                     
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginPage()),);
+
+
+                    },
+                    child: const Text(
+                      "Login/Signup",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
+        );
+      },
+    ),
+  ],
+
+
+  
+
+
 
 
 

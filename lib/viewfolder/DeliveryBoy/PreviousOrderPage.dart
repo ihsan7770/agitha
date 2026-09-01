@@ -9,6 +9,11 @@ class DeliveryBoyPreviousOrdersPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final Size size = MediaQuery.of(context).size;
+final double w = size.width;
+final double h = size.height;
+
     final orderProvider =
         Provider.of<DeliveryBoyHomeController>(context, listen: false);
 
@@ -42,183 +47,197 @@ class DeliveryBoyPreviousOrdersPage extends StatelessWidget {
 
           final orders = snapshot.data!;
 
-          return ListView.builder(
-            itemCount: orders.length,
-            padding: const EdgeInsets.all(12),
-            itemBuilder: (context, index) {
-              final order = orders[index];
-              final items =
-                  List<Map<String, dynamic>>.from(order["items"] ?? []);
+          return  ListView.builder(
+  itemCount: orders.length,
+  padding: EdgeInsets.all(w * 0.03),
+  itemBuilder: (context, index) {
+    final order = orders[index];
+    final items =
+        List<Map<String, dynamic>>.from(order["items"] ?? []);
 
-              double total = 0;
-              for (var item in items) {
-                total += (item["price"] ?? 0) * (item["quantity"] ?? 1);
-              }
-                total=total+order['tip'];
-              return Card(
-                surfaceTintColor:Colors.white,
-                elevation: 4,
-                margin: const EdgeInsets.only(bottom: 14),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(14),
+    double total = 0;
+    for (var item in items) {
+      total += (item["price"] ?? 0) * (item["quantity"] ?? 1);
+    }
+    total += (order['tip'] ?? 0);
+
+    return Card(
+      surfaceTintColor: Colors.white,
+      elevation: 4,
+      margin: EdgeInsets.only(bottom: h * 0.02),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(w * 0.04),
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(w * 0.035),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            /// 🔹 USER INFO
+            ListTile(
+              title: Text(
+                order['username'] ?? '',
+                style: TextStyle(fontSize: w * 0.045),
+              ),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    order['userphone'] ?? '',
+                    style: TextStyle(fontSize: w * 0.035),
+                  ),
+                  if ((order['tip'] ?? 0) > 0)
+                    Text(
+                      "Given Tip: ${order['tip']}",
+                      style: TextStyle(
+                        fontSize: w * 0.03,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                ],
+              ),
+              leading: CircleAvatar(
+                radius: w * 0.055,
+                backgroundColor: Colors.grey.shade200,
+                child: (order['userimg'] != null &&
+                        order['userimg'].toString().isNotEmpty)
+                    ? ClipOval(
+                        child: Image.network(
+                          order['userimg'],
+                          width: w * 0.11,
+                          height: w * 0.11,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) {
+                            return Icon(
+                              Icons.person,
+                              size: w * 0.07,
+                              color: Colors.grey,
+                            );
+                          },
+                        ),
+                      )
+                    : Icon(
+                        Icons.person,
+                        size: w * 0.07,
+                        color: Colors.grey,
+                      ),
+              ),
+            ),
+
+            /// 🔹 ITEMS
+            Column(
+              children: items.map((item) {
+                final double price =
+                    (item["price"] ?? 0).toDouble();
+                final int qty = item["quantity"] ?? 1;
+                final double subTotal = price * qty;
+
+                return Container(
+                  margin: EdgeInsets.only(bottom: h * 0.012),
+                  padding: EdgeInsets.all(w * 0.03),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade100,
+                    borderRadius: BorderRadius.circular(w * 0.03),
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      ListTile(
-                       title: Text(order['username'] ?? ''),
-                       subtitle: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                         children: [
-                           Text(order['userphone'] ?? ''),
-                           if ((order['tip'] ?? 0) > 0)
-                           Text(  "Given Tip: ${order['tip']}" ,style: const TextStyle(fontSize: 10,fontWeight: FontWeight.bold)),
-
-                         ],
-                       ),
-
-                        leading: CircleAvatar(
-                        radius: 22,
-                        backgroundColor: Colors.grey.shade200,
-                        child: (order['userimg'] != null &&
-                                order['userimg'].toString().isNotEmpty)
-                            ? ClipOval(
-                                child: Image.network(
-                                  order['userimg'],
-                                  width: 44,
-                                  height: 44,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return const Icon(
-                                      Icons.person,
-                                      size: 28,
-                                      color: Colors.grey,
-                                    );
-                                  },
-                                ),
-                              )
-                            : const Icon(
-                                Icons.person,
-                                size: 28,
-                                color: Colors.grey,
-                              ),
-                      ),
-
-
-                      ),
-                      /// 🔹 Items with price details
-                      Column(
-                        children: items.map((item) {
-                          final double price =
-                              (item["price"] ?? 0).toDouble();
-                          final int qty = item["quantity"] ?? 1;
-                          final double subTotal = price * qty;
-
-                          return Container(
-                            margin: const EdgeInsets.only(bottom: 8),
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade100,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        item["dishName"] ?? "Item",
-                                        style: const TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ),
-                                    Text(
-                                      "₹$price",
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 4),
-                                Row(
-                                  children: [
-                                    Text(
-                                      "Qty: $qty",
-                                      style: const TextStyle(
-                                        fontSize: 13,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                      const Spacer(),
-                                    Text(
-                                      "Subtotal: ₹$subTotal",
-                                      style: const TextStyle(
-                                        fontSize: 13,
-                                        color: Colors.grey,
-                                      ),)
-                                  
-                                  ],
-                                ),
-                              ],
-                            ),
-                          );
-                        }).toList(),
-                      ),
-
-                      const SizedBox(height: 6),
-
-                      /// 🔹 Date
-                       Text(
-                       "Delivered on ${DateFormat('dd MMM yyyy, hh:mm a').format(
-                         (order['createdAt'] as Timestamp).toDate(), // convert Timestamp to DateTime
-                       )}",
-                       style: const TextStyle(
-                         color: Colors.grey,
-                         fontSize: 13,
-                       ),
-                     ),
-                         
-                      const Divider(height: 20),
-
-                      /// 🔹 Status + Total
                       Row(
                         children: [
-                          const Icon(
-                            Icons.check_circle,
-                            color: Colors.green,
+                          Expanded(
+                            child: Text(
+                              item["dishName"] ?? "Item",
+                              style: TextStyle(
+                                fontSize: w * 0.04,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                           ),
-                          const SizedBox(width: 6),
-                          const Text(
-                            "Delivered",
+                          Text(
+                            "₹$price",
                             style: TextStyle(
-                              color: Colors.green,
-                              fontWeight: FontWeight.w600,
+                              fontSize: w * 0.04,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: h * 0.005),
+                      Row(
+                        children: [
+                          Text(
+                            "Qty: $qty",
+                            style: TextStyle(
+                              fontSize: w * 0.035,
+                              color: Colors.grey,
                             ),
                           ),
                           const Spacer(),
                           Text(
-                            "Total: ₹$total",
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
+                            "Subtotal: ₹$subTotal",
+                            style: TextStyle(
+                              fontSize: w * 0.035,
+                              color: Colors.grey,
                             ),
                           ),
                         ],
                       ),
                     ],
                   ),
+                );
+              }).toList(),
+            ),
+
+            SizedBox(height: h * 0.01),
+
+            /// 🔹 DATE
+            Text(
+              "Delivered on ${DateFormat('dd MMM yyyy, hh:mm a').format(
+                (order['createdAt'] as Timestamp).toDate(),
+              )}",
+              style: TextStyle(
+                color: Colors.grey,
+                fontSize: w * 0.035,
+              ),
+            ),
+
+            Divider(height: h * 0.03),
+
+            /// 🔹 STATUS + TOTAL
+            Row(
+              children: [
+                Icon(
+                  Icons.check_circle,
+                  color: Colors.green,
+                  size: w * 0.05,
                 ),
-              );
-            },
-          );
+                SizedBox(width: w * 0.015),
+                Text(
+                  "Delivered",
+                  style: TextStyle(
+                    color: Colors.green,
+                    fontWeight: FontWeight.w600,
+                    fontSize: w * 0.04,
+                  ),
+                ),
+                const Spacer(),
+                Text(
+                  "Total: ₹$total",
+                  style: TextStyle(
+                    fontSize: w * 0.045,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  },
+);
+
+
         },
       ),
     );

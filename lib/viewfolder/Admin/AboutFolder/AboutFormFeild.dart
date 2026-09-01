@@ -133,25 +133,14 @@ void initState() {
 
     return Scaffold(
       appBar: AppBar(
+        title: Text( widget.title) ,
+        centerTitle: true,
       
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Align(
-              alignment: Alignment.topLeft,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 16.0, top: 12),
-                child: Text(
-                  widget.title,
-                  style: GoogleFonts.tinos(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-              ),
-            ),
+    
 
            
             Form(

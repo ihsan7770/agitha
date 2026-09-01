@@ -7,8 +7,7 @@ class RestaurantViewProvider extends ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;  
    final FirebaseAuth _authentication = FirebaseAuth.instance;
 
-String? _userId;
-
+  String? _userId;
   String? get userId => _userId;
 
  RestaurantViewProvider() {

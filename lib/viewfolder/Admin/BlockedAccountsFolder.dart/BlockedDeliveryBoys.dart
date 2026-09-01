@@ -74,7 +74,9 @@ void dbApproveAlert(
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     // final provider = Provider.of<DeliveryBoyViewProvider>(context);
-    return Scaffold(
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+     return Scaffold(
    
       body: StreamBuilder<List<Map<String, dynamic>>>(
   stream: Provider.of<DeliveryBoyViewProvider>(context, listen: false)
@@ -91,170 +93,139 @@ void dbApproveAlert(
     }
 
     return ListView.builder(
-                  padding: const EdgeInsets.all(16.0),
-                  itemCount: deliveryBoys.length,
-                  itemBuilder: (context, index) {
-                    final deliveryboys = deliveryBoys[index];
+  padding: EdgeInsets.all(screenWidth * 0.04), // responsive padding
+  itemCount: deliveryBoys.length,
+  itemBuilder: (context, index) {
+    final deliveryboy = deliveryBoys[index];
 
-                    // Safe null handling
-                    final db_name = deliveryboys['db_name']?.toString() ?? 'Unknown Delivery Boy';
-                    final db_location = deliveryboys['db_location']?.toString()?? 'Unknown location';
+    // Safe null handling
+    final dbName = deliveryboy['db_name']?.toString() ?? 'Unknown Delivery Boy';
+    final dbLocation = deliveryboy['db_location']?.toString() ?? 'Unknown location';
+    final email = deliveryboy['email']?.toString() ?? 'No email available';
+    final userId = deliveryboy['userId']?.toString();
+    final docId = deliveryboy['docId']?.toString();
 
-                    final email = deliveryboys['email']?.toString() ?? 'No email available';
-                    final userId = deliveryboys['userId']?.toString();
-                    final docId = deliveryboys['docId']?.toString();
-
-                    return
-      
-      
-      
-      
-      
-      
-      
-      
-      Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-          
-            child: InkWell(
-            onTap: () {
-              
-
-              Navigator.push(
-                context,
-                 MaterialPageRoute(builder: (context) => DeliveryBoyDetails(
-                  deliveryboyId: userId ?? '',
-                  deliverboyemail: email,
-                  )),
-              );
-              },
-            child: Container(
-              
-              width: double.infinity,
-              decoration:  BoxDecoration(
-                    color: Colors.grey[100],
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        spreadRadius: 2,
-                        blurRadius: 16,
-                        offset: const Offset(4,4)
-                      )
-                    ] ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          
-                         
-                          Align(
-                            alignment: Alignment.topRight,
-                            child: Text("${index + 1}.", style: GoogleFonts.tinos(
-                              fontSize: 25,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),),
-                          ),
-                          const SizedBox(width: 20,),
-
-
-                          Column(
-                           crossAxisAlignment: CrossAxisAlignment.start,
-                          
-                           children: [ 
-                            
-                             Text(
-                              db_name ,
-                             style: GoogleFonts.tinos(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: const Color.fromARGB(255, 75, 2, 2),
-                                                    ),
-                                                  ),
-                              Text(
-                             email ,
-                             style: GoogleFonts.tinos(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey,
-                              
-                                                    ),
-                             softWrap:true,
-                             overflow: TextOverflow.visible,
-                                                   
-                                                ),
-
-
-                                                     Text(
-                             db_location ,
-                             style: GoogleFonts.tinos(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey,
-                              
-                                                    ),
-                             softWrap:true,
-                             overflow: TextOverflow.visible,
-                                                   
-                                                ),
-
-                                        // Show debug info
-                                      if (userId == null || userId.isEmpty) ...[
-                                        const SizedBox(height: 8),
-                                        Text(
-                                          "No User ID available",
-                                          style: GoogleFonts.tinos(
-                                            fontSize: 12,
-                                           
-                                          ),
-                                        ),
-                                      ],
-
-
-                            //  const SizedBox(height: 20,),
-                                   
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 10.0,bottom: 10.0,),
-                                      child: ElevatedButton(
-                                                      style: ElevatedButton.styleFrom(
-                                                        backgroundColor: colorScheme.primary,
-                                                        shape: RoundedRectangleBorder(
-                                                          borderRadius: BorderRadius.circular(20),
-                                                        ),
-                                                      ),
-                                                     onPressed: () {
-                                                    
-                                                         dbApproveAlert(context, docId!, db_name);
-                                              
-                                                        },
-                                      
-                                      
-                                                      child: const Text("Approve", style: TextStyle(color: Colors.white)),
-                                                    ),
-                                    ),
-
-
-
-
-
-
-                   ],),
-                        ],
+    return Padding(
+      padding: EdgeInsets.only(bottom: screenHeight * 0.02), // responsive spacing
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => DeliveryBoyDetails(
+                deliveryboyId: userId ?? '',
+                deliverboyemail: email,
+              ),
+            ),
+          );
+        },
+        child: Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: Colors.grey[100],
+            borderRadius: BorderRadius.circular(screenWidth * 0.05),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                spreadRadius: 2,
+                blurRadius: 16,
+                offset: const Offset(4, 4),
+              ),
+            ],
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(screenWidth * 0.03),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "${index + 1}.",
+                  style: GoogleFonts.tinos(
+                    fontSize: screenWidth * 0.06, // responsive
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+                SizedBox(width: screenWidth * 0.05),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        dbName,
+                        style: GoogleFonts.tinos(
+                          fontSize: screenWidth * 0.05,
+                          fontWeight: FontWeight.bold,
+                          color: const Color.fromARGB(255, 75, 2, 2),
+                        ),
                       ),
-                    ),
-            
-            
+                      Text(
+                        email,
+                        style: GoogleFonts.tinos(
+                          fontSize: screenWidth * 0.04,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey,
+                        ),
+                        softWrap: true,
+                        overflow: TextOverflow.visible,
+                      ),
+                      Text(
+                        dbLocation,
+                        style: GoogleFonts.tinos(
+                          fontSize: screenWidth * 0.04,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey,
+                        ),
+                        softWrap: true,
+                        overflow: TextOverflow.visible,
+                      ),
+
+                      if (userId == null || userId.isEmpty) ...[
+                        SizedBox(height: screenHeight * 0.01),
+                        Text(
+                          "No User ID available",
+                          style: GoogleFonts.tinos(
+                            fontSize: screenWidth * 0.03,
+                          ),
+                        ),
+                      ],
+
+                      SizedBox(height: screenHeight * 0.015),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: colorScheme.primary,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(screenWidth * 0.05),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: screenWidth * 0.04,
+                            vertical: screenHeight * 0.015,
+                          ),
+                        ),
+                        onPressed: () {
+                          if (docId != null) {
+                            dbApproveAlert(context, docId, dbName);
+                          }
+                        },
+                        child: Text(
+                          "Approve",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: screenWidth * 0.04,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
-        )
-        ],
-      );
-      }
-              );
+        ),
+      ),
+    );
+  },
+);
   },
 ),
 

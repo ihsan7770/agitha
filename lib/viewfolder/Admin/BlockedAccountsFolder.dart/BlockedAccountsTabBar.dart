@@ -9,16 +9,37 @@ class BlockedAccountTabBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.width;
+
+
     return  DefaultTabController(
       length: 3,
       child: Scaffold(
         appBar: AppBar(
          
-          bottom: const TabBar(
+          bottom:  TabBar(
             tabs: [
-              Tab(text: "Blocked User"),
-              Tab(text: "Blocked Restaurant"),
-              Tab(text: "Blocked DeliveryBoys"),
+
+             Tab(
+      child: Padding(
+        padding: EdgeInsets.only(top: height * 0.008),
+        child: Text("Blocked User",style: TextStyle(fontSize: height * 0.034),),
+      ),
+    ),
+    Tab(
+      child: Padding(
+        padding: EdgeInsets.only(top: height * 0.008),
+        child: Text("Blocked Restaurant",style: TextStyle(fontSize: height * 0.034)),
+      ),
+    ),
+    Tab(
+      child: Padding(
+        padding: EdgeInsets.only(top: height * 0.008),
+        child: Text("Blocked DeliveryBoys",style: TextStyle(fontSize: height * 0.034)),
+      ),
+    ),
+
+    
             ],
           ),
         ),

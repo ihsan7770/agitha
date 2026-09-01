@@ -42,7 +42,7 @@ class _AddFoodItemState extends State<AddFoodItem> {
   File? _logoImage;
 
     String? selectedcategory;
-    final List<String> category = ["Special", "Normal",];
+    final List<String> category = ["Special", "Normal","Cake","Bakery","Drinks"];
 
 @override
 void initState() {
@@ -100,7 +100,7 @@ void submitFoodItemss() async {
         // 🔹 Update existing food item
         await foodProvider.updateFoodItem(
            describtion: _describtionController.text.trim(),
-           foodItemId: widget.foodid.toString(), // make sure you pass this when navigating
+          foodItemId: widget.foodid.toString(), // make sure you pass this when navigating
           dishName: _dishNameController.text.trim(),
           price: _priceController.text.trim(),
           category: selectedcategory.toString(),
@@ -174,6 +174,11 @@ DecorationImage? _buildImage(String? path, File? file) {
      final foodprovider = Provider.of<Addfoodprovider>(context);
     return Scaffold(
       appBar: AppBar(
+        title:   Text(
+                      widget.isUpdate ? "Update Food Item" : "Add Food Item",
+                     
+                    ),
+        centerTitle: true,
         leading: IconButton(icon:Icon(Icons.arrow_back),onPressed: (){
 
               Navigator.push(context, MaterialPageRoute(builder: (context) => const   CompanyMainPage()),);
@@ -186,18 +191,7 @@ DecorationImage? _buildImage(String? path, File? file) {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    "Upload Image",
-                    style: GoogleFonts.tinos(
-                      fontSize: 23,
-                      fontWeight: FontWeight.bold,
-                      color: const Color.fromARGB(255, 75, 2, 2),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10),
+               
               InkWell(
                   onTap: _pickFoodImage,
                   child: Container(
@@ -240,7 +234,7 @@ DecorationImage? _buildImage(String? path, File? file) {
                 TextFormField(
                   controller: _dishNameController,
                   decoration: const InputDecoration(
-                    labelText: "Dish Name",
+                    labelText: "Food/Cake/Bakery/Drinks",
                     border: OutlineInputBorder(),
                   ),
                   validator: (value) =>

@@ -14,6 +14,8 @@ class ContactMessages extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        title: const Text("Messages"),
+        centerTitle: true,
         
       ),
       body: StreamBuilder<List<MessageModel>>(
@@ -33,24 +35,7 @@ class ContactMessages extends StatelessWidget {
 
           return Column(
             children: [
-                Align(
-                alignment: Alignment.topLeft,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 16.0, bottom: 8.0),
-                  child: Text(
-                    "Messages",
-                    style: GoogleFonts.tinos(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-              ),
-
-
-
-
+      
               Expanded(
                 child: ListView.builder(
                   padding: const EdgeInsets.all(16),

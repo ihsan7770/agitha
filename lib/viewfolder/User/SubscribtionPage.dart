@@ -2,7 +2,7 @@ import 'package:agitha/ControllersFolder/AuthenticationContoller.dart';
 import 'package:agitha/ControllersFolder/SubscribtionController.dart';
 import 'package:agitha/ControllersFolder/UserRegistrationController.dart';
 import 'package:agitha/ModelsFoder/SubscribtionModel.dart';
-import 'package:agitha/viewfolder/Screens/HomePage.dart';
+import 'package:agitha/viewfolder/Screens/UserMainPage.dart';
 import 'package:agitha/viewfolder/User/LoginPage.dart';
 import 'package:agitha/viewfolder/User/ProfileDetails/ProfileCreate.dart';
 import 'package:agitha/viewfolder/Widgets/Drawer.dart';
@@ -108,6 +108,7 @@ Widget build(BuildContext context) {
                             child: ElevatedButton(
                         onPressed: () async {
   if (_formKey.currentState!.validate()) {
+    
     bool loggedIn = await Provider.of<AuthenticationController>(
       context,
       listen: false,

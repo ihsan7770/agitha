@@ -16,10 +16,7 @@ class _BlockedRestourentsState extends State<BlockedRestourents> {
     @override
   void initState() {
     super.initState();
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   Provider.of<RestaurantViewProvider>(context, listen: false)
-    //       .fetchCompaniesWithEmails();
-    // });
+  
   }
 
 
@@ -80,6 +77,9 @@ class _BlockedRestourentsState extends State<BlockedRestourents> {
 Widget build(BuildContext context) {
   final colorScheme = Theme.of(context).colorScheme;
 
+  final screenWidth = MediaQuery.of(context).size.width;
+final screenHeight = MediaQuery.of(context).size.height;
+
   return Scaffold(
     body:StreamBuilder<List<Map<String, dynamic>>>(
   stream: Provider.of<RestaurantViewProvider>(context, listen: false)
@@ -95,75 +95,86 @@ Widget build(BuildContext context) {
 
     final companies = snapshot.data!;
 
-    return ListView.builder(
-      padding: const EdgeInsets.all(16.0),
-      itemCount: companies.length,
-      itemBuilder: (context, index) {
-        final data = companies[index];
-        final docId = data['docId'];
-        final restaurantName = data['restaurantName'] ?? 'Unknown Restaurant';
-        final email = data['email'] ?? 'No Email';
-        final userId = data['userId'];
+    return 
+    
+   ListView.builder(
+  padding: EdgeInsets.all(screenWidth * 0.04), // responsive padding
+  itemCount: companies.length,
+  itemBuilder: (context, index) {
+    final data = companies[index];
+    final docId = data['docId'];
+    final restaurantName = data['restaurantName'] ?? 'Unknown Restaurant';
+    final email = data['email'] ?? 'No Email';
+    final userId = data['userId'];
 
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 12.0),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.grey[100],
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 12,
-                  offset: const Offset(4, 4),
-                ),
-              ],
+    return Padding(
+      padding: EdgeInsets.only(bottom: screenHeight * 0.015), // responsive spacing
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.grey[100],
+          borderRadius: BorderRadius.circular(screenWidth * 0.05),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 12,
+              offset: const Offset(4, 4),
             ),
-            child: ListTile(
-              onTap: () {
-                if (userId != null) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ViewExtraRestourentDetails(companyId: userId),
-                    ),
-                  );
-                }
-              },
-              title: Text(
-                "${index + 1}. $restaurantName",
-                style: GoogleFonts.tinos(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
+          ],
+        ),
+        child: ListTile(
+          onTap: () {
+            if (userId != null) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ViewExtraRestourentDetails(companyId: userId),
                 ),
+              );
+            }
+          },
+          title: Text(
+            "${index + 1}. $restaurantName",
+            style: GoogleFonts.tinos(
+              fontSize: screenWidth * 0.05, // responsive font size
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+          subtitle: Text(
+            "$email",
+            style: GoogleFonts.tinos(
+              fontSize: screenWidth * 0.04, // responsive font size
+              fontWeight: FontWeight.bold,
+              color: Colors.grey,
+            ),
+          ),
+          trailing: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: colorScheme.primary,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(screenWidth * 0.05),
               ),
-              subtitle: Text( "$email",
-                  style: GoogleFonts.tinos(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey,
-                ),),
-
-              trailing: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: colorScheme.primary,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
-               onPressed: () {
-               restaurantApproveAlert(context, docId, restaurantName);
-                  },
-
-
-                child: const Text("Approve", style: TextStyle(color: Colors.white)),
+              padding: EdgeInsets.symmetric(
+                horizontal: screenWidth * 0.04,
+                vertical: screenHeight * 0.015,
+              ),
+            ),
+            onPressed: () {
+              restaurantApproveAlert(context, docId, restaurantName);
+            },
+            child: Text(
+              "Approve",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: screenWidth * 0.04,
               ),
             ),
           ),
-        );
-      },
+        ),
+      ),
     );
+  },
+);
   },
 )
 

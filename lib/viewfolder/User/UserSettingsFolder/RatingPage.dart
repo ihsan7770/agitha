@@ -27,23 +27,20 @@ class _RatingPageState extends State<RatingPage> {
     
 
     return  Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: const Text("Rating & Review"),
+        centerTitle: true,
+      ),
       body:  Padding(
         padding: const EdgeInsets.all(16),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-          
-           
-             
+
              Image.asset("assets/rating.png"),
               const SizedBox(height: 12),
           
-              
-           
-          
-        
               const Text(
      
                 "Happy with your experiance? Let us know by rating",
@@ -73,12 +70,6 @@ class _RatingPageState extends State<RatingPage> {
                  },
                ),
                
-                         
-                            
-          
-             
-           
-          
               const SizedBox(height: 20),
           
           
@@ -110,14 +101,6 @@ class _RatingPageState extends State<RatingPage> {
                 ),
               ),
           
-          
-          
-          
-             
-          
-          
-          
-            
           
              const SizedBox(height: 30),
           
@@ -169,15 +152,7 @@ class _RatingPageState extends State<RatingPage> {
      
          
              _reviewController.clear();
-              
-
-
-
-
-
-
-
-
+        
 
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(content: Text('Rating send Successfully')),

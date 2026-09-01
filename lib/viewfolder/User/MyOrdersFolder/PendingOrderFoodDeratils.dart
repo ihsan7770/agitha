@@ -1,7 +1,7 @@
 import 'package:agitha/ControllersFolder/CartController.dart';
 import 'package:agitha/ControllersFolder/UserOrderStatusController.dart';
 import 'package:agitha/ModelsFoder/CartModel.dart';
-import 'package:agitha/viewfolder/Screens/HomePage.dart';
+import 'package:agitha/viewfolder/Screens/UserMainPage.dart';
 import 'package:agitha/viewfolder/User/FoodOrderingFolder/OrderStatusPage.dart';
 import 'package:agitha/viewfolder/User/MyOrdersFolder/TotalFoodOrderDetails.dart';
 import 'package:agitha/viewfolder/User/ProfileDetails/UserProfile.dart';
@@ -31,9 +31,11 @@ class PendingOrderfoodPage extends StatelessWidget {
   }
 }
   bool hasAlertShown = false;
+  
 
   @override
   Widget build(BuildContext context) {
+    
     
     double screenWidth = MediaQuery.of(context).size.width;
         final colorScheme = Theme.of(context).colorScheme;
@@ -128,7 +130,7 @@ class PendingOrderfoodPage extends StatelessWidget {
                                 stream: orderProvider.singleRestaurantDetails(restaurantId),
                                 builder: (context, restSnapshot) {
                                   if (restSnapshot.connectionState == ConnectionState.waiting) {
-                                    return const Text("Loading...");
+                                    return const SizedBox.shrink();
                                   }
                                          
                                   if (!restSnapshot.hasData) {
@@ -167,14 +169,62 @@ class PendingOrderfoodPage extends StatelessWidget {
                                                 padding: const EdgeInsets.all(10),
                                                 child: Row(
                                                   children: [
+
                                                     ClipRRect(
                                                       borderRadius: BorderRadius.circular(12),
-                                                      child: Image.network(
-                                                       restaurant["restaurantImageUrl"] ?? "No Name",
-                                                        width: screenWidth * 0.20,
-                                                        height: screenWidth * 0.20,
-                                                        fit: BoxFit.cover,
+                                                      child:
+                                                      
+                                                     Image.network(
+                                                  restaurant["restaurantImageUrl"] ?? "",
+                                                  width: screenWidth * 0.20,
+                                                  height: screenWidth * 0.20,
+                                                  fit: BoxFit.cover,
+                                                  loadingBuilder: (context, child, loadingProgress) {
+                                                    if (loadingProgress == null) return child;
+                                                    return SizedBox(
+                                                      width: screenWidth * 0.20,
+                                                      height: screenWidth * 0.20,
+                                                      child: const Center(
+                                                        child: CircularProgressIndicator(strokeWidth: 2),
                                                       ),
+                                                    );
+                                                  },
+                                                  errorBuilder: (context, error, stackTrace) {
+                                                    // ❌ No internet / invalid URL
+                                                    return Container(
+  width: 60,
+  height: 60,
+  color: Colors.grey.shade200,
+  alignment: Alignment.center,
+  child: Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: const [
+      Icon(
+        Icons.wifi_off,
+        color: Colors.grey,
+        size: 22,
+      ),
+      SizedBox(height: 2),
+      Text(
+        "No Internet",
+        style: TextStyle(
+          color: Colors.grey,
+          fontSize: 8, // small text
+          fontWeight: FontWeight.w500,
+        ),
+        textAlign: TextAlign.center,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
+    ],
+  ),
+);
+
+                                                  },
+                                                ),
+                                                
+
+
                                                     ),
                                                     const SizedBox(width: 12),
                                                     Expanded(
@@ -261,12 +311,12 @@ class PendingOrderfoodPage extends StatelessWidget {
                                     children: [
                                       Row(
                                         children: [
-                                          const Icon(Icons.circle, size: 8),
+                                         Icon(Icons.circle, size: screenWidth * 0.015),
                                           const SizedBox(width: 6),
                                           Text(
                                             item['dishName']?.toString() ?? "No Name",
-                                            style: const TextStyle(
-                                              fontSize: 14,
+                                            style: TextStyle(
+                                              fontSize: screenWidth * 0.035,
                                               fontWeight: FontWeight.w600,
                                             ),
                                           ),
@@ -277,8 +327,8 @@ class PendingOrderfoodPage extends StatelessWidget {
                                         padding: const EdgeInsets.only(left: 16),
                                         child: Text(
                                           "Quantity: ${item['quantity'] ?? 1}",
-                                          style: const TextStyle(
-                                            fontSize: 13,
+                                          style:  TextStyle(
+                                            fontSize: screenWidth * 0.035,
                                             color: Colors.grey,
                                           ),
                                         ),
@@ -350,7 +400,7 @@ class PendingOrderfoodPage extends StatelessWidget {
     }
 
     // 🔥 Reverse orders so latest comes first
-    final reversedOrders = orders.reversed.toList();
+    // final reversedOrders = orders.reversed.toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -370,14 +420,14 @@ class PendingOrderfoodPage extends StatelessWidget {
 
         /// 🔹 Orders List
         ListView.builder(
-          itemCount: reversedOrders.length,
+          itemCount: orders.length,
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) {
-            final order = reversedOrders[index];
+            final order = orders[index];
             final items =
                 List<Map<String, dynamic>>.from(order['items'] ?? []);
-            // final deliveryBoy = order['deliveryBoy'];
+            
             final restaurant = order['restaurant'];
 
             double total = 0;
@@ -416,15 +466,60 @@ class PendingOrderfoodPage extends StatelessWidget {
                         /// 🔹 Restaurant Section
                         Row(
                           children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(20),
-                              child: Image.network(
-                                restaurant['restaurantImageUrl'],
-                                width: 60,
-                                height: 60,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
+
+                           ClipRRect(
+  borderRadius: BorderRadius.circular(20),
+  child: Image.network(
+    restaurant['restaurantImageUrl'] ?? "",
+    width: 60,
+    height: 60,
+    fit: BoxFit.cover,
+    loadingBuilder: (context, child, loadingProgress) {
+      if (loadingProgress == null) return child;
+      return const SizedBox(
+        width: 60,
+        height: 60,
+        child: Center(
+          child: CircularProgressIndicator(strokeWidth: 2),
+        ),
+      );
+    },
+    errorBuilder: (context, error, stackTrace) {
+      // ❌ No internet / invalid URL
+      return Container(
+  width: 60,
+  height: 60,
+  color: Colors.grey.shade200,
+  alignment: Alignment.center,
+  child: Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: const [
+      Icon(
+        Icons.wifi_off,
+        color: Colors.grey,
+        size: 22,
+      ),
+      SizedBox(height: 2),
+      Text(
+        "No Internet",
+        style: TextStyle(
+          color: Colors.grey,
+          fontSize: 8, // small text
+          fontWeight: FontWeight.w500,
+        ),
+        textAlign: TextAlign.center,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
+    ],
+  ),
+);
+    },
+  ),
+),
+
+
+
                             const SizedBox(width: 16),
                             Expanded(
                               child: Column(
@@ -486,7 +581,7 @@ class PendingOrderfoodPage extends StatelessWidget {
     // 🔥 Navigate to Home / Cart
     Navigator.pushAndRemoveUntil(
       context,
-      MaterialPageRoute(builder: (_) => const HomePage()),
+      MaterialPageRoute(builder: (_) => const UserMainPage()),
       (route) => false,
     );
   },
@@ -528,12 +623,12 @@ class PendingOrderfoodPage extends StatelessWidget {
                                 children: [
                                   Row(
                                     children: [
-                                      const Icon(Icons.circle, size: 8),
+                                       Icon(Icons.circle, size: screenWidth * 0.015),
                                       const SizedBox(width: 6),
                                       Text(
                                         item['dishName'] ?? "Item",
-                                        style: const TextStyle(
-                                          fontSize: 14,
+                                        style: TextStyle(
+                                          fontSize: screenWidth * 0.035,
                                           fontWeight: FontWeight.w600,
                                         ),
                                       ),
@@ -544,8 +639,8 @@ class PendingOrderfoodPage extends StatelessWidget {
                                         const EdgeInsets.only(left: 16, top: 4),
                                     child: Text(
                                       "Qty: ${item['quantity'] ?? 1}",
-                                      style: const TextStyle(
-                                        fontSize: 13,
+                                      style:  TextStyle(
+                                        fontSize: screenWidth * 0.035,
                                         color: Colors.grey,
                                       ),
                                     ),
@@ -554,21 +649,21 @@ class PendingOrderfoodPage extends StatelessWidget {
                               ),
                             );
                           }).toList(),
-                        ),
-              
-                        // / 🔹 Order Date
-                 Padding(
-                     padding: const EdgeInsets.only(top: 10),
-                     child: Text(
-                       "Ordered: ${DateFormat(
-                         'MMMM d, yyyy – hh:mm a',
-                       ).format((order['createdAt'] as Timestamp).toDate())}",
-                       style: GoogleFonts.tinos(
-                         fontSize: screenWidth * 0.035,
-                         color: Colors.grey,
-                     ),
-                     ),
-                   ),
+        ),
+
+        /// 🔹 Order Date
+ Padding(
+     padding: const EdgeInsets.only(top: 10),
+     child: Text(
+        "Ordered: ${DateFormat(
+       'MMMM d, yyyy – hh:mm a',
+        ).format((order['createdAt'] as Timestamp).toDate())}",
+       style: GoogleFonts.tinos(
+         fontSize: screenWidth * 0.035,
+         color: Colors.grey,
+     ),
+     ),
+   ),
 
               
                         const SizedBox(height: 10),
@@ -576,20 +671,23 @@ class PendingOrderfoodPage extends StatelessWidget {
                         /// 🔹 Status + Total
                         Row(
                           children: [
-                            const Row(
+                             Row(
                               children: [
                                 Text(
                                   "Delivered",
                                   style: TextStyle(
-                                    fontSize: 18,
-                                    color: Color.fromARGB(255, 6, 98, 9),
+                                    fontSize: screenWidth * 0.045,
+                                    color: const Color.fromARGB(255, 6, 98, 9),
                                   ),
                                 ),
-                                SizedBox(width: 6),
+                                const SizedBox(width: 6),
                                 Icon(
                                   Icons.check_circle,
-                                  color: Color.fromARGB(255, 6, 98, 9),
+                                  size:screenWidth * 0.055 ,
+                                  color: const Color.fromARGB(255, 6, 98, 9),
                                 ),
+
+
                               ],
                             ),
                             const Spacer(),
@@ -601,7 +699,7 @@ class PendingOrderfoodPage extends StatelessWidget {
                             Text(
                                   "Tip: ₹${order['tip']}",
                                   style: GoogleFonts.tinos(
-                                    fontSize: 13,
+                                    fontSize: screenWidth * 0.035,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -609,7 +707,7 @@ class PendingOrderfoodPage extends StatelessWidget {
                                 Text(
                                   "Total: ₹$total",
                                   style: GoogleFonts.tinos(
-                                    fontSize: 16,
+                                    fontSize: screenWidth * 0.035,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),

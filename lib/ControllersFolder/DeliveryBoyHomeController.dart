@@ -437,22 +437,36 @@ Stream<bool> streamIsAvailable() {
 
   //to show prevous deliveryboy orders
 
-  Stream<List<Map<String, dynamic>>> previousOrdersForDeliveryBoyStream() {
+
+
+Stream<List<Map<String, dynamic>>> previousOrdersForDeliveryBoyStream() {
   final user = FirebaseAuth.instance.currentUser;
   if (user == null) return Stream.value([]);
 
   return FirebaseFirestore.instance
       .collection("previousOrders")
       .where("deliveryBoyId", isEqualTo: user.uid)
-      // .orderBy("createdAt", descending: true) // latest first
       .snapshots()
       .map((snapshot) {
-        return snapshot.docs.map((doc) {
+        final orders = snapshot.docs.map((doc) {
           return {
             "id": doc.id,
             ...doc.data(),
           };
         }).toList();
+
+        /// ✅ SORT locally (latest first)
+        orders.sort((a, b) {
+          final aTime = a['createdAt'];
+          final bTime = b['createdAt'];
+
+          if (aTime is Timestamp && bTime is Timestamp) {
+            return bTime.compareTo(aTime);
+          }
+          return 0;
+        });
+
+        return orders;
       });
 }
 

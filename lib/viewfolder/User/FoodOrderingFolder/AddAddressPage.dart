@@ -181,25 +181,25 @@ Future<void> _getLocationOnStart() async {
   Widget build(BuildContext context) {
     final addressprovider = Provider.of<AddressProvider>(context);
     final colorScheme = Theme.of(context).colorScheme;
+
+    final screenWidth = MediaQuery.of(context).size.width;
+final screenHeight = MediaQuery.of(context).size.height;
+final buttonHPadding = (screenWidth * 0.07).clamp(18.0, 32.0);
+final buttonVPadding = (screenHeight * 0.018).clamp(10.0, 16.0);
+final buttonFontSize = (screenWidth * 0.035).clamp(12.0, 16.0);
+final iconSize = (screenWidth * 0.04).clamp(14.0, 18.0);
+
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: const Text(
+                  "Add New Address",
+                ),
+                centerTitle: true,
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Align(
-              alignment: Alignment.topLeft,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 16.0, top: 8.0),
-                child: Text(
-                  "Add New Address",
-                  style: GoogleFonts.tinos(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-              ),
-            ),
+          
 
             Form(
               key: _formKey,
@@ -254,6 +254,7 @@ Future<void> _getLocationOnStart() async {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  
                   OutlinedButton.icon(
                   onPressed: _isLoadingLocation ? null : () async {
                   setState(() {
@@ -277,18 +278,30 @@ Future<void> _getLocationOnStart() async {
                           )
                         : 
                         
-                        const Icon(Icons.location_pin,color: Color.fromARGB(255, 150, 11, 1),),
+                       Icon(
+                          
+                          Icons.location_pin,
+                          
+                          color: Color.fromARGB(255, 150, 11, 1),
+                          size: iconSize,
+                          
+                          
+                          ),
                     label: 
                     
                     isLoadingLocation 
                         ? const Text("Fetching...")
                         : 
-                        
-                      const Text("Pick location",style: TextStyle(color: Color.fromARGB(255, 150, 11, 1)),),
+                         Text(
+                          "Pick location",style: TextStyle(
+                            fontSize: buttonFontSize,
+                            color: Color.fromARGB(255, 150, 11, 1)),),
                       style: OutlinedButton.styleFrom(
                       foregroundColor: const Color.fromARGB(255, 150, 11, 1),
                       side: const BorderSide(color: Color.fromARGB(255, 150, 11, 1)),
-                      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
+                      padding:  EdgeInsets.symmetric( 
+                           horizontal: buttonHPadding,
+                         vertical: buttonVPadding,     ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
@@ -297,95 +310,79 @@ Future<void> _getLocationOnStart() async {
 
                   const Spacer(),
 
-                  ElevatedButton(
-                    onPressed: () async{
-                      if (_formKey.currentState!.validate()) {
-                                          
-                       final provider = Provider.of<AddressProvider>(context, listen: false);
+                 ElevatedButton(
+  onPressed: addressprovider.isLoading
+      ? null
+      : () async {
+          if (_formKey.currentState!.validate()) {
+            final provider =
+                Provider.of<AddressProvider>(context, listen: false);
 
-                       String address = _addressController.text.trim();
-                       String house = _houseController.text.trim();
+            String address = _addressController.text.trim();
+            String house = _houseController.text.trim();
 
-                       AddressModel addAddress =AddressModel(
-                         docId: '', 
-                         userId: '', 
-                         address: address,
-                         housename: house, 
-                         longitude: longitude, 
-                         latitude: latitude );
-
-                          await provider.addAddress(addAddress);
-
-
-                           
- 
-     _addressController.clear();
-     _houseController.clear();
-   
-
-  
-  
-    FocusScope.of(context).unfocus();
-    
-   
-    if (mounted) {
-      setState(() {});
-    }
-  
-                              if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Address added successfully'),
-          
-              ),
+            AddressModel addAddress = AddressModel(
+              docId: '',
+              userId: '',
+              address: address,
+              housename: house,
+              longitude: longitude,
+              latitude: latitude,
             );
+
+            await provider.addAddress(addAddress);
+
+            _addressController.clear();
+            _houseController.clear();
+            FocusScope.of(context).unfocus();
+
+            if (mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Address added successfully'),
+                ),
+              );
+            }
           }
-                   }
-                   
-                   
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: addressprovider.isLoading ? Colors.grey[100]:colorScheme.primary,
-                      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                    ),
-                    child:addressprovider.isLoading ?
-                    const SizedBox(
-                                    width: 20,
-                                    height: 20,
-                                    child: CircularProgressIndicator(
-                                      color: Colors.white,
-                                      strokeWidth: 2,
-                                    ),
-                                  ):
-                      Text(
-                      'Add',
-                      style: GoogleFonts.tinos(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
+        },
+  style: ElevatedButton.styleFrom(
+    backgroundColor: addressprovider.isLoading
+        ? Colors.grey[300]
+        : colorScheme.primary,
+    padding: EdgeInsets.symmetric(
+      horizontal: buttonHPadding,
+      vertical: buttonVPadding,
+    ),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(25),
+    ),
+  ),
+  child: addressprovider.isLoading
+      ? SizedBox(
+          width: 20,
+          height: 20,
+          child: const CircularProgressIndicator(
+            color: Colors.white,
+            strokeWidth: 2,
+          ),
+        )
+      : Text(
+          'Add',
+          style: GoogleFonts.tinos(
+            fontSize: buttonFontSize,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+),
+
+
                 ],
               ),
             ),
 
-            
-
-
-
+          
             //show saved address////////////////////////////////////////
-
-
-
-
-
-
-
-
 
             Align(
               alignment: Alignment.topLeft,
@@ -394,7 +391,7 @@ Future<void> _getLocationOnStart() async {
                 child: Text(
                   "Saved Addresses",
                   style: GoogleFonts.tinos(
-                    fontSize: 25,
+                    fontSize: 23,
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
                   ),
@@ -423,13 +420,6 @@ Future<void> _getLocationOnStart() async {
     ),
   ),
 );
-
-
-
-
-
-
-
 
     }
 
@@ -530,7 +520,7 @@ Future<void> _getLocationOnStart() async {
                         fontSize: 16,
                         color: Colors.grey,
                       ),
-                       maxLines: 3,
+                       maxLines: 2,
                        overflow: TextOverflow.ellipsis,
                     ),
                   ),

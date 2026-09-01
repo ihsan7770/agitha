@@ -14,16 +14,15 @@ class MediaPage extends StatefulWidget {
 class _MediaPageState extends State<MediaPage> {
   late MediaProvider mediaProvider;
 
-  @override
-  void initState() {
-    super.initState();
-    mediaProvider = Provider.of<MediaProvider>(context, listen: false);
+@override
+void initState() {
+  super.initState();
+  mediaProvider = Provider.of<MediaProvider>(context, listen: false);
 
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await mediaProvider.fetchAllMedia();
-      setState(() {});
-    });
-  }
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    mediaProvider.fetchAllMedia();
+  });
+}
 
   Future<void> openWebsite(String url) async {
     final colorScheme = Theme.of(context).colorScheme;

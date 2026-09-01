@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:agitha/ModelsFoder/CompanyRegistrationModel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -35,6 +36,8 @@ class ViewDishesController extends ChangeNotifier {
   });
 }
 
+
+
 void fetchFoodItemsByIdNormal(String restaurantId) {
   _firestore
       .collection('foodItems')
@@ -51,6 +54,28 @@ void fetchFoodItemsByIdNormal(String restaurantId) {
     _normalStreamController.add(list);
   });
 }
+
+  CompanyRegistrationModel? company;
+  bool isLoading = false;
+  String? errorMessage;
+
+  
+
+ Stream<Map<String, dynamic>?> fetchCompanyByRestaurantId(
+      String restaurantId) {
+    return FirebaseFirestore.instance
+        .collection('companies')
+        .where('userId', isEqualTo: restaurantId)
+        .limit(1)
+        .snapshots()
+        .map((snapshot) {
+      if (snapshot.docs.isEmpty) return null;
+      return snapshot.docs.first.data();
+    });
+  }
+
+
+
   @override
   void dispose() {
     _specialStreamController.close();

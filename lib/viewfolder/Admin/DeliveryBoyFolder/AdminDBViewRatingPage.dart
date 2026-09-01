@@ -84,7 +84,7 @@ class ViewDeliveryBoysRatings extends StatelessWidget {
                                       color: Colors.amber,
                                     ),
                                     itemCount: 5,
-                                    itemSize: 20.0,
+                                    itemSize: 16.0,
                                     direction: Axis.horizontal,
                                   ),
 

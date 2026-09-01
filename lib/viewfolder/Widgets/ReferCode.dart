@@ -18,7 +18,6 @@ class _ReferCodeWidgetState extends State<ReferCodeWidget> {
       _showCopied = true;
     });
 
-    // Hide after 1.5 seconds
     Future.delayed(const Duration(milliseconds: 1500), () {
       if (mounted) {
         setState(() {
@@ -30,42 +29,60 @@ class _ReferCodeWidgetState extends State<ReferCodeWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: EdgeInsets.all(size.width * 0.03),
       decoration: BoxDecoration(
         color: Colors.teal.shade50,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(size.width * 0.025),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text(
+          Text(
             "Your Code: REF12345",
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+            style: TextStyle(
+              fontSize: size.width * 0.045,
+              fontWeight: FontWeight.w500,
+            ),
           ),
-          // Wrap Stack with Clip.none to allow overflow
+
+          /// Copy Icon + Tooltip
           Stack(
             clipBehavior: Clip.none,
             alignment: Alignment.center,
             children: [
               IconButton(
                 onPressed: _copyCode,
-                icon: const Icon(Icons.copy, color: Colors.teal),
+                icon: Icon(
+                  Icons.copy,
+                  color: Colors.teal,
+                  size: size.width * 0.06,
+                ),
               ),
+
               if (_showCopied)
                 Positioned(
-                  top: -30, // show above icon
+                  top: -size.height * 0.04,
                   child: Material(
                     color: Colors.transparent,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: size.width * 0.02,
+                        vertical: size.height * 0.005,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.black87,
-                        borderRadius: BorderRadius.circular(6),
+                        borderRadius:
+                            BorderRadius.circular(size.width * 0.015),
                       ),
-                      child: const Text(
+                      child: Text(
                         "Copied!",
-                        style: TextStyle(color: Colors.white, fontSize: 12),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: size.width * 0.03,
+                        ),
                       ),
                     ),
                   ),

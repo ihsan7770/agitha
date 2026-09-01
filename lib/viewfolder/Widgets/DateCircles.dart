@@ -3,7 +3,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 class DateSelector extends StatefulWidget {
-  const DateSelector({super.key});
+  final void Function(DateTime)? onDateSelected; // optional callback
+
+  const DateSelector({super.key, this.onDateSelected});
 
   @override
   State<DateSelector> createState() => _DateSelectorState();
@@ -11,7 +13,7 @@ class DateSelector extends StatefulWidget {
 
 class _DateSelectorState extends State<DateSelector> {
   int selectedIndex = 0;
-  final int daysToShow = 14; // show 2 weeks
+  final int daysToShow = 14; 
   final DateTime today = DateTime.now();
 
   @override
@@ -27,20 +29,25 @@ class _DateSelectorState extends State<DateSelector> {
           bool isSelected = selectedIndex == index;
 
           String dayName =
-              index == 0 ? "Today" : DateFormat('E').format(date); // Mon, Tue...
-          String dayNumber = DateFormat('d MMM').format(date); // 4 Jan
+              index == 0 ? "Today" : DateFormat('E').format(date);
+          String dayNumber = DateFormat('d MMM').format(date);
 
           return GestureDetector(
             onTap: () {
               setState(() {
                 selectedIndex = index;
               });
+
+              // 🔹 Pass selected date to parent
+              widget.onDateSelected?.call(date);
             },
             child: Container(
               margin: const EdgeInsets.symmetric(horizontal: 6, vertical: 10),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
-                color: isSelected ? Color.fromARGB(255, 224, 219, 219) : colorScheme.primary,
+                color: isSelected
+                    ? const Color.fromARGB(255, 224, 219, 219)
+                    : colorScheme.primary,
                 borderRadius: BorderRadius.circular(25),
               ),
               child: Column(

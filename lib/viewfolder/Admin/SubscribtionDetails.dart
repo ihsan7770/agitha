@@ -12,7 +12,10 @@ class SubscribtionDetails extends StatelessWidget {
   Widget build(BuildContext context) {
      final SubscriptionProvider = Provider.of<SubscriptionController>(context, listen: false);
     return  Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: const Text( "Subscriptions"),
+        centerTitle: true,
+      ),
       body:  StreamBuilder<List<Subscription>>(
               stream: SubscriptionProvider.subscriptionStream(),
               builder: (context, snapshot) {
@@ -23,35 +26,24 @@ class SubscribtionDetails extends StatelessWidget {
                     child: CircularProgressIndicator(),
                   ));
                 }
-                if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Padding(
-                    padding: EdgeInsets.only(top: 100),
-                    child: Text(
-                      "No user details found",
-                      style: TextStyle(fontSize: 18),
-                    ),
-                  );
-                }
-      
+
+
+
+                       if (!snapshot.hasData || snapshot.data!.isEmpty) {
+       return const Center(
+         child: Text(
+           "No subscriptions found",
+           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+         ),
+       );
+     }
+              
                 final SubscriptionProvider = snapshot.data!;
       
                 return Column(
                   children: [
       
-                     Align(
-                alignment: Alignment.topLeft,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 16.0, bottom: 8.0),
-                  child: Text(
-                    "Subscriptions",
-                    style: GoogleFonts.tinos(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-              ),
+                
                     ListView.builder(
                       shrinkWrap: true,
                                   itemCount:SubscriptionProvider.length,

@@ -85,27 +85,32 @@ Stream<List<Map<String, dynamic>>> notdeliveredcurrentUserOrdersStream() {
       .where("userId", isEqualTo: user.uid)
       .snapshots()
       .map((snapshot) {
-    final orders = snapshot.docs
-        .map((doc) => {
-              "id": doc.id,
-              ...doc.data(),
-            })
-        // ✅ Only active (not delivered AND not cancelled)
-        .where((order) =>
-            order["deliverystatous"] != "order_delivered" &&
-            order["status"] != "cancelled")
-        .toList();
+        final orders = snapshot.docs
+            .map((doc) => {
+                  "id": doc.id,
+                  ...doc.data(),
+                })
+            // ✅ Only active (not delivered & not cancelled)
+            .where((order) =>
+                order["deliverystatous"] != "order_delivered" &&
+                order["status"] != "cancelled"&&
+                order["status"] != "rejected"
+                
+                )
+            .toList();
 
-    // 🔽 Sort latest first
-    orders.sort((a, b) {
-      final aTime = a['createdAt'] as Timestamp;
-      final bTime = b['createdAt'] as Timestamp;
-      return bTime.compareTo(aTime);
-    });
+        // 🔽 Sort latest first
+        orders.sort((a, b) {
+          final aTime = a['createdAt'] as Timestamp;
+          final bTime = b['createdAt'] as Timestamp;
+          return bTime.compareTo(aTime);
+        });
 
-    return orders;
-  });
+        // ✅ LIMIT TO 1 (latest only)
+        return orders.isNotEmpty ? [orders.first] : [];
+      });
 }
+
 
 
 
@@ -182,17 +187,15 @@ Stream<List<Map<String, dynamic>>> previousUserOrdersStream() {
   return FirebaseFirestore.instance
       .collection("previousOrders")
       .where('userId', isEqualTo: user.uid)
-      // .orderBy("createdAt", descending: true)
       .snapshots()
       .asyncMap((snapshot) async {
-
         List<Map<String, dynamic>> orders = [];
 
         final Map<String, Map<String, dynamic>> deliveryBoyCache = {};
         final Map<String, Map<String, dynamic>> restaurantCache = {};
 
         for (var doc in snapshot.docs) {
-          final data = doc.data() as Map<String, dynamic>;
+          final data = doc.data();
 
           final status =
               data['deliverystatous'] ?? data['status'] ?? "assigned";
@@ -201,11 +204,8 @@ Stream<List<Map<String, dynamic>>> previousUserOrdersStream() {
           final items =
               List<Map<String, dynamic>>.from(data['items'] ?? []);
 
-          /// 🔹 restaurantId FROM ITEMS
-          final restaurantId = items.isNotEmpty
-              ? items.first['restaurantId']
-              : null;
-
+          final restaurantId =
+              items.isNotEmpty ? items.first['restaurantId'] : null;
           final deliveryBoyId = data['deliveryBoyId'];
 
           Map<String, dynamic>? deliveryBoy;
@@ -266,9 +266,25 @@ Stream<List<Map<String, dynamic>>> previousUserOrdersStream() {
           });
         }
 
+        /// ✅ SORT: Latest order first
+        orders.sort((a, b) {
+          final aTime = a['createdAt'];
+          final bTime = b['createdAt'];
+
+          if (aTime is Timestamp && bTime is Timestamp) {
+            return bTime.compareTo(aTime);
+          }
+          return 0;
+        });
+
+        /// ✅ OPTION 1: Return all previous orders (sorted)
         return orders;
+
+        /// ✅ OPTION 2: Return only latest order
+        // return orders.isNotEmpty ? [orders.first] : [];
       });
 }
+
 
 
 

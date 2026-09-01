@@ -3,6 +3,7 @@ import 'package:agitha/CustomShapeClass.dart';
 import 'package:agitha/ModelsFoder/SignUpmodel.dart';
 
 import 'package:agitha/viewfolder/User/LoginPage.dart';
+import 'package:agitha/viewfolder/User/SignupFolder/OtpPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -21,7 +22,7 @@ class _SignUpPageState extends State<SignUpPage> {
   // Controllers
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
+  final TextEditingController _phoneNumberController =
       TextEditingController();
 
   // Dropdown value
@@ -30,42 +31,46 @@ class _SignUpPageState extends State<SignUpPage> {
 
   // Password visibility
   bool _obscurePassword = true;
-  bool _obscureConfirmPassword = true;
-
- Future<void> SignUpSubmit() async {
-    final authProvider =Provider.of<AuthenticationController>(context,listen: false);
-    final colorScheme = Theme.of(context).colorScheme;
-if (_formKey.currentState!.validate()) {
-            final result = await authProvider.signUp(
-              email: _emailController.text.trim(),
-              password: _passwordController.text.trim(),
-              role: _selectedRole ?? "",
-            );
-
-            if (result == "success") {
-              ScaffoldMessenger.of(context).showSnackBar(
-                 SnackBar(
-                  content: const Text("Successfully Signed In"),
-                  backgroundColor: Colors.red[900],
-                ),
-              );
-
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const LoginPage()),
-              );
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(result),
-                  backgroundColor: colorScheme.primary
-                ),
-              );
-            }
-          }
 
 
- }
+Future<void> SignUpSubmit() async {
+  final authProvider =
+      Provider.of<AuthenticationController>(context, listen: false);
+
+  // final phone = "+91${_phoneNumberController.text.trim()}"; use for real numbers
+
+   final phone = "+1${_phoneNumberController.text.trim()}";
+
+  if (_formKey.currentState!.validate()) {
+    final result = await authProvider.signUp(
+      email: _emailController.text.trim(),
+      password: _passwordController.text.trim(),
+      phoneNumber: phone,
+      
+    );
+
+    debugPrint("📌 Signup result: $result");
+
+  
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => OtpPage(
+            password: _passwordController.text.trim(),
+            email: _emailController.text.trim(),
+            phone: phone,
+            role: _selectedRole ?? "user",
+          ),
+        ),
+      );
+  
+    
+  }
+
+  
+}
+
+
   @override
   Widget build(BuildContext context) {
     final authProvider =Provider.of<AuthenticationController>(context);
@@ -155,6 +160,26 @@ if (_formKey.currentState!.validate()) {
                       ),
                       const SizedBox(height: 16),
 
+                        TextFormField(
+                       controller: _phoneNumberController,
+                       decoration: const InputDecoration(
+                         labelText: "Phone Number",
+                         border: OutlineInputBorder(),
+                       ),
+                       keyboardType: TextInputType.number,
+                      //  maxLength: 10, // optional: limits input to 10 digits
+                       validator: (value) {
+                         if (value == null || value.isEmpty) {
+                           return "Phone number is required";
+                         } else if (value.length != 10 || !RegExp(r'^[0-9]+$').hasMatch(value)) {
+                           return "Enter a valid 10-digit number";
+                         }
+                         return null;
+                       },
+                  ),
+
+                       const SizedBox(height: 16),
+
                       // Password field
                       TextFormField(
                         controller: _passwordController,
@@ -181,35 +206,10 @@ if (_formKey.currentState!.validate()) {
                       const SizedBox(height: 16),
 
                       // Confirm Password field
-                      TextFormField(
-                        controller: _confirmPasswordController,
-                        obscureText: _obscureConfirmPassword,
-                        decoration: InputDecoration(
-                          labelText: "Confirm Password",
-                          border: const OutlineInputBorder(),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              _obscureConfirmPassword
-                                  ? Icons.visibility_off
-                                  : Icons.visibility,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                _obscureConfirmPassword =
-                                    !_obscureConfirmPassword;
-                              });
-                            },
-                          ),
-                        ),
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return "Confirm your password";
-                          } else if (value != _passwordController.text) {
-                            return "Passwords do not match";
-                          }
-                          return null;
-                        },
-                      ),
+                    
+
+
+
                       const SizedBox(height: 24),
 
    ElevatedButton(

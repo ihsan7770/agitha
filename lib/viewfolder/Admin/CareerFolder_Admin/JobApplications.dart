@@ -52,9 +52,16 @@ class _JobApplicationsState extends State<JobApplications> {
     final jobController =
         Provider.of<JobApplicationController>(context, listen: false);
     final colorScheme = Theme.of(context).colorScheme;
+    
+          final screenWidth = MediaQuery.of(context).size.width;
+final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: const Text("Job Applications"),
+        centerTitle: true,
+
+      ),
       body: StreamBuilder<List<JobApplicationModel>>(
         stream: jobController.getAllJobApplications(),
         builder: (context, snapshot) {
@@ -70,111 +77,144 @@ class _JobApplicationsState extends State<JobApplications> {
 
           final applications = snapshot.data!;
 
-          return ListView(
-            padding: const EdgeInsets.all(16.0),
+          return 
+          
+
+ListView(
+  padding: EdgeInsets.all(screenWidth * 0.04), // responsive padding
+  children: [
+    ...applications.map((app) {
+      return Container(
+        margin: EdgeInsets.only(bottom: screenHeight * 0.025), // responsive spacing
+        decoration: BoxDecoration(
+          color: Colors.grey[200],
+          borderRadius: BorderRadius.circular(screenWidth * 0.05),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              spreadRadius: 1,
+              blurRadius: 10,
+              offset: const Offset(4, 4),
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(screenWidth * 0.04), // responsive padding
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Job Title
               Text(
-                "Job Applications",
+                "Application for ${app.appliedJob}",
                 style: GoogleFonts.tinos(
-                  fontSize: 30,
+                  fontSize: screenWidth * 0.055,
+                  fontWeight: FontWeight.bold,
+                  color: const Color.fromARGB(255, 75, 2, 2),
+                ),
+              ),
+              SizedBox(height: screenHeight * 0.008),
+
+              // Name
+              Text(
+                app.fullName,
+                style: GoogleFonts.tinos(
+                  fontSize: screenWidth * 0.05,
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
               ),
-              const SizedBox(height: 10),
 
-              ...applications.map((app) {
-                return Container(
-                  margin: const EdgeInsets.only(bottom: 20),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        spreadRadius: 1,
-                        blurRadius: 10,
-                        offset: const Offset(4, 4),
-                      )
-                    ],
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Application for ${app.appliedJob}",
-                          style: GoogleFonts.tinos(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                            color: const Color.fromARGB(255, 75, 2, 2),
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          app.fullName,
-                          style: GoogleFonts.tinos(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                        Text(app.email,
-                            style: GoogleFonts.tinos(
-                                fontSize: 17, color: Colors.black)),
-                        Text(app.phone,
-                            style: GoogleFonts.tinos(
-                                fontSize: 17, color: Colors.black)),
-                        const SizedBox(height: 8),
-                        Text(
-                          "Address",
-                          style: GoogleFonts.tinos(
-                            fontSize: 17,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                        Text(
-                          app.address,
-                          style: const TextStyle(fontSize: 16, color: Colors.black87),
-                          textAlign: TextAlign.justify,
-                        ),
-                        const SizedBox(height: 16),
+              // Email & Phone
+              Text(
+                app.email,
+                style: GoogleFonts.tinos(
+                  fontSize: screenWidth * 0.045,
+                  color: Colors.black,
+                ),
+              ),
+              Text(
+                app.phone,
+                style: GoogleFonts.tinos(
+                  fontSize: screenWidth * 0.045,
+                  color: Colors.black,
+                ),
+              ),
 
-                        // ✅ View and Download CV buttons
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            OutlinedButton(
-                              style: OutlinedButton.styleFrom(
-                                side: BorderSide(color: colorScheme.primary, width: 1.5),
-                              ),
-                              onPressed: () => _showCvPopup(app.resumeFileName),
-                              child: Text(
-                                "View CV",
-                                style: TextStyle(color: colorScheme.primary),
-                              ),
-                            ),
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: colorScheme.primary,
-                              ),
-                              onPressed: () => _downloadCv(app.resumeFileName),
-                              child: const Text(
-                                "Download CV",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+              SizedBox(height: screenHeight * 0.008),
+
+              // Address
+              Text(
+                "Address",
+                style: GoogleFonts.tinos(
+                  fontSize: screenWidth * 0.045,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+              Text(
+                app.address,
+                style: TextStyle(
+                  fontSize: screenWidth * 0.042,
+                  color: Colors.black87,
+                ),
+                textAlign: TextAlign.justify,
+              ),
+
+              SizedBox(height: screenHeight * 0.015),
+
+              // View & Download CV buttons
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      side: BorderSide(
+                          color: colorScheme.primary, width: screenWidth * 0.003),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: screenWidth * 0.03,
+                        vertical: screenHeight * 0.012,
+                      ),
+                    ),
+                    onPressed: () => _showCvPopup(app.resumeFileName),
+                    child: Text(
+                      "View CV",
+                      style: TextStyle(
+                        color: colorScheme.primary,
+                        fontSize: screenWidth * 0.042,
+                      ),
                     ),
                   ),
-                );
-              }),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: colorScheme.primary,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: screenWidth * 0.03,
+                        vertical: screenHeight * 0.012,
+                      ),
+                    ),
+                    onPressed: () => _downloadCv(app.resumeFileName),
+                    child: Text(
+                      "Download CV",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: screenWidth * 0.042,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ],
-          );
+          ),
+        ),
+      );
+    }),
+  ],
+);
+
+
+
+
+
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

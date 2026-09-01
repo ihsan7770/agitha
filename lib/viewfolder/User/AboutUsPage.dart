@@ -1,8 +1,5 @@
-
 import 'package:agitha/ControllersFolder/AboutOusController.dart';
-// import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -14,226 +11,216 @@ class AboutUsPage extends StatefulWidget {
 }
 
 class _AboutUsPageState extends State<AboutUsPage> {
-    bool isExpanded = false;
-        @override
+  bool isExpanded = false;
+
+  @override
   void initState() {
     super.initState();
-   
-     WidgetsBinding.instance.addPostFrameCallback((_) {
-    context.read<AboutProvider>().fetchAboutData();
-  });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<AboutProvider>().fetchAboutData();
+    });
   }
+
   @override
   Widget build(BuildContext context) {
-
-   
- final aboutProvider = Provider.of<AboutProvider>(context);
-
-    if (aboutProvider.isLoading) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
+    final aboutProvider = Provider.of<AboutProvider>(context);
     final about = aboutProvider.aboutData;
-
-    if (about == null) {
-      return const Center(child: Text("No data found."));
-    }
-    
-   
+    final size = MediaQuery.of(context).size;
 
     return Scaffold(
       appBar: AppBar(),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-        
-                              Image.asset(
-                              "assets/projectimages/Career.png", // your image
-                                                         fit: BoxFit.cover,
-                                width: double.infinity,
-                                height: 240,
+      body: aboutProvider.isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : about == null
+              ? const Center(child: Text("No data found."))
+              : SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      /// 🔹 Top Image
+                      Image.asset(
+                        "assets/projectimages/Career.png",
+                        fit: BoxFit.cover,
+                        width: size.width,
+                        height: size.height * 0.3,
+                      ),
+
+                      /// 🔹 About Section
+                      Container(
+                        width: size.width,
+                        color: const Color.fromARGB(255, 253, 10, 10),
+                        padding: EdgeInsets.symmetric(
+                          vertical: size.height * 0.03,
+                        ),
+                        child: Column(
+                          children: [
+                            Text(
+                              "About Agitha",
+                              style: GoogleFonts.tinos(
+                                fontSize: size.width * 0.1,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
                               ),
-        
-                            
-                              
-                              Container(
-                                color: const Color.fromARGB(255, 253, 10, 10),
-                                child: Column(
-                                  children: [
-                                    Text(
-                                       "About Agitha",
-                                       style: GoogleFonts.tinos(
-                                         fontSize: 40,
-                                         fontWeight: FontWeight.bold,
-                                         color: Colors.white,
-                                       ),
-                                     ),
-                                            
-                                     Padding(
-                                       padding: const EdgeInsets.only(left: 16.0,right: 16.0,bottom: 16.0),
-                                       child: Text(about.about,
-                                                     
-                                                    
-                                                     style: const TextStyle(
-                                                       fontSize: 16,
-                                                       color: Colors.white,
-                                                       height: 1.5, // line spacing for better readability
-                                                     ),
-                                                     textAlign: TextAlign.justify,
-                                                   ),
-                                     ),
-                                  ],
+                            ),
+
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: size.width * 0.05,
+                                vertical: size.height * 0.02,
+                              ),
+                              child: Text(
+                                about.about,
+                                style: TextStyle(
+                                  fontSize: size.width * 0.04,
+                                  color: Colors.white,
+                                  height: 1.5,
+                                ),
+                                textAlign: TextAlign.justify,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      /// 🔹 Our People
+                      Padding(
+                        padding: EdgeInsets.only(
+                          left: size.width * 0.05,
+                          top: size.height * 0.03,
+                        ),
+                        child: Align(
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            "Our People",
+                            style: GoogleFonts.tinos(
+                              fontSize: size.width * 0.075,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: size.width * 0.05,
+                          vertical: size.height * 0.015,
+                        ),
+                        child: Text(
+                          about.ourPeople,
+                          style: TextStyle(
+                            fontSize: size.width * 0.04,
+                            color: Colors.black,
+                            height: 1.5,
+                          ),
+                          textAlign: TextAlign.left,
+                        ),
+                      ),
+
+                      /// 🔹 Mission & Vision
+                      Container(
+                        width: size.width,
+                        color: Colors.white,
+                        child: Column(
+                          children: [
+                            Align(
+                              alignment: Alignment.topLeft,
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                  left: size.width * 0.05,
+                                ),
+                                child: Text(
+                                  "Mission and Vision",
+                                  style: GoogleFonts.tinos(
+                                    fontSize: size.width * 0.075,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
                                 ),
                               ),
-        
-        
-        
-                             
-        
-                            
-                               Padding(
-                                 padding: const EdgeInsets.only(left: 16.0,top: 16.0),
-                                 child: Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Text(
-                                     "Our People",
-                                     style: GoogleFonts.tinos(
-                                       fontSize: 30,
-                                       fontWeight: FontWeight.bold,
-                                       color: Colors.black,
-                                     ),
-                                   ),
-                                                               ),
-                               ),
-        
-                                Padding(
-                                 padding: const EdgeInsets.only(left: 16.0,right: 16.0,bottom: 16.0),
-                                 child: Text(about.ourPeople,
-                                               
-                                               style: const TextStyle(
-                                                 fontSize: 16,
-                                                 color: Colors.black,
-                                                 height: 1.5, // line spacing for better readability
-                                               ),
-                                               textAlign: TextAlign.left,
-                                             ),
-                               ),
+                            ),
 
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: size.width * 0.05,
+                                vertical: size.height * 0.015,
+                              ),
+                              child: Text(
+                                about.missionAndVision,
+                                style: TextStyle(
+                                  fontSize: size.width * 0.04,
+                                  color: Colors.black,
+                                  height: 1.5,
+                                ),
+                                textAlign: TextAlign.left,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
 
-                                  
-                                  
-                                   Container(
-                                    color: Colors.white,
-                                     child: Column(
-                                       children: [
-                                         Align(
-                                          alignment: Alignment.topLeft,
-                                           child: Padding(
-                                             padding: const EdgeInsets.only(left: 16.0),
-                                             child: Text(
-                                             "Mission and Vision",
-                                             style: GoogleFonts.tinos(
-                                             fontSize: 30,
-                                             fontWeight: FontWeight.bold,
-                                             color: Colors.black,
-                                                                              ),
-                                                                            ),
-                                           ),
-                                         ),
-                                                 
-                                               Padding(
-                                                padding:const EdgeInsets.only(left: 16.0,right: 16.0,bottom: 16.0),
-                                                child: Text(about.missionAndVision,
-                                                    
-                                                    
-                                                     style: const TextStyle(
-                                                       fontSize: 16,
-                                                       color: Colors.black,
-                                                       height: 1.5, // line spacing for better readability
-                                                     ),
-                                                     textAlign: TextAlign.left,
-                                                   ),
-                                                                        ),
-                                       ],
-                                     ),
-                                   ),
+                      /// 🔹 Word from Chairman
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            left: size.width * 0.05,
+                            top: size.height * 0.02,
+                          ),
+                          child: Text(
+                            "Word from Chairman",
+                            style: GoogleFonts.tinos(
+                              fontSize: size.width * 0.075,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                      ),
 
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: size.width * 0.05,
+                          vertical: size.height * 0.02,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              about.wordFromChairman,
+                              style: TextStyle(
+                                fontSize: size.width * 0.04,
+                                color: Colors.black87,
+                                height: 1.5,
+                              ),
+                              maxLines: isExpanded ? null : 3,
+                              overflow: isExpanded
+                                  ? TextOverflow.visible
+                                  : TextOverflow.ellipsis,
+                            ),
 
-                                        
-                                         
-                                        Align(
-                                          alignment: Alignment.topLeft,
-                                           child: Padding(
-                                             padding: const EdgeInsets.only(left: 16.0),
-                                             child: Text(
-                                             "Word from Chairman",
-                                             style: GoogleFonts.tinos(
-                                             fontSize: 30,
-                                             fontWeight: FontWeight.bold,
-                                             color: Colors.black,
-                                                                              ),
-                                                                            ),
-                                           ),
-                                         ),
+                            SizedBox(height: size.height * 0.01),
 
-                                          Padding(
-                                         padding:
-                                             const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 30.0),
-                                         child: Column(
-                                           crossAxisAlignment: CrossAxisAlignment.start,
-                                           children: [
-                                             Text(
-                                               about.wordFromChairman,
-                                               style: const TextStyle(
-                                                 fontSize: 16,
-                                                 color: Colors.black87,
-                                                 height: 1.5,
-                                               ),
-                                               textAlign: TextAlign.left,
-                                               maxLines: isExpanded ? null : 3,
-                                               overflow: isExpanded
-                                                   ? TextOverflow.visible
-                                                   : TextOverflow.ellipsis,
-                                             ),
-                                             const SizedBox(height: 5),
-                                             InkWell(
-                                               onTap: () {
-                                                 setState(() {
-                                                   isExpanded = !isExpanded;
-                                                 });
-                                               },
-                                               child: Text(
-                                                 isExpanded ? "Read Less" : "Read More",
-                                                 style: const TextStyle(
-                                                   fontSize: 14,
-                                                   color: Colors.red,
-                                                   fontWeight: FontWeight.bold,
-                                                 ),
-                                               ),
-                                             ),
-                                           ],
-                                         ),
-                                       ),
-
-
-                                        
-                                            
-        
-                          
-                                   
-                               
-
-                              
-                               
-                   
-                   
-        
-            
-        
-        
-          ],
-        ),
-      ),
+                            InkWell(
+                              onTap: () {
+                                setState(() {
+                                  isExpanded = !isExpanded;
+                                });
+                              },
+                              child: Text(
+                                isExpanded ? "Read Less" : "Read More",
+                                style: TextStyle(
+                                  fontSize: size.width * 0.035,
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
     );
   }
 }

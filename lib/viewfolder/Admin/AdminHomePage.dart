@@ -11,7 +11,7 @@ import 'package:agitha/viewfolder/Admin/SubscribtionDetails.dart';
 import 'package:agitha/viewfolder/Admin/UserDetails.dart';
 import 'package:agitha/viewfolder/Admin/MediaFolder/Mediafromfeild.dart';
 import 'package:agitha/viewfolder/Admin/ViewRatingsAndReview.dart';
-import 'package:agitha/viewfolder/Screens/HomePage.dart';
+import 'package:agitha/viewfolder/Screens/UserMainPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -24,7 +24,9 @@ class AdminHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    
+    final Size size = MediaQuery.of(context).size;
+final double w = size.width;
+final double h = size.height;
       final provider = Provider.of<DashboardStreamProvider>(context);
     return Scaffold(
       appBar: AppBar(),
@@ -168,135 +170,146 @@ class AdminHomePage extends StatelessWidget {
        ),),           
         // Drower ends
 
-        body: Column(
-          children: [
-
-                     Container(
-        height: 180,
-        width: double.infinity,
-        padding: const EdgeInsets.all(12),
-        decoration: const BoxDecoration(
+        body:SingleChildScrollView(
+          child: Column(
+            children: [
+          
+              /// 🔹 TOP IMAGE
+              Container(
+                height: h * 0.23, // was 180
+                width: double.infinity,
+                padding: EdgeInsets.all(w * 0.04), // was 12
+                decoration: const BoxDecoration(
           color: Colors.white,
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(12),
-          child:Image.asset('assets/agithaicon.png',color:Colors.black),
-        ),
-      ),
-
-      const SizedBox(height: 30,),
-
-    Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-
-          Column(children: [
-            
-            Text("Total Restaurants", 
-            style: GoogleFonts.tinos(
-            fontSize: 25,
-            fontWeight: FontWeight.bold,
-            color: Colors.black
-                                                    ),),
-            Text(  provider.companyCount.toString(), style: GoogleFonts.tinos(
-            fontSize: 30,
-            fontWeight: FontWeight.bold,
-            color: Colors.grey
-                                                    ),  ),
-          
-          ],),
-
-          const SizedBox(width: 20,),
-
-
-           Column(children: [
-            
-            Text("Total Users", 
-            style: GoogleFonts.tinos(
-            fontSize: 25,
-            fontWeight: FontWeight.bold,
-            color:Colors.black
-                                                    ),),
-              Text(  provider.userProfileCount.toString(), style: GoogleFonts.tinos(
-            fontSize: 30,
-            fontWeight: FontWeight.bold,
-            color: Colors.grey
-                                                    ),  ),
-          
-          ],)
-
-
-
-        ],
-
-
-
-      ),
-
-      const SizedBox(height: 30,),
-
-      
-            Column(children: [
-            
-            Text("Total Delivery Boys", 
-            style: GoogleFonts.tinos(
-            fontSize: 25,
-            fontWeight: FontWeight.bold,
-            color: Colors.black
-                                                    ),),
-
-             Text(   provider.deliveryBoyCount.toString(), style: GoogleFonts.tinos(
-            fontSize: 30,
-            fontWeight: FontWeight.bold,
-            color: Colors.grey
-                                                    ),  ),
-          
-          ],),
-
-
-          const SizedBox(height: 100,),
-
-
-
-          SizedBox(
-            width: double.infinity,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 56.0,right: 56.0),
-              child: TextButton.icon(
-                          style: TextButton.styleFrom(
-                            foregroundColor: Colors.white, 
-                            backgroundColor: colorScheme.primary
-                          ),
-                          icon: const Icon(Icons.arrow_back,size: 20,),
-                          label:  Text("Logout",style: GoogleFonts.tinos(
-                          fontSize: 20,
-                         
-                          color: Colors.white
-                                                                  ),),
-                          onPressed: () {
-                            
-         
-                         Navigator.push(context, MaterialPageRoute(builder:(context)=> const HomePage()));
-                         },
+                ),
+                child: ClipRRect(
+          borderRadius: BorderRadius.circular(w * 0.04), // was 12
+          child: Image.asset(
+            'assets/agithaicon.png',
+            color: Colors.black,
+          ),
+                ),
               ),
+          
+              SizedBox(height: h * 0.04), // was 30
+          
+              /// 🔹 RESTAURANT + USERS
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+          
+          Column(
+            children: [
+              Text(
+                "Total Restaurants",
+                style: GoogleFonts.tinos(
+                  fontSize: w * 0.06, // was 25
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+              Text(
+                provider.companyCount.toString(),
+                style: GoogleFonts.tinos(
+                  fontSize: w * 0.07, // was 30
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey,
+                ),
+              ),
+            ],
+          ),
+          
+          SizedBox(width: w * 0.05), // was 20
+          
+          Column(
+            children: [
+              Text(
+                "Total Users",
+                style: GoogleFonts.tinos(
+                  fontSize: w * 0.06,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+              Text(
+                provider.userProfileCount.toString(),
+                style: GoogleFonts.tinos(
+                  fontSize: w * 0.07,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey,
+                ),
+              ),
+            ],
+          ),
+                ],
+              ),
+          
+              SizedBox(height: h * 0.04), // was 30
+          
+              /// 🔹 DELIVERY BOYS
+              Column(
+                children: [
+          Text(
+            "Total Delivery Boys",
+            style: GoogleFonts.tinos(
+              fontSize: w * 0.06,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
             ),
           ),
-    
-
-
-
-      
-
-
-
-
-
-
-          ],
-
-
-
-        ),       
+          Text(
+            provider.deliveryBoyCount.toString(),
+            style: GoogleFonts.tinos(
+              fontSize: w * 0.07,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey,
+            ),
+          ),
+                ],
+              ),
+          
+              SizedBox(height: h * 0.12), // was 100
+          
+              /// 🔹 LOGOUT BUTTON
+              SizedBox(
+                width: double.infinity,
+                child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: w * 0.14, // was 56
+          ),
+          child: TextButton.icon(
+            style: TextButton.styleFrom(
+              foregroundColor: Colors.white,
+              backgroundColor: colorScheme.primary,
+              padding: EdgeInsets.symmetric(
+                vertical: h * 0.018,
+              ),
+            ),
+            icon: Icon(
+              Icons.arrow_back,
+              size: w * 0.05, // was 20
+            ),
+            label: Text(
+              "Logout",
+              style: GoogleFonts.tinos(
+                fontSize: w * 0.05, // was 20
+                color: Colors.white,
+              ),
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const UserMainPage(),
+                ),
+              );
+            },
+          ),
+                ),
+              ),
+            ],
+          ),
+        )
              
    
 

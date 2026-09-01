@@ -1,6 +1,7 @@
 import 'package:agitha/ControllersFolder/AuthenticationContoller.dart';
 import 'package:agitha/ControllersFolder/DeliveryBoyHomeController.dart';
 import 'package:agitha/viewfolder/DeliveryBoy/DeliveryBoyRegistration.dart';
+import 'package:agitha/viewfolder/Widgets/ImageErrorContainer.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -12,15 +13,17 @@ class DeliveryBoyProfile extends StatefulWidget {
 }
 
 class _DeliveryBoyProfileState extends State<DeliveryBoyProfile> {
-  bool isSwitched = false;
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    
+
+    /// ✅ MediaQuery
+    final Size size = MediaQuery.of(context).size;
+    final double w = size.width;
+    final double h = size.height;
 
     return Scaffold(
       backgroundColor: const Color(0xffF6F7FB),
-      
       body: StreamBuilder(
         stream: DeliveryBoyHomeController().streamCurrentDeliveryBoy(),
         builder: (context, snapshot) {
@@ -36,54 +39,67 @@ class _DeliveryBoyProfileState extends State<DeliveryBoyProfile> {
           final data = doc.data()!;
 
           return SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+            padding: EdgeInsets.symmetric(
+              vertical: h * 0.025,
+              horizontal: w * 0.04,
+            ),
             child: Column(
               children: [
-                // IMAGE
-                const SizedBox(height: 20),
+                SizedBox(height: h * 0.02),
+
+                /// 🔹 IMAGE
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(w * 0.04),
                   child: Image.network(
                     data['db_licenceUrl'],
                     fit: BoxFit.cover,
                     width: double.infinity,
-                    height: 220,
-                    errorBuilder: (_, __, ___) =>
-                        const Icon(Icons.image_not_supported, size: 100),
+                    height: h * 0.28,
+                    errorBuilder: (context, error, stackTrace) =>
+                        const NoInternetWidget(
+                      width: double.infinity,
+                      height: double.infinity,
+                      iconSize: 30,
+                      textSize: 8,
+                    ),
                   ),
                 ),
-                const SizedBox(height: 20),
 
-                // SINGLE CARD FOR ALL DETAILS
+                SizedBox(height: h * 0.03),
+
+                /// 🔹 CARD
                 Card(
                   surfaceTintColor: Colors.white,
                   elevation: 4,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
+                    borderRadius: BorderRadius.circular(w * 0.05),
+                  ),
                   child: Padding(
-                    padding: const EdgeInsets.all(20.0),
+                    padding: EdgeInsets.all(w * 0.05),
                     child: Column(
                       children: [
-                        // Name + Edit button
+                        /// NAME + EDIT
                         Row(
                           children: [
                             Expanded(
                               child: Text(
                                 data['db_name'],
                                 style: GoogleFonts.tinos(
-                                  fontSize: 26,
+                                  fontSize: w * 0.065,
                                   fontWeight: FontWeight.bold,
-                                  color: const Color.fromARGB(255, 75, 2, 2),
+                                  color:
+                                      const Color.fromARGB(255, 75, 2, 2),
                                 ),
                               ),
                             ),
                             IconButton(
-                              icon: const Icon(Icons.edit, size: 28),
+                              icon: Icon(Icons.edit, size: w * 0.07),
                               onPressed: () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => DeliveryBoyRegistration(
+                                    builder: (context) =>
+                                        DeliveryBoyRegistration(
                                       db_id: doc.id,
                                       db_name: data['db_name'],
                                       db_phone: data['db_phone'],
@@ -91,7 +107,8 @@ class _DeliveryBoyProfileState extends State<DeliveryBoyProfile> {
                                       db_gender: data['db_gender'],
                                       db_vehicle: data['db_vehicle'],
                                       db_location: data['db_location'],
-                                      db_restaurantname: data['db_restaurantname'],
+                                      db_restaurantname:
+                                          data['db_restaurantname'],
                                       working_restaurant_docId:
                                           data['working_restaurant_docId'],
                                       db_licenceUrl: data['db_licenceUrl'],
@@ -102,243 +119,117 @@ class _DeliveryBoyProfileState extends State<DeliveryBoyProfile> {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 16),
 
-                        // PERSONAL INFO ROWS (directly in card)
+                        SizedBox(height: h * 0.02),
+
+                        /// INFO ROWS
+                        _infoRow(
+                          icon: Icons.cake,
+                          label: "Age",
+                          value: data['db_age'].toString(),
+                          w: w,
+                        ),
+                        _infoRow(
+                          icon: Icons.phone,
+                          label: "Phone",
+                          value: data['db_phone'],
+                          w: w,
+                        ),
+                        _infoRow(
+                          icon: Icons.location_on,
+                          label: "Location",
+                          value: data['db_location'],
+                          w: w,
+                        ),
+                        _infoRow(
+                          icon: Icons.person_outline,
+                          label: "Gender",
+                          value: data['db_gender'],
+                          w: w,
+                        ),
+                        _infoRow(
+                          icon: Icons.restaurant,
+                          label: "Working Restaurant",
+                          value: data['db_restaurantname'],
+                          w: w,
+                        ),
+                        _infoRow(
+                          icon: Icons.directions_bike,
+                          label: "Vehicle Type",
+                          value: data['db_vehicle'],
+                          w: w,
+                        ),
+
+                        /// AVAILABILITY
                         Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0),
+                          padding: EdgeInsets.symmetric(vertical: h * 0.015),
                           child: Row(
                             children: [
-                              Icon(Icons.cake, color: Colors.grey[700]),
-                              const SizedBox(width: 12),
                               Text(
-                                "Age: ",
+                                "Available for Delivery:",
                                 style: GoogleFonts.tinos(
-                                  fontSize: 16,
+                                  fontSize: w * 0.04,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.grey[800],
                                 ),
                               ),
-                              Expanded(
-                                child: Text(
-                                  data['db_age'].toString(),
-                                  style: GoogleFonts.tinos(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.black,
-                                  ),
-                                ),
+                              const Spacer(),
+                              StreamBuilder<bool>(
+                                stream: DeliveryBoyHomeController()
+                                    .availabilityStream(),
+                                builder: (context, snapshot) {
+                                  if (!snapshot.hasData) {
+                                    return const CircularProgressIndicator();
+                                  }
+
+                                  return Transform.scale(
+                                    scale: w * 0.0022,
+                                    child: Switch(
+                                      value: snapshot.data!,
+                                      onChanged: (value) {
+                                        DeliveryBoyHomeController()
+                                            .trueandfalseupdateAvailability(
+                                                value);
+                                      },
+                                      activeColor:
+                                          colorScheme.primary,
+                                    ),
+                                  );
+                                },
                               ),
                             ],
                           ),
                         ),
 
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0),
-                          child: Row(
-                            children: [
-                              Icon(Icons.phone, color: Colors.grey[700]),
-                              const SizedBox(width: 12),
-                              Text(
-                                "Phone: ",
-                                style: GoogleFonts.tinos(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.grey[800],
-                                ),
+                        SizedBox(height: h * 0.02),
+
+                        /// LOGOUT
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  colorScheme.primary,
+                              foregroundColor: Colors.white,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: w * 0.08,
+                                vertical: h * 0.015,
                               ),
-                              Expanded(
-                                child: Text(
-                                  data['db_phone'],
-                                  style: GoogleFonts.tinos(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.black,
-                                  ),
-                                ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.circular(w * 0.05),
                               ),
-                            ],
+                            ),
+                            onPressed: () {
+                              AuthenticationController()
+                                  .logout(context);
+                            },
+                            child: Text(
+                              "Logout",
+                              style: TextStyle(fontSize: w * 0.045),
+                            ),
                           ),
                         ),
-
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0),
-                          child: Row(
-                            children: [
-                              Icon(Icons.location_on, color: Colors.grey[700]),
-                              const SizedBox(width: 12),
-                              Text(
-                                "Location: ",
-                                style: GoogleFonts.tinos(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.grey[800],
-                                ),
-                              ),
-                              Expanded(
-                                child: Text(
-                                  data['db_location'],
-                                  style: GoogleFonts.tinos(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0),
-                          child: Row(
-                            children: [
-                              Icon(Icons.person_outline, color: Colors.grey[700]),
-                              const SizedBox(width: 12),
-                              Text(
-                                "Gender: ",
-                                style: GoogleFonts.tinos(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.grey[800],
-                                ),
-                              ),
-                              Expanded(
-                                child: Text(
-                                  data['db_gender'],
-                                  style: GoogleFonts.tinos(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0),
-                          child: Row(
-                            children: [
-                              Icon(Icons.restaurant, color: Colors.grey[700]),
-                              const SizedBox(width: 12),
-                              Text(
-                                "Working Restaurant: ",
-                                style: GoogleFonts.tinos(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.grey[800],
-                                ),
-                              ),
-                              Expanded(
-                                child: Text(
-                                  data['db_restaurantname'],
-                                  style: GoogleFonts.tinos(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0),
-                          child: Row(
-                            children: [
-                              Icon(Icons.directions_bike, color: Colors.grey[700]),
-                              const SizedBox(width: 12),
-                              Text(
-                                "Vehicle Type: ",
-                                style: GoogleFonts.tinos(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.grey[800],
-                                ),
-                              ),
-                              Expanded(
-                                child: Text(
-                                  data['db_vehicle'],
-                                  style: GoogleFonts.tinos(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        
-                        Padding(
-  padding: const EdgeInsets.symmetric(vertical: 10.0),
-  child: Row(
-    children: [
-      Text(
-        "Available for Delivery: ",
-        style: GoogleFonts.tinos(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-          color: Colors.grey[800],
-        ),
-      ),
-      Spacer(),
-      StreamBuilder<bool>(
-        stream: DeliveryBoyHomeController().availabilityStream(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return const CircularProgressIndicator();
-          }
-
-          bool isAvailable = snapshot.data!;
-
-          return Transform.scale(
-            scale: 0.7,
-            child: Switch(
-              value: isAvailable,
-              onChanged: (value) {
-               DeliveryBoyHomeController().trueandfalseupdateAvailability(value); // update Firestore
-              },
-              activeColor: Theme.of(context).colorScheme.primary,
-              inactiveThumbColor: Colors.grey,
-            ),
-          );
-        },
-      ),
-    ],
-  ),
-),
-
-                  
-
-                        const SizedBox(height: 20),
-
-               Padding(
-                 padding: const EdgeInsets.all(8.0),
-                 child: Align(
-                  alignment: Alignment.bottomRight,
-                   child: ElevatedButton(
-                         onPressed: () { 
-                            AuthenticationController().logout(context);
-                         },
-                         style: ElevatedButton.styleFrom(
-                         backgroundColor:
-                         Theme.of(context).colorScheme.primary,
-                         foregroundColor: Colors.white,
-                         shape: RoundedRectangleBorder(
-                         borderRadius: BorderRadius.circular(20),
-                         ),
-                         ),
-                            child: const Text("Logout"),
-                          ),
-                 ),
-               ),
-
-
                       ],
                     ),
                   ),
@@ -347,6 +238,41 @@ class _DeliveryBoyProfileState extends State<DeliveryBoyProfile> {
             ),
           );
         },
+      ),
+    );
+  }
+
+  /// 🔹 Reusable Info Row
+  Widget _infoRow({
+    required IconData icon,
+    required String label,
+    required String value,
+    required double w,
+  }) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: w * 0.025),
+      child: Row(
+        children: [
+          Icon(icon, color: Colors.grey[700], size: w * 0.05),
+          SizedBox(width: w * 0.03),
+          Text(
+            "$label: ",
+            style: GoogleFonts.tinos(
+              fontSize: w * 0.04,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey[800],
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: GoogleFonts.tinos(
+                fontSize: w * 0.04,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

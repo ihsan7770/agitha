@@ -1,8 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 class LanguagePage extends StatefulWidget {
   const LanguagePage({super.key});
 
@@ -24,65 +22,81 @@ class _LanguagePageState extends State<LanguagePage> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return Scaffold(
       appBar: AppBar(),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(size.width * 0.04),
         child: Stack(
           children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                /// 🔹 Title
                 Text(
                   'Languages',
                   style: GoogleFonts.tinos(
-                    fontSize: 40,
+                    fontSize: size.width * 0.1,
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
                   ),
                 ),
-                const SizedBox(height: 8),
+
+                SizedBox(height: size.height * 0.01),
+
                 Text(
                   'Selected Language',
                   style: GoogleFonts.roboto(
-                    fontSize: 20,
+                    fontSize: size.width * 0.05,
                     fontWeight: FontWeight.bold,
                     color: Colors.grey,
                   ),
                 ),
-                const SizedBox(height: 12),
+
+                SizedBox(height: size.height * 0.015),
+
+                /// 🔹 Selected Language Card
                 Container(
-                  height: 90,
+                  height: size.height * 0.12,
                   decoration: BoxDecoration(
                     color: Colors.red[900],
                     borderRadius: BorderRadius.circular(25),
                   ),
                   child: Row(
                     children: [
-                      const Padding(
-                        padding: EdgeInsets.all(12.0),
+                      Padding(
+                        padding: EdgeInsets.all(size.width * 0.03),
                         child: CircleAvatar(
-                          radius: 30,
+                          radius: size.width * 0.07,
                           backgroundColor: Colors.white,
-                          child: Icon(Icons.flag, color: Colors.red, size: 25),
+                          child: Icon(
+                            Icons.flag,
+                            color: Colors.red,
+                            size: size.width * 0.06,
+                          ),
                         ),
                       ),
+
                       Text(
                         'English (US)',
                         style: GoogleFonts.roboto(
-                          fontSize: 20,
+                          fontSize: size.width * 0.05,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
                       ),
+
                       const Spacer(),
+
                       Padding(
-                        padding: const EdgeInsets.all(16.0),
+                        padding: EdgeInsets.all(size.width * 0.04),
                         child: Transform.scale(
-                          scale: 1.3,
+                          scale: size.width * 0.0035,
                           child: Radio<String>(
                             activeColor: Colors.white,
-                            fillColor: MaterialStateProperty.all(Colors.white),
+                            fillColor:
+                                MaterialStateProperty.all(Colors.white),
                             value: "English (US)",
                             groupValue: selectedTime,
                             materialTapTargetSize:
@@ -96,53 +110,69 @@ class _LanguagePageState extends State<LanguagePage> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 16),
+
+                SizedBox(height: size.height * 0.02),
+
+                /// 🔹 All Languages
                 Text(
                   'All Languages',
                   style: GoogleFonts.roboto(
-                    fontSize: 20,
+                    fontSize: size.width * 0.05,
                     fontWeight: FontWeight.bold,
                     color: Colors.grey,
                   ),
                 ),
-                const SizedBox(height: 12),
+
+                SizedBox(height: size.height * 0.015),
+
+                /// 🔹 Language List
                 Expanded(
                   child: ListView.builder(
+                    padding: EdgeInsets.only(
+                      bottom: size.height * 0.12,
+                    ),
                     itemCount: languages.length,
-                    padding: const EdgeInsets.only(bottom: 80), // space for button
                     itemBuilder: (context, index) {
                       return Padding(
-                        padding: const EdgeInsets.all(12.0),
+                        padding: EdgeInsets.symmetric(
+                          vertical: size.height * 0.01,
+                        ),
                         child: Container(
-                          height: 90,
+                          height: size.height * 0.12,
                           decoration: BoxDecoration(
                             color: Colors.grey[100],
                             borderRadius: BorderRadius.circular(25),
                           ),
                           child: Row(
                             children: [
-                              const Padding(
-                                padding: EdgeInsets.all(12.0),
+                              Padding(
+                                padding: EdgeInsets.all(size.width * 0.03),
                                 child: CircleAvatar(
-                                  radius: 30,
+                                  radius: size.width * 0.07,
                                   backgroundColor: Colors.white,
-                                  child: Icon(Icons.flag,
-                                      color: Colors.red, size: 25),
+                                  child: Icon(
+                                    Icons.flag,
+                                    color: Colors.red,
+                                    size: size.width * 0.06,
+                                  ),
                                 ),
                               ),
+
                               Text(
                                 languages[index],
                                 style: GoogleFonts.roboto(
-                                  fontSize: 20,
+                                  fontSize: size.width * 0.05,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black,
                                 ),
                               ),
+
                               const Spacer(),
+
                               Padding(
-                                padding: const EdgeInsets.all(16.0),
+                                padding: EdgeInsets.all(size.width * 0.04),
                                 child: Transform.scale(
-                                  scale: 1.3,
+                                  scale: size.width * 0.0035,
                                   child: Radio<String>(
                                     activeColor: Colors.black,
                                     fillColor:
@@ -166,25 +196,27 @@ class _LanguagePageState extends State<LanguagePage> {
                 ),
               ],
             ),
+
+            /// 🔹 Save Button
             Positioned(
-              bottom: 10,
-              left: 16,
-              right: 16,
+              bottom: size.height * 0.015,
+              left: size.width * 0.04,
+              right: size.width * 0.04,
               child: SizedBox(
-                width: double.infinity,
-                height: 50,
+                height: size.height * 0.065,
                 child: ElevatedButton(
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    backgroundColor:
+                        Theme.of(context).colorScheme.primary,
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
                   ),
-                  child: const Text(
+                  child: Text(
                     "Save",
-                    style: TextStyle(fontSize: 18),
+                    style: TextStyle(fontSize: size.width * 0.045),
                   ),
                 ),
               ),

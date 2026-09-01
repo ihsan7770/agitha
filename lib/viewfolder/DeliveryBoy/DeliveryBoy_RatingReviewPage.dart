@@ -10,27 +10,15 @@ class DeliveryBoyReviewRatingDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
       final DbRatingController = Provider.of<DeliveryBoyRatingProvider>(context, listen: false);
-    return Scaffold(appBar: AppBar(),
+    return Scaffold(appBar: AppBar(
+      title: const Text("Ratings & Reviews",),
+      centerTitle: true,
+    ),
     body: SingleChildScrollView(
       child: Column(
         
         children: [
-              Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: Text("Ratings & Reviews",
-                  style: GoogleFonts.tinos(
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                        color:Colors.black
-                      ),
-                
-                
-                )),
-            ),
-      
-            const SizedBox(height: 10,),
+  
       
              StreamBuilder<List<Map<String, dynamic>>>(
         stream: DbRatingController.getDeliveryBoySideReviewsStream(),
@@ -39,9 +27,17 @@ class DeliveryBoyReviewRatingDetails extends StatelessWidget {
         return const Center(child: CircularProgressIndicator());
       }
       
-      if (!snapshot.hasData || snapshot.data!.isEmpty) {
-        return const Center(child: Text("No reviews yet"));
-      }
+           if (!snapshot.hasData || snapshot.data!.isEmpty) {
+       return SizedBox(
+         height: MediaQuery.of(context).size.height * 0.6,
+         child: const Center(
+           child: Text(
+             "No reviews yet",
+             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+           ),
+         ),
+       );
+     }
       
       final reviews = snapshot.data!;
       

@@ -1,5 +1,6 @@
 import 'package:agitha/ControllersFolder/DeliveryBoyViewController.dart';
 import 'package:agitha/viewfolder/Admin/DeliveryBoyFolder/AdminDBViewRatingPage.dart';
+import 'package:agitha/viewfolder/Widgets/ImageErrorContainer.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -33,6 +34,11 @@ class _DeliveryBoyDetailsState extends State<DeliveryBoyDetails> {
     final provider = Provider.of<DeliveryBoyViewProvider>(context);
     final deliveryboy = provider.deliveryboys;
 
+    final size = MediaQuery.of(context).size;
+    final width = size.width;
+    final height = size.height;
+
+
     if (deliveryboy == null) {
       return const Scaffold(
         body: Center(child: Text("Delivery Boy details not found")),
@@ -47,340 +53,222 @@ class _DeliveryBoyDetailsState extends State<DeliveryBoyDetails> {
       ),
       body: SingleChildScrollView(
         child: Column(
-          children: [
-            /// CLEAR IMAGE (NO CROP)
-            Padding(
-              padding: const EdgeInsets.only(left: 16.0,right: 16.0,bottom: 8),
-              child: Container(
-                height: 260,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 10,
-                      offset: Offset(0, 6),
-                    ),
-                  ],
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: Image.network(
-                    deliveryboy.db_licenceUrl,
-                    fit: BoxFit.contain, // ✅ SHOW FULL IMAGE
-                    filterQuality: FilterQuality.high,
-                    errorBuilder: (_, __, ___) => const Center(
-                      child: Icon(Icons.image_not_supported),
-                    ),
-                  ),
-                ),
+    children: [
+
+      /// ================= IMAGE SECTION =================
+      Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: width * 0.04,
+          vertical: height * 0.01,
+        ),
+        child: Container(
+          height: height * 0.32,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(width * 0.05),
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 10,
+                offset: Offset(0, 6),
               ),
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(width * 0.05),
+            child: Image.network(
+              deliveryboy.db_licenceUrl,
+              fit: BoxFit.contain,
+              filterQuality: FilterQuality.high,
+              errorBuilder: (context, error, stackTrace) =>
+                  NoInternetWidget(
+                    width: double.infinity,
+                    height: double.infinity,
+                    iconSize: width * 0.08,
+                    textSize: width * 0.025,
+                  ),
             ),
+          ),
+        ),
+      ),
 
-         
+      /// ================= DETAILS CARD =================
+      Padding(
+        padding: EdgeInsets.symmetric(horizontal: width * 0.04),
+        child: Card(
+          surfaceTintColor: Colors.white,
+          elevation: 4,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(width * 0.05),
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(width * 0.04),
+            child: Column(
+              children: [
 
-            
-            /// DETAILS CARD (INLINED WIDGETS)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Card(
-                surfaceTintColor: Colors.white,
-                elevation: 4,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
+                /// -------- NAME + RATING --------
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: height * 0.015),
+                  child: Row(
                     children: [
-                      // Name
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        child: Row(
-                          children: [
-                        
-                            const SizedBox(width: 14),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Text(
-                                      deliveryboy.db_name,
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                      Spacer(),
-
-                                               InkWell(
-                                                onTap: (){
-                                                  
-                                                  Navigator.push(context, MaterialPageRoute(builder: (context) =>  ViewDeliveryBoysRatings(dbname:deliveryboy.db_name,deliveryBoyId: deliveryboy.db_userId,rating: deliveryboy.rating.toString(),)),);
-
-
-                                                },
-                                                 child: Container(
-                                                               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                                                               decoration: BoxDecoration(
-                                                                 color: Colors.black,
-                                                                 borderRadius: BorderRadius.circular(30),
-                                                                 boxShadow: const [
-                                                                   BoxShadow(color: Colors.black12, blurRadius: 6),
-                                                                 ],
-                                                               ),
-                                                               child: Row(
-                                                                 mainAxisSize: MainAxisSize.min,
-                                                                 children:  [
-                                                                   const Icon(Icons.star, color: Colors.amber, size: 14),
-                                                                     const SizedBox(width: 4),
-                                                                   Text(
-                                                                    deliveryboy.rating.toDouble().toStringAsFixed(1),
-                                                                     style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 12,color: Colors.white),
-                                                                   ),
-                                                                 ],
-                                                               ),
-                                                             ),
-                                               ),
-                                    ],
-                                  ),
-                               
-                                ],
-                              ),
-                            ),
-                          ],
+                      Expanded(
+                        child: Text(
+                          deliveryboy.db_name,
+                          style: GoogleFonts.poppins(
+                            fontSize: width * 0.05,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
-
-                      // Phone
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        child: Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: Colors.black.withOpacity(0.05),
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(Icons.phone, size: 20),
-                            ),
-                            const SizedBox(width: 14),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Phone",
-                                    style: GoogleFonts.poppins(
-                                        fontSize: 12, color: Colors.grey),
-                                  ),
-                                  Text(
-                                    deliveryboy.db_phone,
-                                    style: GoogleFonts.poppins(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                ],
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => ViewDeliveryBoysRatings(
+                                dbname: deliveryboy.db_name,
+                                deliveryBoyId: deliveryboy.db_userId,
+                                rating: deliveryboy.rating.toString(),
                               ),
                             ),
-                          ],
-                        ),
-                      ),
-
-                      // Email
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        child: Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: Colors.black.withOpacity(0.05),
-                                shape: BoxShape.circle,
+                          );
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: width * 0.025,
+                            vertical: height * 0.005,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.black,
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(Icons.star,
+                                  color: Colors.amber,
+                                  size: width * 0.04),
+                              SizedBox(width: width * 0.01),
+                              Text(
+                                deliveryboy.rating
+                                    .toDouble()
+                                    .toStringAsFixed(1),
+                                style: TextStyle(
+                                  fontSize: width * 0.032,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
                               ),
-                              child: const Icon(Icons.email, size: 20),
-                            ),
-                            const SizedBox(width: 14),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Email",
-                                    style: GoogleFonts.poppins(
-                                        fontSize: 12, color: Colors.grey),
-                                  ),
-                                  Text(
-                                    widget.deliverboyemail,
-                                    style: GoogleFonts.poppins(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      // Location
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        child: Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: Colors.black.withOpacity(0.05),
-                                shape: BoxShape.circle,
-                              ),
-                              child:
-                                  const Icon(Icons.location_on, size: 20),
-                            ),
-                            const SizedBox(width: 14),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Location",
-                                    style: GoogleFonts.poppins(
-                                        fontSize: 12, color: Colors.grey),
-                                  ),
-                                  Text(
-                                    deliveryboy.db_location,
-                                    style: GoogleFonts.poppins(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      // Gender
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        child: Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: Colors.black.withOpacity(0.05),
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(Icons.person_outline, size: 20),
-                            ),
-                            const SizedBox(width: 14),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Gender",
-                                    style: GoogleFonts.poppins(
-                                        fontSize: 12, color: Colors.grey),
-                                  ),
-                                  Text(
-                                    deliveryboy.db_gender,
-                                    style: GoogleFonts.poppins(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      // Age
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        child: Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: Colors.black.withOpacity(0.05),
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(Icons.cake, size: 20),
-                            ),
-                            const SizedBox(width: 14),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Age",
-                                    style: GoogleFonts.poppins(
-                                        fontSize: 12, color: Colors.grey),
-                                  ),
-                                  Text(
-                                    deliveryboy.db_age.toString(),
-                                    style: GoogleFonts.poppins(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      // Vehicle
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        child: Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: Colors.black.withOpacity(0.05),
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(Icons.delivery_dining, size: 20),
-                            ),
-                            const SizedBox(width: 14),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Vehicle",
-                                    style: GoogleFonts.poppins(
-                                        fontSize: 12, color: Colors.grey),
-                                  ),
-                                  Text(
-                                    deliveryboy.db_vehicle,
-                                    style: GoogleFonts.poppins(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ],
                   ),
                 ),
-              ),
-            ),
 
-            const SizedBox(height: 20),
-          ],
+                /// -------- INFO ROWS --------
+                infoRow(
+                  icon: Icons.phone,
+                  label: "Phone",
+                  value: deliveryboy.db_phone,
+                  width: width,
+                ),
+
+                infoRow(
+                  icon: Icons.email,
+                  label: "Email",
+                  value: widget.deliverboyemail,
+                  width: width,
+                ),
+
+                infoRow(
+                  icon: Icons.location_on,
+                  label: "Location",
+                  value: deliveryboy.db_location,
+                  width: width,
+                ),
+
+                infoRow(
+                  icon: Icons.person_outline,
+                  label: "Gender",
+                  value: deliveryboy.db_gender,
+                  width: width,
+                ),
+
+                infoRow(
+                  icon: Icons.cake,
+                  label: "Age",
+                  value: deliveryboy.db_age.toString(),
+                  width: width,
+                ),
+
+                infoRow(
+                  icon: Icons.delivery_dining,
+                  label: "Vehicle",
+                  value: deliveryboy.db_vehicle,
+                  width: width,
+                ),
+              ],
+            ),
+          ),
         ),
+      ),
+
+      SizedBox(height: height * 0.03),
+    ],
+  )
+
+
+
       ),
     );
   }
+
+
+  Widget infoRow({
+  required IconData icon,
+  required String label,
+  required String value,
+  required double width,
+}) {
+  return Padding(
+    padding: EdgeInsets.symmetric(vertical: width * 0.03),
+    child: Row(
+      children: [
+        Container(
+          padding: EdgeInsets.all(width * 0.025),
+          decoration: BoxDecoration(
+            color: Colors.black.withOpacity(0.05),
+            shape: BoxShape.circle,
+          ),
+          child: Icon(icon, size: width * 0.05),
+        ),
+        SizedBox(width: width * 0.04),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: GoogleFonts.poppins(
+                  fontSize: width * 0.03,
+                  color: Colors.grey,
+                ),
+              ),
+              Text(
+                value,
+                style: GoogleFonts.poppins(
+                  fontSize: width * 0.04,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
 }

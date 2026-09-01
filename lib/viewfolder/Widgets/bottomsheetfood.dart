@@ -5,6 +5,7 @@ import 'package:agitha/ControllersFolder/UserRegistrationController.dart';
 import 'package:agitha/ModelsFoder/CartModel.dart';
 import 'package:agitha/ModelsFoder/FoodRating.dart';
 import 'package:agitha/viewfolder/User/ProfileDetails/ProfileCreate.dart';
+import 'package:agitha/viewfolder/Widgets/ImageErrorContainer.dart';
 import 'package:agitha/viewfolder/Widgets/ProfileAlert.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -36,165 +37,6 @@ class BottomSheetFood extends StatefulWidget {
 
 class _BottomSheetFoodState extends State<BottomSheetFood> {
   
-// void showRatingAlert(BuildContext context, FoodRatingProvider controller) async {
-//   final String restaurantId = widget.foodid;
-//   final String foodName = widget.foodname;
-//   final String dishid =widget.dishid;
-//   final colorScheme = Theme.of(context).colorScheme;
-
-//   double rating = 0;
-//   bool showRatingError = false;
-//   bool showReviewError = false;
-//   TextEditingController reviewController = TextEditingController();
-
-//   showDialog(
-//     context: context,
-//     useRootNavigator: true,
-//     builder: (context) {
-//       return StatefulBuilder(
-//         builder: (context, setState) {
-//           return AlertDialog(
-//             shape: RoundedRectangleBorder(
-//               borderRadius: BorderRadius.circular(20),
-//             ),
-//             contentPadding: EdgeInsets.zero,
-//             content: Container(
-//               padding: const EdgeInsets.all(20),
-//               child: Column(
-//                 mainAxisSize: MainAxisSize.min,
-//                 children: [
-//                   Text(
-//                     "Share your delicious experience",
-//                     style: GoogleFonts.tinos(
-//                       fontSize: 23,
-//                       fontWeight: FontWeight.bold,
-//                     ),
-//                     textAlign: TextAlign.center,
-//                   ),
-
-//                   const SizedBox(height: 12),
-
-//                   /// ⭐ RATING STARS
-//                   Row(
-//                     mainAxisAlignment: MainAxisAlignment.center,
-//                     children: List.generate(5, (index) {
-//                       return IconButton(
-//                         onPressed: () {
-//                           setState(() {
-//                             rating = index + 1.0;
-//                             showRatingError = false;
-//                           });
-//                         },
-//                         icon: Icon(
-//                           index < rating ? Icons.star : Icons.star_border,
-//                           color: showRatingError ? Colors.red : Colors.amber,
-//                           size: showRatingError ? 38 : 32,
-//                         ),
-//                       );
-//                     }),
-//                   ),
-
-//                   const SizedBox(height: 8),
-
-//                   // /// ⭐ RATING ERROR MESSAGE
-//                   // if (showRatingError)
-//                   //   Text(
-//                   //     "Please select a rating",
-//                   //     style: TextStyle(color: Colors.red, fontSize: 13),
-//                   //   ),
-
-//                   const SizedBox(height: 12),
-
-//                   /// ✍ REVIEW FIELD
-//                   TextField(
-//                     controller: reviewController,
-//                     maxLines: 3,
-//                     decoration: InputDecoration(
-//                       hintText: "Write your review...",
-//                       filled: true,
-//                       fillColor: Colors.grey.shade100,
-//                       errorText: showReviewError ? "Review cannot be empty" : null,
-//                       border: OutlineInputBorder(
-//                         borderRadius: BorderRadius.circular(14),
-//                       ),
-//                       focusedBorder: OutlineInputBorder(
-//                         borderSide: BorderSide(
-//                           color: showReviewError ? Colors.red : colorScheme.primary,
-//                           width: 2,
-//                         ),
-//                         borderRadius: BorderRadius.circular(14),
-//                       ),
-//                     ),
-//                   ),
-
-//                   const SizedBox(height: 20),
-
-//                   Row(
-//                     children: [
-//                       Expanded(
-//                         child: OutlinedButton(
-//                           style: OutlinedButton.styleFrom(
-//                             side: BorderSide(color: colorScheme.primary, width: 1.5),
-//                           ),
-//                           onPressed: () => Navigator.pop(context),
-//                           child: const Text("Cancel"),
-//                         ),
-//                       ),
-
-//                       const SizedBox(width: 12),
-
-//                       Expanded(
-//                         child: ElevatedButton(
-//                           style: ElevatedButton.styleFrom(
-//                             backgroundColor: colorScheme.primary,
-//                             foregroundColor: Colors.white,
-//                             shape: RoundedRectangleBorder(
-//                               borderRadius: BorderRadius.circular(20),
-//                             ),
-//                           ),
-//                           onPressed: () async {
-//                             setState(() {
-//                               showRatingError = rating == 0;
-//                               showReviewError = reviewController.text.trim().isEmpty;
-//                             });
-
-//                             if (showRatingError || showReviewError) return;
-
-//                             Navigator.pop(context);
-
-//                             FoodRatingModel model = FoodRatingModel(
-//                               docId: "",
-//                               restaurantId: restaurantId,
-//                               dishid: dishid ,
-//                               foodname: foodName,
-//                               profileImageUrl: "",
-//                               username: "",
-//                               rating: rating,
-//                               review: reviewController.text.trim(),
-//                             );
-
-//                             await controller.AddFoodRating(model);
-//                             await controller.updateAverageRating(model.dishid); 
-                            
-//                           },
-//                           child: const Text(
-//                             "Send",
-//                             style: TextStyle(color: Colors.white),
-//                           ),
-//                         ),
-//                       ),
-//                     ],
-//                   ),
-//                 ],
-//               ),
-//             ),
-//           );
-//         },
-//       );
-//     },
-//   );
-// }
-
 
 
 
@@ -236,7 +78,18 @@ class _BottomSheetFoodState extends State<BottomSheetFood> {
                     height: 300,
                     width: double.infinity,
                     fit: BoxFit.cover,
+
+                     errorBuilder: (context, error, stackTrace) =>
+                      const NoInternetWidget(
+                                width: double.infinity,
+                                height: 300,
+                                iconSize: 50,
+                                textSize: 14,
+                               )
+
+                               
                   ),
+                  
                 ),
 
                 const SizedBox(height: 14),
@@ -282,7 +135,7 @@ class _BottomSheetFoodState extends State<BottomSheetFood> {
                     const Icon(Icons.star, color: Colors.amber, size: 18),
                     const SizedBox(width: 4),
                     Text(
-                      widget.rating.toString(),
+                      widget.rating.toStringAsFixed(1),
                       style: GoogleFonts.poppins(
                         color: Colors.white,
                         fontSize: 14,
@@ -338,8 +191,18 @@ StreamBuilder<List<Map<String, dynamic>>>(
     }
 
     if (!snapshot.hasData || snapshot.data!.isEmpty) {
-      return Center(child: Text("No reviews yet"));
-    }
+  return SizedBox(
+    height: MediaQuery.of(context).size.height * 0.6,
+    child: const Center(
+      child: Text(
+        "No reviews yet",
+        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+      ),
+    ),
+  );
+}
+
+ 
 
     final reviews = snapshot.data!;
 

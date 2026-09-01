@@ -8,8 +8,8 @@ import 'package:agitha/viewfolder/DeliveryBoy/DeliveryBoyHomePage.dart';
 import 'package:agitha/viewfolder/DeliveryBoy/DeliveryBoyInstructionUser.dart';
 import 'package:agitha/viewfolder/DeliveryBoy/DeliveryBoyMainPage.dart';
 import 'package:agitha/viewfolder/DeliveryBoy/DeliveryBoyRegistration.dart';
-import 'package:agitha/viewfolder/Screens/HomePage.dart';
-import 'package:agitha/viewfolder/Screens/SignUpPage.dart';
+import 'package:agitha/viewfolder/Screens/UserMainPage.dart';
+import 'package:agitha/viewfolder/User/SignupFolder/SignUpPage.dart';
 import 'package:agitha/viewfolder/SubCompany/CompanyHomePage.dart';
 import 'package:agitha/viewfolder/SubCompany/CompanyInstruction.dart';
 import 'package:agitha/viewfolder/SubCompany/CompanyMainPage.dart';
@@ -41,7 +41,7 @@ class _LoginPageState extends State<LoginPage> {
 
  
   String? _selectedRole;
-  final List<String> _roles = ["User", "Delivery Boy", "Company",];
+  // final List<String> _roles = ["User", "Delivery Boy", "Company",];
 
 
   bool _obscurePassword = true;
@@ -58,17 +58,18 @@ class _LoginPageState extends State<LoginPage> {
 
  Future<void> loginSubmit() async {
   if (_formKey.currentState!.validate()) {
+
     String role = await authProvider.login(
+
       email: _emailController.text.trim(),
       password: _passwordController.text.trim(),
     );
 
-    if(_emailController.text ==adminName && _passwordController.text==password && _selectedRole == null){
+    if(_emailController.text ==adminName && _passwordController.text==password){
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const AdminHomePage()),
       );
-
 
     }
 
@@ -76,7 +77,7 @@ class _LoginPageState extends State<LoginPage> {
     else if (role == "User") {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => const HomePage()),
+        MaterialPageRoute(builder: (_) => const UserMainPage()),
       );
 
 
@@ -145,6 +146,9 @@ else if (role == "Company") {
         ),
       );
     }
+
+
+
   }
 }
 
@@ -167,7 +171,7 @@ else if (role == "Company") {
                 alignment: Alignment.topLeft,
                 child: IconButton(
                         onPressed: () {
-                           Navigator.push(context, MaterialPageRoute(builder:(context)=> const HomePage()));
+                           Navigator.push(context, MaterialPageRoute(builder:(context)=> const UserMainPage()));
                         },
                         icon: const Icon(Icons.arrow_back,size: 30,color: Colors.white,),),
               ),
@@ -199,42 +203,42 @@ else if (role == "Company") {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                    
-                      DropdownButtonFormField<String>(
-                        value: _selectedRole,
-                        decoration: const InputDecoration(
-                          labelText: "Select Role",
-                          border: OutlineInputBorder(),
-                        ),
-                        items: _roles
-                            .map((role) => DropdownMenuItem(
-                                  value: role,
-                                  child: Text(role),
-                                ))
-                            .toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            _selectedRole = value;
-                          });
-                        },
+                      // DropdownButtonFormField<String>(
+                      //   value: _selectedRole,
+                      //   decoration: const InputDecoration(
+                      //     labelText: "Select Role",
+                      //     border: OutlineInputBorder(),
+                      //   ),
+                      //   items: _roles
+                      //       .map((role) => DropdownMenuItem(
+                      //             value: role,
+                      //             child: Text(role),
+                      //           ))
+                      //       .toList(),
+                      //   onChanged: (value) {
+                      //     setState(() {
+                      //       _selectedRole = value;
+                      //     });
+                      //   },
 
-                          validator: (value) {
-                         String email = _emailController.text.trim();
+                      //     validator: (value) {
+                      //    String email = _emailController.text.trim();
                         
-                          // ✅ If email is admin email → no error even if role not selected
-                          if (email == adminName) {
-                            return null;
-                          }
+                      //     // ✅ If email is admin email → no error even if role not selected
+                      //     if (email == adminName) {
+                      //       return null;
+                      //     }
                         
-                          // ✅ For normal users → role required
-                          if (value == null || value.isEmpty) {
-                            return "Please select a role";
-                          }
+                      //     // ✅ For normal users → role required
+                      //     if (value == null || value.isEmpty) {
+                      //       return "Please select a role";
+                      //     }
                         
-                          return null;
-                        },
+                      //     return null;
+                      //   },
 
 
-                      ),
+                      // ),
                       const SizedBox(height: 16),
 
                      

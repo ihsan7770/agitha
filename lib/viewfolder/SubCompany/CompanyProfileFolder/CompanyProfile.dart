@@ -1,8 +1,11 @@
 
+
+
 import 'package:agitha/ControllersFolder/RestouarntVeiwController.dart';
 import 'package:agitha/ControllersFolder/RestourentHomeController.dart';
 import 'package:agitha/ModelsFoder/CompanyRegistrationModel.dart';
 import 'package:agitha/viewfolder/SubCompany/CompanyProfileFolder/CompanyProfileUpdate.dart';
+import 'package:agitha/viewfolder/Widgets/ImageErrorContainer.dart';
 
 
 import 'package:flutter/cupertino.dart';
@@ -60,56 +63,22 @@ class _CompanyProfileState extends State<CompanyProfile> {
   @override
   Widget build(BuildContext context) {
     
-    final provider = Provider.of<RestaurantHomeProvider>(context);
-    final restaurantss = provider.restaurant;
+    // final provider = Provider.of<RestaurantHomeProvider>(context);
+    // final restaurantss = provider.restaurant;
 
     double screenWidth = MediaQuery.of(context).size.width;
+      final screenHeight = MediaQuery.of(context).size.height;
 
-    // // Sample URLs and images
-    // String instagramUrl = restaurantss?.instagramUrl?.toString() ?? "https://www.instagram.com/";
-    // String facebookUrl =restaurantss?.facebookUrl?.toString() ?? "https://www.facebook.com/";
-    // String twitterUrl = restaurantss?.twitterUrl?.toString() ??"https://twitter.com/";
-    // String imagePath = restaurantss?.restaurantImageUrl?.toString()??'assets/projectimages/2nd.jpg';
-    // String logoPath =restaurantss?.logoUrl?.toString() ?? 'assets/projectimages/beefberbgr.png' ;
-
-//     // Default values if restaurant is null
-//     String restaurantName = restaurantss?.restaurantName ?? "Restaurant Name";
-//   int twoseats = restaurantss?.twoSeat ?? 0;
-// int fourseats = restaurantss?.fourSeat ?? 0;
-// int sixseats = restaurantss?.sixSeat ?? 0;
-// int eightseats = restaurantss?.eightSeat ?? 0;
-// int tenseats = restaurantss?.tenSeat ?? 0;
-// // int reservationNumber = restaurant?.reservationNumber?? 0;
-// int reservationAmount = restaurantss?.reservationAmount ?? 0;
-// int noDecorationAmount = restaurantss?.noDecorationAmount ?? 0;
-// int decorationAmount = restaurantss?.decorationAmount ?? 0;
-
-//     String brandType = restaurantss?.brandType ?? "Brand Type";
-//     String companyDescribtion = restaurantss?.description ??
-//         "Agthia-Food Company focuses on sustainable and high-quality food concepts aiming to enhance human health and the environment for future generations.";
 
     final colorScheme = Theme.of(context).colorScheme;
 
-    // // URL launcher function
-    // Future<void> _launchUrl(String url) async {
-    //   final uri = Uri.parse(url);
-    //   if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
-    //     throw Exception('Could not launch $url');
-    //   }
-    // }
-    
-   
-
-  // int totalSeats = 
-  //   (restaurant?.twoSeat ?? 0) * 2 +
-  //   (restaurant?.fourSeat ?? 0) * 4 +
-  //   (restaurant?.sixSeat ?? 0) * 6 +
-  //   (restaurant?.eightSeat ?? 0) * 8 +
-  //   (restaurant?.tenSeat ?? 0) * 10;
-
+  
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text("Restaurant Profile"),
+        centerTitle: true,
+      ),
       body: StreamBuilder<CompanyRegistrationModel?>(
   stream: context.read<RestaurantHomeProvider>().restaurantStream(),
   builder: (context, snapshot) {
@@ -130,7 +99,8 @@ class _CompanyProfileState extends State<CompanyProfile> {
   (restaurant.eightSeat) * 8 +
   (restaurant.tenSeat) * 10;
 
-    return   SingleChildScrollView(
+    return   
+    SingleChildScrollView(
                   child: Column(
                     children: [
                       // Stack for banner image and logo
@@ -140,7 +110,17 @@ class _CompanyProfileState extends State<CompanyProfile> {
                            restaurant.restaurantImageUrl,
                             fit: BoxFit.cover,
                             width: double.infinity,
-                            height: 180,
+                            height: screenWidth * 0.58 ,
+
+
+                            errorBuilder: (context, error, stackTrace) =>
+                               NoInternetWidget(
+                                width: double.infinity,
+                                height: screenHeight * 0.28,
+                        iconSize: screenWidth * 0.08,
+                        textSize: screenWidth * 0.035,
+                               )
+
                           ),
                        
                           // Edit button
@@ -173,16 +153,16 @@ class _CompanyProfileState extends State<CompanyProfile> {
                                 ),
                               );
                             },
-                            child: const Padding(
+                            child:  Padding(
                               padding: EdgeInsets.all(8.0),
                               child: Align(
                                 alignment: Alignment.topRight,
                                 child: CircleAvatar(
-                                  radius: 30,
+                                  radius: screenWidth * 0.08,
                                   backgroundColor: Colors.white,
                                   child: Icon(
                                     Icons.edit,
-                                    size: 30,
+                                    size: screenWidth * 0.08,
                                     color: Colors.blue,
                                   ),
                                 ),
@@ -191,7 +171,9 @@ class _CompanyProfileState extends State<CompanyProfile> {
                           ),
                         ],
                       ),
-            const SizedBox(height: 10,),
+
+                        const SizedBox(height: 10,),
+                        
                       // Restaurant name
                           Padding(
                             padding: const EdgeInsets.all(8.0),
@@ -200,110 +182,112 @@ class _CompanyProfileState extends State<CompanyProfile> {
                               children: [
                                 Row(
                                             children: [
-                                             Image.network(restaurant.logoUrl,height: 130,width: 130,),
-                                              const SizedBox(width: 20),
-                                              Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                
-                                
-                                                       LayoutBuilder(
-                                          builder: (context, constraints) {
-                                            double nameFontSize =
-                                                MediaQuery.of(context).size.width * 0.07; // base scaling
-                                            nameFontSize = nameFontSize.clamp(16.0, 24.0);
-                                            return Text(
-                                             restaurant.restaurantName,
-                                              style: GoogleFonts.tinos(
-                                                fontSize: nameFontSize,
-                                                fontWeight: FontWeight.bold,
-                                                color: const Color.fromARGB(255, 75, 2, 2),
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                
-                                
-                                
-                                                        LayoutBuilder(
-                                          builder: (context, constraints) {
-                                            double phoneFontSize =
-                                                MediaQuery.of(context).size.width * 0.04; // base scaling
-                                            phoneFontSize = phoneFontSize.clamp(14.0, 20.0);
-                                            return Text(
-                                              restaurant.brandType,
-                                              style: GoogleFonts.tinos(
-                                                fontSize: phoneFontSize,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.black,
-                                              ),
-                                            );
-                                          },
-                                        ),
+                                             Image.network(
+                                              
+                                              restaurant.logoUrl,height: screenWidth * 0.35,width: screenWidth * 0.35,
 
-                                                  LayoutBuilder(
-                                          builder: (context, constraints) {
-                                            double phoneFontSize =
-                                                MediaQuery.of(context).size.width * 0.04; // base scaling
-                                            phoneFontSize = phoneFontSize.clamp(14.0, 20.0);
-                                            return Text(
-                                              restaurant.phone,
-                                              style: GoogleFonts.tinos(
-                                                fontSize: phoneFontSize,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.black,
+                                              errorBuilder: (context, error, stackTrace) =>
+                                               NoInternetWidget(
+                                              width: screenWidth * 0.35,
+                                              height: screenWidth * 0.35,
+                                              iconSize: screenWidth * 0.06,
+                                               
+                                              textSize: screenWidth * 0.035,
+                                             )
+
+                                              
+                                              
+                                              
                                               ),
-                                            );
-                                          },
-                                        ),
-                                            LayoutBuilder(
-                                          builder: (context, constraints) {
-                                            double nameFontSize =
-                                                MediaQuery.of(context).size.width * 0.0; // base scaling
-                                            nameFontSize = nameFontSize.clamp(16.0, 24.0);
-                                            return Text(
-                                             restaurant.location,
-                                              style: GoogleFonts.tinos(
-                                                fontSize: nameFontSize,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.black
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                
-                                                  LayoutBuilder(
-                                          builder: (context, constraints) {
-                                            double phoneFontSize =
-                                                MediaQuery.of(context).size.width * 0.04; // base scaling
-                                            phoneFontSize = phoneFontSize.clamp(14.0, 20.0);
-                                            return Row(
-                                  children:  [
-                                     Icon(
-                                      Icons.star,
-                                      color: colorScheme.primary,
-                                      size: 20,
-                                    ),
-                                    const SizedBox(width: 5),
-                                    Text(
-                                      restaurant.rating.toString(),
-                                        style: GoogleFonts.tinos(
-                                                fontSize: phoneFontSize,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.black,
-                                              ),
-                                    ),
-                                  ],
-                                );
-                                
-                                          },
-                                        ),
-                                           
-                                
-                                                  const SizedBox(height: 10),
-                                                 
-                                                ],
-                                              )
+                                              const SizedBox(width: 20),
+
+
+                                             Expanded(
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+
+      /// Restaurant Name
+      Text(
+        restaurant.restaurantName,
+        style: GoogleFonts.tinos(
+          fontSize: screenWidth * 0.06,
+          fontWeight: FontWeight.bold,
+          color: const Color.fromARGB(255, 75, 2, 2),
+        ),
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+      ),
+
+      const SizedBox(height: 4),
+
+      /// Brand Type
+      Text(
+        restaurant.brandType,
+        style: GoogleFonts.tinos(
+          fontSize: screenWidth * 0.05,
+          fontWeight: FontWeight.w600,
+          color: Colors.black,
+        ),
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+      ),
+
+      const SizedBox(height: 4),
+
+      /// Phone
+      Text(
+        restaurant.phone,
+        style: GoogleFonts.tinos(
+          fontSize: screenWidth * 0.05,
+          fontWeight: FontWeight.w500,
+          color: Colors.black,
+        ),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
+
+      const SizedBox(height: 4),
+
+      /// Location
+      Text(
+        restaurant.location,
+        style: GoogleFonts.tinos(
+          fontSize: screenWidth * 0.05,
+          fontWeight: FontWeight.w500,
+          color: Colors.black,
+        ),
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+      ),
+
+      const SizedBox(height: 6),
+
+      /// Rating Row
+      Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.star,
+            color: colorScheme.primary,
+            size: screenWidth * 0.05,
+          ),
+          const SizedBox(width: 5),
+          Text(
+            restaurant.rating.toStringAsFixed(1),
+            style: GoogleFonts.tinos(
+              fontSize: screenWidth * 0.05,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+        ],
+      ),
+
+      const SizedBox(height: 10),
+    ],
+  ),
+)
                                             ],
                                           ),
                               ],
@@ -321,7 +305,7 @@ class _CompanyProfileState extends State<CompanyProfile> {
                           child: Text(
                             "Description",
                             style: GoogleFonts.tinos(
-                              fontSize: 20,
+                              fontSize: screenWidth * 0.06,
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
                             ),
@@ -336,8 +320,8 @@ class _CompanyProfileState extends State<CompanyProfile> {
                           alignment: Alignment.topLeft,
                           child: Text(
                             restaurant.description,
-                            style: const TextStyle(
-                              fontSize: 16,
+                            style:  TextStyle(
+                              fontSize: screenWidth * 0.04,
                               color: Colors.black,
                               height: 1.5,
                             ),
@@ -356,7 +340,7 @@ class _CompanyProfileState extends State<CompanyProfile> {
                           child: Text(
                             "Available Tables",
                             style: GoogleFonts.tinos(
-                              fontSize: 25,
+                              fontSize: screenWidth * 0.06,
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
                             ),
@@ -404,7 +388,7 @@ class _CompanyProfileState extends State<CompanyProfile> {
                           child: Text(
                             "Total Seats",
                             style: GoogleFonts.tinos(
-                              fontSize: 20,
+                              fontSize: screenWidth * 0.07,
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
                             ),
@@ -423,7 +407,7 @@ class _CompanyProfileState extends State<CompanyProfile> {
                           child: Text(
                            totalSeats.toString(),
                             style: GoogleFonts.tinos(
-                              fontSize: 35,
+                              fontSize: screenWidth * 0.07,
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
                             ),
@@ -437,20 +421,15 @@ class _CompanyProfileState extends State<CompanyProfile> {
                          restaurant.reservationAmount.toString(),
                         restaurant. noDecorationAmount.toString(),
                         restaurant. decorationAmount.toString(),
+                        screenWidth
                       ),
 
                       // Social Media Section
                       _buildSocialMediaSection(
-                          context,  restaurant.instagramUrl, restaurant. facebookUrl,  restaurant.twitterUrl),
+                          context,  restaurant.instagramUrl, restaurant. facebookUrl,  restaurant.twitterUrl,screenWidth),
                     ],
                   ),
                 );
-    
-    
-    
-    
-   
-
 
   },
 )
@@ -465,7 +444,7 @@ class _CompanyProfileState extends State<CompanyProfile> {
   }
 
   Widget _buildPriceDetailsSection(
-      BuildContext context, String reservationAmount, String noDecorationAmount, String decorationAmount) {
+      BuildContext context, String reservationAmount, String noDecorationAmount, String decorationAmount, double screenWidth) {
     final colorScheme = Theme.of(context).colorScheme;
     return Align(
       alignment: Alignment.topLeft,
@@ -474,11 +453,11 @@ class _CompanyProfileState extends State<CompanyProfile> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 16.0, bottom: 15.0),
+            padding:  EdgeInsets.only(left: 16.0, bottom: 15.0),
             child: Text(
               "Price Details",
               style: GoogleFonts.tinos(
-                fontSize: 23,
+                fontSize: screenWidth * 0.06,
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
               ),
@@ -487,15 +466,15 @@ class _CompanyProfileState extends State<CompanyProfile> {
        
           Padding(
             padding: const EdgeInsets.only(left: 16.0, bottom: 8.0),
-            child: Text("Reservation Price: ${reservationAmount}"),
+            child: Text("Reservation Price: ${reservationAmount}",style: TextStyle(fontSize: screenWidth * 0.05),),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 16.0, bottom: 8.0),
-            child: Text("Event Booking Price: $noDecorationAmount"),
+            child: Text("Event Booking Price: $noDecorationAmount",style: TextStyle(fontSize: screenWidth * 0.05)),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 16.0, bottom: 8.0),
-            child: Text("Event Decorating Price: $decorationAmount"),
+            child: Text("Event Decorating Price: $decorationAmount",style: TextStyle(fontSize: screenWidth * 0.05)),
           ),
         ],
       ),
@@ -503,7 +482,7 @@ class _CompanyProfileState extends State<CompanyProfile> {
   }
 
   Widget _buildSocialMediaSection(
-      BuildContext context, String instagramUrl, String facebookUrl, String twitterUrl) {
+      BuildContext context, String instagramUrl, String facebookUrl, String twitterUrl ,double screenWidth) {
     final colorScheme = Theme.of(context).colorScheme;
 
 Future<void> openWebsite(String url) async {
@@ -545,7 +524,7 @@ Future<void> openWebsite(String url) async {
               onTap: () => openWebsite(url),
               child: CircleAvatar(
                 backgroundColor: Colors.red[100],
-                radius: 25,
+                radius:  screenWidth *0.07,
                 child: FaIcon(
                   icon,
                   color: colorScheme.primary,
@@ -554,7 +533,7 @@ Future<void> openWebsite(String url) async {
               ),
             ),
             const SizedBox(width: 10),
-            Text(url, style: const TextStyle(fontSize: 16)),
+            Text(url, style:  TextStyle(fontSize: screenWidth * 0.04)),
           ],
         ),
       );
@@ -568,7 +547,7 @@ Future<void> openWebsite(String url) async {
           child: Text(
             "Social Media",
             style: GoogleFonts.tinos(
-              fontSize: 23,
+              fontSize: screenWidth *0.06,
               fontWeight: FontWeight.bold,
               color: Colors.black,
             ),

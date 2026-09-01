@@ -1,8 +1,9 @@
 import 'package:agitha/ModelsFoder/SignUpmodel.dart';
-import 'package:agitha/viewfolder/Screens/HomePage.dart';
+import 'package:agitha/viewfolder/Screens/UserMainPage.dart';
 import 'package:agitha/viewfolder/User/LoginPage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class AuthenticationController extends ChangeNotifier {
@@ -20,49 +21,100 @@ class AuthenticationController extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<String> signUp({
-    required String email,
-    required String password,
-    required String role,
-  }) async {
-    _setLoading(true);
-    try {
-    
-      UserCredential userCredential = await _authentication.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+String? _verificationId;
 
-      User? user = userCredential.user;
+  /// 🔹 SIGNUP → EMAIL + OTP SEND
+Future<String> signUp({
+  required String email,
+  required String password,
+  required String phoneNumber,
+}) async {
+  _setLoading(true);
 
-      if (user != null) {
-      
-        _currentUser = SignUpModel(
-          uid: user.uid,
-          email: email,
-          password: password,
-          role: role,
-        );
+  try {
+    // 1️⃣ SEND OTP first
+     await _authentication.verifyPhoneNumber(
+      phoneNumber: phoneNumber,
+      timeout: const Duration(seconds: 60),
 
-      
-        await _firestore.collection("Users").doc(user.uid).set(_currentUser!.toMap());
+      verificationCompleted: (PhoneAuthCredential credential) {
+      debugPrint("⚠ Auto-verification ignored for safety");
+      },
 
+// more secure code
+  //  verificationCompleted: (PhoneAuthCredential credential) async {
+  //       debugPrint("⚡ Auto OTP verified");
+
+  //       try {
+  //         // 🔗 Try linking phone if possible (optional, safe)
+  //         User? user = _authentication.currentUser;
+  //         if (user != null) {
+  //           await user.linkWithCredential(credential);
+  //           debugPrint("✅ Phone auto-linked");
+  //         }
+  //       } catch (e) {
+  //         debugPrint("❌ Auto-link error: $e");
+  //       } finally {
+  //         _setLoading(false); // 🔵 STOP LOADING
+  //       }
+  //     },
+
+
+      verificationFailed: (FirebaseAuthException e) {
+        debugPrint("❌ OTP failed: ${e.message}");
         _setLoading(false);
-        notifyListeners();
+        throw Exception(e.message);
+      },
 
-        return "success"; 
-      } else {
+      codeSent: (String verificationId, int? resendToken) {
+        _verificationId = verificationId;
+        debugPrint("📩 OTP SENT");
         _setLoading(false);
-        return "User creation failed";
-      }
-    } on FirebaseAuthException catch (e) {
-      _setLoading(false);
-      return e.message ?? "An unknown error occurred";
-    } catch (e) {
-      _setLoading(false);
-      return e.toString();
-    }
+      },
+
+      codeAutoRetrievalTimeout: (String verificationId) {
+        debugPrint("⏰ OTP timeout");
+        _verificationId = verificationId;
+      },
+    );
+
+    return "OTP sent, verify first"; // Navigate to OTP screen
+  } catch (e) {
+    debugPrint("❌ Signup error: $e");
+    _setLoading(false);
+    return e.toString();
   }
+}
+
+//otp resent 
+Future<void> resendOTP(String phoneNumber) async {
+  await _authentication.verifyPhoneNumber(
+    phoneNumber: phoneNumber,
+
+    verificationCompleted: (PhoneAuthCredential credential) async {
+      // Auto verification (Android)
+      await _authentication.signInWithCredential(credential);
+    },
+
+    verificationFailed: (FirebaseAuthException e) {
+      print("Verification Failed: ${e.message}");
+    },
+
+    codeSent: (String verificationId, int? resendToken) {
+      print("OTP Sent Successfully");
+      _verificationId = verificationId;
+    },
+
+    codeAutoRetrievalTimeout: (String verificationId) {
+      _verificationId = verificationId;
+    },
+  );
+}
+
+
+
+
+
   // 🔹 LOGIN (role-based)
   Future<String> login({
   required String email,
@@ -121,7 +173,61 @@ class AuthenticationController extends ChangeNotifier {
   }
 }
 
+Future<String> verifyOtpAndSignUpUser({
+  required String otp,
+  required String email,
+  required String password,
+  required String phone,
+  required String role,
+}) async {
+  _setLoading(true);
 
+  try {
+    if (_verificationId == null) {
+      throw Exception("OTP not sent");
+    }
+
+    final credential = PhoneAuthProvider.credential(
+      verificationId: _verificationId!,
+      smsCode: otp,
+    );
+
+    // 🔐 FIRST create the email user AFTER OTP verification
+    UserCredential userCredential =
+        await _authentication.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+
+    User user = userCredential.user!;
+    debugPrint("✅ Email user created after OTP: ${user.uid}");
+
+    // 🔗 Link phone credential
+    await user.linkWithCredential(credential);
+
+    // Save to Firestore
+    await _firestore.collection("Users").doc(user.uid).set({
+      "userId": user.uid,
+      "email": email,
+      "phone": phone,
+      "role": role,
+      "createdAt": FieldValue.serverTimestamp(),
+    });
+
+    _setLoading(false);
+    return "success";
+  } catch (e) {
+    _setLoading(false);
+    return e.toString();
+  }
+}
+
+   Future<void> _deleteInvalidUser() async {
+    final user = _authentication.currentUser;
+    if (user != null) {
+      await user.delete();
+    }
+  }
 
 
 // check loged in user
@@ -142,7 +248,13 @@ bool get isLoggedIn => _authentication.currentUser != null;
         onPressed: () => Navigator.pop(context), // Cancel
         child: const Text('Cancel'),
       ),
-      TextButton(
+
+      ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor:
+              Theme.of(context).colorScheme.primary,
+              foregroundColor: Colors.white,
+        ),
         onPressed: () {
           Navigator.push(context, MaterialPageRoute(builder:(context)=> const LoginPage()));
         },
@@ -234,7 +346,7 @@ Future<bool> isDeliveryBoyRegistered() async {
     //                                   ),
     //                                 );
 
-                                      Navigator.push(context, MaterialPageRoute(builder:(context)=> const HomePage()));
+                                      Navigator.push(context, MaterialPageRoute(builder:(context)=> const UserMainPage()));
 
      }catch(e){
 
@@ -244,13 +356,37 @@ Future<bool> isDeliveryBoyRegistered() async {
                                         backgroundColor:colorScheme.primary
                                       ),
                                     );
+   }
 
-
-
-
-      
-     }
+     
 
 
   
-  } }
+  }
+  
+  
+     //splash logic
+Stream<String?> getUserRoleStream() {
+    final uid = _authentication.currentUser?.uid;
+
+    if (uid == null) {
+      return Stream.value(null);
+    }
+
+    return _firestore
+        .collection('Users')
+        .doc(uid)
+        .snapshots()
+        .map((snapshot) {
+      if (snapshot.exists) {
+        return snapshot.data()?['role'] as String?;
+      }
+      return null;
+    });
+  }
+
+  
+  
+  
+  
+   }

@@ -6,11 +6,12 @@ import 'package:agitha/ControllersFolder/UserRegistrationController.dart';
 import 'package:agitha/ModelsFoder/CartModel.dart';
 import 'package:agitha/ModelsFoder/FoodRating.dart';
 import 'package:agitha/viewfolder/User/ProfileDetails/ProfileCreate.dart';
+
 import 'package:agitha/viewfolder/Widgets/ProfileAlert.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_emoji_feedback/flutter_emoji_feedback.dart';
+//import 'package:flutter_emoji_feedback/flutter_emoji_feedback.dart';
 
 class FoodItemPage extends StatefulWidget {
   final String dishid;

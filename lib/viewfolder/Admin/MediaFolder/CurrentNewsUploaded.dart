@@ -73,7 +73,12 @@ Future<void> openWebsite(String url) async {
             onPressed: () => Navigator.pop(context), // Cancel
             child: const Text('Cancel'),
           ),
-          TextButton(
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+          backgroundColor:
+              Theme.of(context).colorScheme.primary,
+              foregroundColor: Colors.white
+        ),
             onPressed: () async {
               await mediaProvider.deleteMedia(docId);
               Navigator.pop(context);
@@ -93,7 +98,11 @@ Future<void> openWebsite(String url) async {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: const Text(
+                  "Current News",),
+                  centerTitle: true,
+      ),
       body: Consumer<MediaProvider>(
         builder: (context, mediaProvider, _) {
           final List<MediaModel> mediaList = mediaProvider.mediaList;
@@ -109,20 +118,7 @@ Future<void> openWebsite(String url) async {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Heading
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  "Current News",
-                  style: GoogleFonts.tinos(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-              ),
-
-              // News List
+               // News List
               Expanded(
                 child: ListView.builder(
                   padding: const EdgeInsets.all(16),

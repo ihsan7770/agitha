@@ -1,6 +1,7 @@
 import 'package:agitha/ControllersFolder/RestouarntVeiwController.dart';
 import 'package:agitha/viewfolder/Admin/RestorentFolder/ViewRatingsRestaurant.dart';
 import 'package:agitha/viewfolder/User/FoodOrderingFolder/User_RestaurantRating_ReviewPage.dart';
+import 'package:agitha/viewfolder/Widgets/ImageErrorContainer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -51,7 +52,7 @@ Widget buildTable(int count, double screenWidth, String imageAsset, {double size
       Text(
         count.toString(),
         style: GoogleFonts.tinos(
-          fontSize: 16,
+          fontSize:screenWidth * 0.05 ,
           fontWeight: FontWeight.bold,
           color: Colors.black,
         ),
@@ -62,6 +63,9 @@ Widget buildTable(int count, double screenWidth, String imageAsset, {double size
 
 
   Widget socialRow(String url, IconData icon, Color bgColor) {
+      final Size size = MediaQuery.of(context).size;
+      final double width = size.width;
+    
      final colorScheme = Theme.of(context).colorScheme;
     bool hasUrl = url.isNotEmpty;
     return Padding(
@@ -71,11 +75,12 @@ Widget buildTable(int count, double screenWidth, String imageAsset, {double size
           InkWell(
             onTap: hasUrl ? () => _launchUrl(url) : null,
             child: CircleAvatar(
-              radius: 25,
+              radius: width * 0.07,
               backgroundColor: hasUrl ? bgColor : Colors.grey[300],
               child: FaIcon(
                 icon,
                 color: hasUrl ?  colorScheme.primary : Colors.grey,
+                size: width * 0.06,
               ),
             ),
           ),
@@ -85,6 +90,7 @@ Widget buildTable(int count, double screenWidth, String imageAsset, {double size
               hasUrl ? url : 'Not provided',
               style: TextStyle(
                 color: hasUrl ? Colors.black : Colors.grey,
+                fontSize: width * 0.05
               ),
             ),
           ),
@@ -93,21 +99,6 @@ Widget buildTable(int count, double screenWidth, String imageAsset, {double size
     );
   }
 
-  Widget logoWidget(String? url, String fallbackAsset) {
-    if (url != null && url.isNotEmpty) {
-      return Image.network(
-        url,
-        width: 120,
-        height: 80,
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) {
-          return Image.asset(fallbackAsset, width: 120, height: 80);
-        },
-      );
-    } else {
-      return Image.asset(fallbackAsset, width: 120, height: 80);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +106,7 @@ Widget buildTable(int count, double screenWidth, String imageAsset, {double size
     final provider = Provider.of<RestaurantViewProvider>(context);
     final company = provider.company;
     double screenWidth = MediaQuery.of(context).size.width;
-     final colorScheme = Theme.of(context).colorScheme;
+    final colorScheme = Theme.of(context).colorScheme;
 
     if (provider.loading) {
       return const Scaffold(
@@ -133,7 +124,7 @@ Widget buildTable(int count, double screenWidth, String imageAsset, {double size
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.error_outline, size: 64, color: Colors.red),
+              const Icon(Icons.error_outline, size: 64, color: Colors.red),
               const SizedBox(height: 16),
               const Text("Company details not found", style: TextStyle(fontSize: 18)),
               const SizedBox(height: 8),
@@ -155,7 +146,7 @@ Widget buildTable(int count, double screenWidth, String imageAsset, {double size
        4 * company.fourSeat +
        6 * company.sixSeat +
        8 *  company.eightSeat +
-        10 * company.tenSeat;
+      10 * company.tenSeat;
 
     return Scaffold(
       appBar:  AppBar(
@@ -167,19 +158,22 @@ Widget buildTable(int count, double screenWidth, String imageAsset, {double size
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             
-                company.restaurantImageUrl.isNotEmpty
-                    ? Image.network(
+                
+                    Image.network(
                         company.restaurantImageUrl,
                         width: double.infinity,
-                        height: 180,
+                        height:   screenWidth * 0.50,
                         fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Image.asset("assets/projectimages/2nd.jpg",
-                              width: double.infinity, height: 180, fit: BoxFit.cover);
-                        },
-                      )
-                    : Image.asset("assets/projectimages/2nd.jpg",
-                        width: double.infinity, height: 180, fit: BoxFit.cover),
+
+                        errorBuilder: (context, error, stackTrace) =>
+                                 NoInternetWidget(
+                                width:double.infinity,
+                                height:  screenWidth * 0.50,
+                                iconSize: screenWidth * 0.9,
+                                textSize: screenWidth * 0.35,
+                               )
+                      ),
+                  
           
             const SizedBox(height: 16),
 
@@ -193,151 +187,154 @@ Widget buildTable(int count, double screenWidth, String imageAsset, {double size
 
                   Row(
             children: [
-             Image.network(company.logoUrl,height: 120,width: 120,),
-              const SizedBox(width: 20),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-             Row(
-                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                 children: [
-                   Text(
-                     company.restaurantName,
-                     style: GoogleFonts.tinos(
-                                fontSize: MediaQuery.of(context).size.width * 0.07,
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 75, 2, 2),
-                     ),
-                     overflow: TextOverflow.ellipsis,
-                   ),
-                   SizedBox(width:MediaQuery.of(context).size.width * 0.24 ,),
-                  
-                   InkWell(
-                    onTap:() {
-                       Navigator.push(context, MaterialPageRoute(builder: (context) =>   ViewRatingRestaurant(
-                        imageUrl:company.logoUrl,
-                        rating: company.rating.toString(),
-                        restaurantname: company.restaurantName,
-                        retaurantId: company.userId,
-                        )),);
-                     
-                      
-                    } ,
-                     child: Container(
-                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                       decoration: BoxDecoration(
-                         color: Colors.black87,
-                         borderRadius: BorderRadius.circular(20),
-                       ),
-                       child: Row(
-                         children: [
-                                  const Icon(Icons.star, color: Colors.orange, size: 12),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    company.rating.toStringAsFixed(1),
-                                    style: const TextStyle(
-                                      fontSize: 8,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                         ],
-                       ),
-                     ),
-                   ),
-                 ],
-               ),
-
-
-
-                        LayoutBuilder(
-          builder: (context, constraints) {
-            double phoneFontSize =
-                MediaQuery.of(context).size.width * 0.04; // base scaling
-            phoneFontSize = phoneFontSize.clamp(14.0, 20.0);
-            return Text(
-              company.brandType,
-              style: GoogleFonts.tinos(
-                fontSize: phoneFontSize,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
-            );
-          },
-        ),
-        
-                                                  LayoutBuilder(
-                                          builder: (context, constraints) {
-                                            double phoneFontSize =
-                                                MediaQuery.of(context).size.width * 0.04; // base scaling
-                                            phoneFontSize = phoneFontSize.clamp(14.0, 20.0);
-                                            return Text(
-                                              company.phone,
-                                              style: GoogleFonts.tinos(
-                                                fontSize: phoneFontSize,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.black,
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                            LayoutBuilder(
-                                          builder: (context, constraints) {
-                                            double nameFontSize =
-                                                MediaQuery.of(context).size.width * 0.0; // base scaling
-                                            nameFontSize = nameFontSize.clamp(16.0, 24.0);
-                                            return Text(
-                                             company.location,
-                                              style: GoogleFonts.tinos(
-                                                fontSize: nameFontSize,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.black
-                                              ),
-                                            );
-                                          },
-                                        ),
-
+             Image.network(
+             company.logoUrl,
+             height: screenWidth * 0.28, // responsive height
              
-           
+             width: screenWidth * 0.28,  // responsive width
+             fit: BoxFit.cover,
+             errorBuilder: (context, error, stackTrace) => NoInternetWidget(
+               width: screenWidth * 0.28,
+               height: screenWidth * 0.28,
+               iconSize: screenWidth * 0.06,
+               textSize: screenWidth * 0.022,
+             ),
+           ),
 
-                  const SizedBox(height: 10),
-                 
-                ],
-              )
+              const SizedBox(width: 20),
+
+Expanded(
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+
+      /// Restaurant Name
+      Text(
+        company.restaurantName,
+        style: GoogleFonts.tinos(
+          fontSize: screenWidth * 0.07,
+          fontWeight: FontWeight.bold,
+          color: const Color.fromARGB(255, 75, 2, 2),
+        ),
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+      ),
+
+      const SizedBox(height: 4),
+
+      /// Brand Type
+      Text(
+        company.brandType,
+        style: GoogleFonts.tinos(
+          fontSize: screenWidth * 0.05,
+          fontWeight: FontWeight.w600,
+          color: Colors.black,
+        ),
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+      ),
+
+      const SizedBox(height: 4),
+
+      /// Phone
+      Text(
+        company.phone,
+        style: GoogleFonts.tinos(
+          fontSize: screenWidth * 0.05,
+          fontWeight: FontWeight.w500,
+          color: Colors.black,
+        ),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
+
+      const SizedBox(height: 4),
+
+      /// Location
+      Text(
+        company.location,
+        style: GoogleFonts.tinos(
+          fontSize: screenWidth * 0.05,
+          fontWeight: FontWeight.w500,
+          color: Colors.black,
+        ),
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+      ),
+
+      const SizedBox(height: 8),
+
+      /// Rating Button
+      InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ViewRatingRestaurant(
+                imageUrl: company.logoUrl,
+                rating: company.rating.toString(),
+                restaurantname: company.restaurantName,
+                retaurantId: company.userId,
+              ),
+            ),
+          );
+        },
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+          decoration: BoxDecoration(
+            color: Colors.black87,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.star,
+                  color: Colors.orange,
+                  size: screenWidth * 0.04),
+              SizedBox(width: screenWidth * 0.02),
+              Text(
+                company.rating.toStringAsFixed(1),
+                style: TextStyle(
+                  fontSize: screenWidth * 0.04,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+
+      const SizedBox(height: 10),
+    ],
+  ),
+)
+
+
+
+
             ],
           ),
 
-
-
-
-
-
-
-
-
-
-
-
-                 
                   const SizedBox(height: 10),
                   Text("Description",
-                      style: GoogleFonts.tinos(fontSize: 20, fontWeight: FontWeight.bold)),
+                      style: GoogleFonts.tinos(fontSize: screenWidth * 0.06, fontWeight: FontWeight.bold)),
                   Text(company.description,
-                      style: const TextStyle(fontSize: 16),
+                      style: TextStyle(fontSize:  screenWidth * 0.04),
                       textAlign: TextAlign.justify),
                 ],
               ),
             ),
 
-            const SizedBox(height: 30),
+            
 
             // Tables
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.only(left: 16.0,top: 8.0,bottom: 8.0),
               child: Align(
                   alignment: Alignment.topLeft,
                   child: Text("Available Tables",
-                      style: GoogleFonts.tinos(fontSize: 25, fontWeight: FontWeight.bold))),
+                      style: GoogleFonts.tinos(fontSize:  screenWidth * 0.06, fontWeight: FontWeight.bold))),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -360,11 +357,11 @@ Widget buildTable(int count, double screenWidth, String imageAsset, {double size
         ),
 
 
-            const SizedBox(height: 20),
+            
 
             Center(
               child: Text("Total Seats: $totalSeats",
-                  style: GoogleFonts.tinos(fontSize: 35, fontWeight: FontWeight.bold)),
+                  style: GoogleFonts.tinos(fontSize:  screenWidth * 0.06, fontWeight: FontWeight.bold)),
             ),
 
             const SizedBox(height: 30),
@@ -376,14 +373,14 @@ Widget buildTable(int count, double screenWidth, String imageAsset, {double size
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text("Price Details",
-                      style: GoogleFonts.tinos(fontSize: 23, fontWeight: FontWeight.bold)),
+                      style: GoogleFonts.tinos(fontSize: screenWidth * 0.06, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 8),
                   Text("Reservation Price: ${company.reservationAmount}",
-                      style: GoogleFonts.tinos(fontSize: 20)),
+                      style: GoogleFonts.tinos(fontSize: screenWidth * 0.06)),
                   Text("Event Booking Price: ${company.noDecorationAmount}",
-                      style: GoogleFonts.tinos(fontSize: 20)),
+                      style: GoogleFonts.tinos(fontSize: screenWidth * 0.06)),
                   Text("Event Decorating Price: ${company.decorationAmount}",
-                      style: GoogleFonts.tinos(fontSize: 20)),
+                      style: GoogleFonts.tinos(fontSize: screenWidth * 0.06)),
                 ],
               ),
             ),
@@ -397,7 +394,7 @@ Widget buildTable(int count, double screenWidth, String imageAsset, {double size
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text("Social Media",
-                      style: GoogleFonts.tinos(fontSize: 23, fontWeight: FontWeight.bold)),
+                      style: GoogleFonts.tinos(fontSize: screenWidth * 0.06, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 10),
                   socialRow(company.instagramUrl, FontAwesomeIcons.instagram, Colors.red[100]!),
                   socialRow(company.facebookUrl, FontAwesomeIcons.facebook, Colors.red[100]!),

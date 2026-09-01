@@ -33,7 +33,10 @@ class AdminSideUserDetails extends StatelessWidget {
   
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: const Text("User Details"),
+        centerTitle: true,
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -67,20 +70,8 @@ class AdminSideUserDetails extends StatelessWidget {
                children: [
              
              
-                 Align(
-                    alignment: Alignment.topLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 16.0, bottom: 8.0),
-                      child: Text(
-                        "User details",
-                        style: GoogleFonts.tinos(
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  ),
+         
+
                  ListView.builder(
                   shrinkWrap: true,
                   itemCount:profiledata.length,

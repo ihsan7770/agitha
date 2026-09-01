@@ -96,6 +96,9 @@ class _ViewDeliveryBoysState extends State<ViewDeliveryBoys> {
       );
     }
 
+
+ final screenWidth = MediaQuery.of(context).size.width;
+ final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar:  AppBar(
         title: const Text("Delivery Boys List"),
@@ -116,144 +119,186 @@ class _ViewDeliveryBoysState extends State<ViewDeliveryBoys> {
           }
 
           return ListView.builder(
-            padding: const EdgeInsets.all(16),
-            itemCount: deliveryBoys.length,
-            itemBuilder: (context, index) {
-              final db = deliveryBoys[index];
+  padding: EdgeInsets.all(screenWidth * 0.04), // responsive padding
+  itemCount: deliveryBoys.length,
+  itemBuilder: (context, index) {
+    final db = deliveryBoys[index];
 
-              final name = db['db_name'] ?? 'Unknown Delivery Boy';
-              final email = db['email'] ?? 'No email';
-              final location = db['db_location'] ?? 'No location';
-              final userId = db['userId'] ?? '';
-              final docId = db['docId'];
+    final name = db['db_name'] ?? 'Unknown Delivery Boy';
+    final email = db['email'] ?? 'No email';
+    final location = db['db_location'] ?? 'No location';
+    final userId = db['userId'] ?? '';
+    final docId = db['docId'];
 
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 16),
-                child: InkWell(
-                    onTap: userId != null && userId.isNotEmpty
-                            ? () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        DeliveryBoyDetails(deliverboyemail: email,deliveryboyId:userId ?? ''),
-                                  ),
-                                );
-                              }
-                            : null,
-
-
-                  child: Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[100],
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 12,
-                            offset: const Offset(2, 3))
-                      ],
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(name,
-                              style: GoogleFonts.tinos(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black)),
-                          const SizedBox(height: 5),
-                          Text(email,
-                              style: GoogleFonts.tinos(
-                                  fontSize: 16, color: Colors.grey)),
-                          const SizedBox(height: 3),
-                          Text(location,
-                              style: GoogleFonts.tinos(
-                                  fontSize: 15, color: Colors.grey)),
-                  
-                          const SizedBox(height: 16),
-                  
-                          Row(
-                                children: [
-                                  // Reject Button
-                                  OutlinedButton(
-                                     style: OutlinedButton.styleFrom(
-                                    side: BorderSide(
-                                      color: Theme.of(context).colorScheme.primary,
-                                      width: 1.5,
-                                    ),
-                                  ),
-                                    onPressed: 
-                                        () => dbDeleteAlert(
-                                        context, docId, name),
-                                    child: const Text(
-                                      
-                                        "Reject"),
-                                  ),
-                  
-                                  const SizedBox(width: 20),
-                  
-                   StreamBuilder<bool>(
-                    stream: Provider.of<DeliveryBoyViewProvider>(context, listen: false)
-                        .checkDeliveryBoyApprovedStream(docId),
-                    builder: (context, snapshot) {
-                      final isApproved = snapshot.data ?? false;
-                  
-                      return ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: isApproved
-                              ? Colors.grey
-                              : Theme.of(context).colorScheme.primary,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                        ),
-                        onPressed: isApproved
-                            ? null
-                            : () {
-                                dbApproveAlert(
+    return Padding(
+      padding: EdgeInsets.only(bottom: screenHeight * 0.02),
+      child: InkWell(
+        onTap: userId.isNotEmpty
+            ? () {
+                Navigator.push(
                   context,
-                  docId,
-                  name, // ✅ Already available above
-                                );
-                              },
-                        child: Text(
-                          isApproved ? "Approved" : "Approve",
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                      );
-                    },
-                  )
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                                ],
-                              )
-                        
-                  
-                  
-                        ],
-                      ),
+                  MaterialPageRoute(
+                    builder: (context) => DeliveryBoyDetails(
+                      deliverboyemail: email,
+                      deliveryboyId: userId,
                     ),
                   ),
+                );
+              }
+            : null,
+        child: Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: Colors.grey[100],
+            borderRadius: BorderRadius.circular(screenWidth * 0.05),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: screenWidth * 0.03,
+                offset: const Offset(2, 3),
+              )
+            ],
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(screenWidth * 0.04),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  name,
+                  style: GoogleFonts.tinos(
+                    fontSize: screenWidth * 0.05,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              );
-            },
-          );
+                SizedBox(height: screenHeight * 0.006),
+                Text(
+                  email,
+                  style: GoogleFonts.tinos(
+                    fontSize: screenWidth * 0.04,
+                    color: Colors.grey,
+                  ),
+                ),
+                SizedBox(height: screenHeight * 0.004),
+                Text(
+                  location,
+                  style: GoogleFonts.tinos(
+                    fontSize: screenWidth * 0.038,
+                    color: Colors.grey,
+                  ),
+                ),
+
+                SizedBox(height: screenHeight * 0.02),
+
+                Row(
+                  children: [
+
+                  
+
+                           SizedBox(
+                      width:screenWidth * 0.28,   // compact width
+                      height: screenWidth * 0.085, // compact height
+                      child: OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                          side: BorderSide(
+                            color: Theme.of(context).colorScheme.primary,
+                            width: 1.2,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(screenWidth* 0.04),
+                          ),
+                        ),
+                        onPressed: () => dbDeleteAlert(
+                          context,
+                          docId,
+                          name,
+                        ),
+                        child: Text(
+                          "Reject",
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.primary,
+                            fontSize:screenWidth * 0.026, // smaller text
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ),
+                    
+              
+
+
+
+                    SizedBox(width: screenWidth * 0.05),
+
+
+
+                    StreamBuilder<bool>(
+  stream: Provider.of<DeliveryBoyViewProvider>(
+    context,
+    listen: false,
+  ).checkDeliveryBoyApprovedStream(docId),
+  builder: (context, snapshot) {
+    final isApproved = snapshot.data ?? false;
+
+    return  SizedBox(
+                          width: screenWidth * 0.3,   // smaller width
+                          height: screenWidth * 0.1,// responsive button height
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: isApproved
+                                  ? Colors.grey
+                                  : Theme.of(context).colorScheme.primary,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(screenWidth* 0.05), // responsive radius
+                              ),
+                            ),
+                            onPressed: isApproved
+                                ? null
+                                : () {
+                                    dbApproveAlert(
+                                      context,
+                                      docId,
+                                      name,
+                                    );
+                                  },
+                            child: Text(
+                              isApproved ? "Approved" : "Approve",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: screenWidth * 0.026, // responsive text size
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        );
+    
+    
+
+
+          },
+        )
+
+
+
+                         ],
+                       ),
+                     ],
+                   ),
+                 ),
+               ),
+             ),
+           );
+         },
+       );
+
+
+
         },
       ),
+
+
+
     );
   }
 }

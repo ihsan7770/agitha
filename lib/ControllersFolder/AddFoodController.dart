@@ -125,11 +125,75 @@ class Addfoodprovider extends ChangeNotifier{
       }).toList();
     });
   }
+
+
+  
+  //show cake items
+   Stream<List<FoodItemModel>> streamCakeItems() {
+    final currentUser = _auth.currentUser;
+    if (currentUser == null) {
+      // Return empty stream if no user is logged in
+      return const Stream.empty();
+    }
+
+    return _firestore
+        .collection('foodItems')
+        .where('category', isEqualTo: 'Cake')
+        .where('restaurantId', isEqualTo: currentUser.uid) // ✅ filter by current restaurant
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((doc) {
+        return FoodItemModel.fromDoc(doc);
+      }).toList();
+    });
+  }
+
+
+    //show backery items
+   Stream<List<FoodItemModel>> streamBakeryItems() {
+    final currentUser = _auth.currentUser;
+    if (currentUser == null) {
+      // Return empty stream if no user is logged in
+      return const Stream.empty();
+    }
+
+    return _firestore
+        .collection('foodItems')
+        .where('category', isEqualTo: 'Bakery')
+        .where('restaurantId', isEqualTo: currentUser.uid) // ✅ filter by current restaurant
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((doc) {
+        return FoodItemModel.fromDoc(doc);
+      }).toList();
+    });
+  }
   //update food item
+
+
+     Stream<List<FoodItemModel>> streamDrinksItems() {
+    final currentUser = _auth.currentUser;
+    if (currentUser == null) {
+      // Return empty stream if no user is logged in
+      return const Stream.empty();
+    }
+
+    return _firestore
+        .collection('foodItems')
+        .where('category', isEqualTo: 'Drinks')
+        .where('restaurantId', isEqualTo: currentUser.uid) // ✅ filter by current restaurant
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((doc) {
+        return FoodItemModel.fromDoc(doc);
+      }).toList();
+    });
+  }
   
 Future<void> updateFoodItem({
   required String foodItemId,
-   // ✅ pass the specific food document ID here
+  
+   
   required String dishName,
   required String describtion,
   required String price,
@@ -178,6 +242,7 @@ Future<void> updateFoodItem({
       'category': category,
       'restaurantId': currentUser.uid,
       'restaurantName': restaurantName,
+      'describtion':describtion,
       'updatedAt': DateTime.now(),
     };
 
@@ -187,6 +252,7 @@ Future<void> updateFoodItem({
 
     // 🔹 Step 4: Update the specific food item document
     await _firestore.collection('foodItems').doc(foodItemId).update(updatedData);
+    debugPrint("food id ${foodItemId}");
 
     _isLoading = false;
     notifyListeners();

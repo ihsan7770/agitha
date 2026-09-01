@@ -173,27 +173,21 @@ class _EditRestorentDetailsState extends State<CompanyProfileUpdate> {
         Provider.of<RestaurantHomeProvider>(context);
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
+     final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+
+     title:  const Text(
+                  "Edit Restaurant",
+                ),
+                centerTitle: true,
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
 
-              Padding(
-              padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: Text(
-                  "Edit Restaurant",
-                  style: GoogleFonts.tinos(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-              ),
-            ),
+             
 
             Center(
               child: InkWell(
@@ -237,7 +231,7 @@ class _EditRestorentDetailsState extends State<CompanyProfileUpdate> {
                 child: Text(
                   "Basic Details",
                   style: GoogleFonts.tinos(
-                    fontSize: 25,
+                    fontSize: screenWidth * 0.055,
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
                   ),
@@ -400,7 +394,7 @@ class _EditRestorentDetailsState extends State<CompanyProfileUpdate> {
                             child: Text(
                               "Price Details",
                               style: GoogleFonts.tinos(
-                                fontSize: 25,
+                                fontSize: screenWidth * 0.055,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black,
                               ),
@@ -446,7 +440,7 @@ class _EditRestorentDetailsState extends State<CompanyProfileUpdate> {
                             child: Text(
                               "Social Media",
                               style: GoogleFonts.tinos(
-                                fontSize: 25,
+                                fontSize: screenWidth * 0.055,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black,
                               ),
@@ -486,7 +480,7 @@ class _EditRestorentDetailsState extends State<CompanyProfileUpdate> {
                             child: Text(
                               "Restaurant Image",
                               style: GoogleFonts.tinos(
-                                fontSize: 25,
+                                fontSize: screenWidth * 0.055,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black,
                               ),
@@ -528,7 +522,7 @@ class _EditRestorentDetailsState extends State<CompanyProfileUpdate> {
                             child: Text(
                               "Description",
                               style: GoogleFonts.tinos(
-                                fontSize: 25,
+                                fontSize:screenWidth * 0.055,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black,
                               ),

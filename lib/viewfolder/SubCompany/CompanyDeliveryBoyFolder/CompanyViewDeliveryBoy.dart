@@ -14,7 +14,12 @@ class CompanyViewDeliveryBoys extends StatelessWidget {
     final restaurantController = Provider.of<RestaurentDeliveryBoyProvider>(context);
     //  final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text("Delivery Boys Lists"),
+        centerTitle: true,
+
+
+      ),
       body: StreamBuilder<List<Map<String, dynamic>>>(
         stream: restaurantController.streamApprovedDeliveryBoysForCompany(),
         builder: (context, snapshot) {
@@ -107,8 +112,8 @@ class CompanyViewDeliveryBoys extends StatelessWidget {
                                                        Text(
                               "${boy['email'] ?? 'No email'}",
                                style: GoogleFonts.tinos(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
                                 color: Colors.grey,
                                 
                                                       ),

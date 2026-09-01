@@ -8,17 +8,37 @@ class UpcomingEventTapBarPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  DefaultTabController(
+    final screenWidth = MediaQuery.of(context).size.width;
+    final tabFontSize = screenWidth * 0.035;
+
+    return DefaultTabController(
       length: 3,
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-         
-          bottom: const TabBar(
+          bottom: TabBar(
             tabs: [
-              Tab(text: "Event Orders"),
-              Tab(text: "Booked Events"),
-              Tab(text: "Previous Events"),
+              Tab(
+                child: Text(
+                  "Event Orders",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: tabFontSize),
+                ),
+              ),
+              Tab(
+                child: Text(
+                  "Booked Events",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: tabFontSize),
+                ),
+              ),
+              Tab(
+                child: Text(
+                  "Previous Events",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: tabFontSize),
+                ),
+              ),
             ],
           ),
         ),
@@ -26,10 +46,7 @@ class UpcomingEventTapBarPage extends StatelessWidget {
           children: [
             EventOrdersPage(),
             BookedEventsPage(),
-            PreviousEventsPage()
-
-
-            
+            PreviousEventsPage(),
           ],
         ),
       ),

@@ -1,7 +1,8 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:agitha/ModelsFoder/UserRegistratioModel.dart';
-import 'package:agitha/viewfolder/Screens/HomePage.dart';
+import 'package:agitha/viewfolder/Screens/UserMainPage.dart';
 import 'package:agitha/viewfolder/User/ProfileDetails/ProfileCreate.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -14,62 +15,96 @@ class UserRegistrationProvider with ChangeNotifier {
 final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 final FirebaseStorage _storage = FirebaseStorage.instance;
 
-  String? _email;
-  String? _name;
+  StreamSubscription<User?>? _authSubscription;
 
-  String? get email => _email;
-  String? get name => _name;
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
 
- UserRegistrationProvider() {
-    _fetchUserInfo();
+ 
+
+  StreamSubscription<DocumentSnapshot>? _userDocSubscription;
+
+  String? email;
+  String? name;
+  String? role;
+
+  UserRegistrationProvider() {
+    debugPrint("🟢 Provider initialized");
+    _listenToAuth();
   }
 
-  Future<void> _fetchUserInfo() async {
-    _auth.authStateChanges().listen((User? user) async {
-      if (user != null) {
-        try {
-          // 🔹 Fetch user document where userId == logged in user's UID
-          final query = await _firestore
-              .collection('Users')
-              .where('userId', isEqualTo: user.uid)
-              .limit(1)
-              .get();
+  void _listenToAuth() {
+    _authSubscription = _auth.authStateChanges().listen((User? user) {
+      debugPrint("🔄 Auth changed");
 
-          if (query.docs.isNotEmpty) {
-            final data = query.docs.first.data();
-            _email = data['email'];
-            _name = _extractNameFromEmail(_email ?? '');
+      if (user != null) {
+        debugPrint("✅ Logged in UID: ${user.uid}");
+
+        email = user.email;
+        name = _extractNameFromEmail(email ?? '');
+
+        /// 🔥 Listen to Firestore document stream
+        _userDocSubscription = _firestore
+            .collection('Users')
+            .doc(user.uid)
+            .snapshots()
+            .listen((doc) {
+
+          if (doc.exists) {
+            final data = doc.data();
+            role = data?['role'];
+
+            debugPrint("📄 Firestore role: $role");
           } else {
-            // fallback: if Firestore document not found, use FirebaseAuth email
-            _email = user.email;
-            _name = _extractNameFromEmail(_email ?? '');
+            debugPrint("❌ No user document found");
+            role = null;
           }
-        } catch (e) {
-          debugPrint('Error fetching user info: $e');
-          _email = user.email;
-          _name = _extractNameFromEmail(_email ?? '');
-        }
+
+          _isLoading = false;
+          notifyListeners();
+        });
+
       } else {
-        _email = null;
-        _name = null;
+        debugPrint("🚪 Logged out");
+
+        email = null;
+        name = null;
+        role = null;
+
+        _userDocSubscription?.cancel();
+        _isLoading = false;
+        notifyListeners();
       }
-      notifyListeners();
     });
   }
 
   String _extractNameFromEmail(String email) {
-    final localPart = email.split('@')[0];
-    final cleaned = localPart.replaceAll(RegExp(r'[._\d]+'), ' ').trim();
-    return cleaned
-        .split(' ')
-        .map((w) => w.isEmpty ? '' : '${w[0].toUpperCase()}${w.substring(1)}')
-        .join(' ');
+    if (email.contains('@')) {
+      return email.split('@').first;
+    }
+    return "User";
   }
+
+  @override
+  void dispose() {
+    debugPrint("🛑 Disposing Provider");
+    _authSubscription?.cancel();
+    _userDocSubscription?.cancel();
+    super.dispose();
+  }
+
+  // String _extractNameFromEmail(String email) {
+  //   final localPart = email.split('@')[0];
+  //   final cleaned = localPart.replaceAll(RegExp(r'[._\d]+'), ' ').trim();
+  //   return cleaned
+  //       .split(' ')
+  //       .map((w) => w.isEmpty ? '' : '${w[0].toUpperCase()}${w.substring(1)}')
+  //       .join(' ');
+  // }
 
   //Resgister User
 
-bool _isLoading = false;
-  bool get isLoading => _isLoading;
+
 
 Future<String> registerUser({
   required String username,

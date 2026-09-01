@@ -128,6 +128,9 @@ class _AddInstructionsState extends State<AddInstructions> {
     final colorScheme = Theme.of(context).colorScheme;
     final instructionProvider = Provider.of<InstructionProvider>(context);
 
+    final Size size = MediaQuery.of(context).size;
+    final double screenWidth = size.width;
+
     String heading ;
     if(widget.role == "Restaurant"){
       heading = "Edit Restaurant Instructions";
@@ -139,6 +142,9 @@ class _AddInstructionsState extends State<AddInstructions> {
 
     return Scaffold(
       appBar: AppBar(
+        title:  Text(
+                heading,),
+                centerTitle: true,
       
       ),
       body: Padding(
@@ -148,14 +154,7 @@ class _AddInstructionsState extends State<AddInstructions> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                heading,
-                style: GoogleFonts.tinos(
-                  fontSize: 26,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 20),
+              
 
               // Small single-line field
               TextFormField(
@@ -266,9 +265,9 @@ class _AddInstructionsState extends State<AddInstructions> {
                                       strokeWidth: 2,
                                     ),
                                   )
-                                :  const Text(
+                                :   Text(
                           "Send to Restaurant",
-                          style: TextStyle(fontSize: 16),
+                          style: TextStyle(fontSize: screenWidth * 0.04),
                         ),
                       ),
                     ),
@@ -305,9 +304,9 @@ class _AddInstructionsState extends State<AddInstructions> {
                                       strokeWidth: 2,
                                     ),
                                   )
-                                : const Text(
+                                :  Text(
                           "Send to DeliveryBoy",
-                          style: TextStyle(fontSize: 16),
+                          style: TextStyle(fontSize:  screenWidth * 0.04),
                         ),
                       ),
                     ),

@@ -169,8 +169,10 @@ class _ViewRestorentsState extends State<ViewRestorents> {
 
   @override
   Widget build(BuildContext context) {
-  
-    // final colorScheme = Theme.of(context).colorScheme;
+      final Size size = MediaQuery.of(context).size;
+      final double w = size.width;
+    
+          // final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
        appBar:  AppBar(
@@ -237,12 +239,12 @@ class _ViewRestorentsState extends State<ViewRestorents> {
                                 Text(
                                   "${index + 1}.",
                                   style: GoogleFonts.tinos(
-                                    fontSize: 25,
+                                    fontSize:  w * 0.07,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.black,
                                   ),
                                 ),
-                                const SizedBox(width: 20),
+                                 SizedBox(width:  w * 0.06),
                                 Expanded(
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -250,7 +252,7 @@ class _ViewRestorentsState extends State<ViewRestorents> {
                                       Text(
                                         restaurantName,
                                         style: GoogleFonts.tinos(
-                                          fontSize: 20,
+                                          fontSize: w * 0.06,
                                           fontWeight: FontWeight.bold,
                                           color: const Color.fromARGB(255, 75, 2, 2),
                                         ),
@@ -258,7 +260,7 @@ class _ViewRestorentsState extends State<ViewRestorents> {
                                       Text(
                                         email,
                                         style: GoogleFonts.tinos(
-                                          fontSize: 16,
+                                          fontSize: w * 0.05,
                                           fontWeight: FontWeight.bold,
                                           color: Colors.grey,
                                         ),
@@ -267,70 +269,88 @@ class _ViewRestorentsState extends State<ViewRestorents> {
 
 
                                       Row(
-  children: [
-    // Reject Button (no stream needed)
-    OutlinedButton(
-      style: OutlinedButton.styleFrom(
-        side: BorderSide(
-          color: Theme.of(context).colorScheme.primary,
-          width: 1.5,
-        ),
-      ),
-      onPressed: 
-      
-      
-      
-      
-      () => restaurantRejectAlert(
-        context, 
-        docId, 
-        restaurantName, // pass initial name or empty string
-      ),
-      child: const Text("Reject"),
-    ),
-
-    const SizedBox(width: 20),
-
- StreamBuilder<bool>(
-  stream: Provider.of<RestaurantViewProvider>(context, listen: false)
-      .checkRestaurantApprovedStream(docId),
-  builder: (context, snapshot) {
-    final isApproved = snapshot.data ?? false;
-
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: isApproved
-            ? Colors.grey
-            : Theme.of(context).colorScheme.primary,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-      ),
-      onPressed: isApproved
-          ? null
-          : () {
-              restaurantApproveAlert(
-                context,
-                docId,
-                restaurantName, // ✅ Already available above
-              );
-            },
-      child: Text(
-        isApproved ? "Approved" : "Approve",
-        style: const TextStyle(color: Colors.white),
-      ),
-    );
-  },
-)
-
-  ],
-),
-
-
-
-                                    ],
-                                  ),
-                                ),
+                      children: [
+                        // Reject Button (no stream needed)
+                      SizedBox(
+                      width: w * 0.28,   // compact width
+                      height: w * 0.085, // compact height
+                      child: OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                          side: BorderSide(
+                            color: Theme.of(context).colorScheme.primary,
+                            width: 1.2,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(w * 0.04),
+                          ),
+                        ),
+                        onPressed: () => restaurantRejectAlert(
+                          context,
+                          docId,
+                          restaurantName,
+                        ),
+                        child: Text(
+                          "Reject",
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.primary,
+                            fontSize: w * 0.026, // smaller text
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ),
+                    
+                         SizedBox(width: w * 0.04),
+                    
+                     StreamBuilder<bool>(
+                      stream: Provider.of<RestaurantViewProvider>(context, listen: false)
+                          .checkRestaurantApprovedStream(docId),
+                      builder: (context, snapshot) {
+                        final isApproved = snapshot.data ?? false;
+                        return SizedBox(
+                          width: w * 0.3,   // smaller width
+                          height: w * 0.1,// responsive button height
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: isApproved
+                                  ? Colors.grey
+                                  : Theme.of(context).colorScheme.primary,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(w * 0.05), // responsive radius
+                              ),
+                            ),
+                            onPressed: isApproved
+                                ? null
+                                : () {
+                                    restaurantApproveAlert(
+                                      context,
+                                      docId,
+                                      restaurantName,
+                                    );
+                                  },
+                            child: Text(
+                              isApproved ? "Approved" : "Approve",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: w * 0.026, // responsive text size
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    )
+                    
+                    
+                      ],
+                    ),
+                    
+                    
+                    
+                                                        ],
+                                                      ),
+                                                    ),
                               ],
                             ),
                           ),

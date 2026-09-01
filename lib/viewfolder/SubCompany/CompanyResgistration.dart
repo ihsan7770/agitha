@@ -92,7 +92,7 @@ class _CompanyResgistrationState extends State<CompanyResgistration> {
 
   final provider = Provider.of<CompanyRegistrationProvider>(context, listen: false);
 
-final message = await provider.registerCompany(
+ final message = await provider.registerCompany(
   location: _locationController.text.trim(),
   phone: _phoneController.text.trim(),
   restaurantName: _restorentNameController.text.trim(),
@@ -143,6 +143,9 @@ final message = await provider.registerCompany(
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final authProvider = Provider.of<CompanyRegistrationProvider>(context);
+     final media = MediaQuery.of(context);
+    // final height = media.size.height;
+    final width = media.size.width;
     return Scaffold(
       appBar: AppBar(),
       body: SingleChildScrollView(
@@ -154,15 +157,15 @@ final message = await provider.registerCompany(
               Align(
                 alignment: Alignment.center,
                 child: Padding(
-                  padding: const EdgeInsets.only(
-                    left: 16.0,
-                    right: 16.0,
-                    top: 8.0,
+                  padding:  EdgeInsets.only(
+                    left: width * 0.05,
+                    right: width* 0.05,
+                    top: width * 0.03,
                   ),
                   child: Text(
                     "Be a part of Agitha",
                     style: GoogleFonts.tinos(
-                      fontSize: 30,
+                      fontSize: width * 0.07,
                       fontWeight: FontWeight.bold,
                       color: const Color.fromARGB(255, 75, 2, 2),
                     ),
@@ -183,7 +186,7 @@ final message = await provider.registerCompany(
                 child: Text(
                   "Enter Some Basic Details",
                   style: GoogleFonts.tinos(
-                    fontSize: 23,
+                    fontSize:  width * 0.065,
                     fontWeight: FontWeight.bold,
                     color: const Color.fromARGB(255, 75, 2, 2),
                   ),
@@ -250,7 +253,7 @@ final message = await provider.registerCompany(
                 child: Text(
                   "Enter Table Details",
                   style: GoogleFonts.tinos(
-                    fontSize: 23,
+                    fontSize: width * 0.065,
                     fontWeight: FontWeight.bold,
                     color: const Color.fromARGB(255, 75, 2, 2),
                   ),
@@ -354,9 +357,9 @@ final message = await provider.registerCompany(
                             child: Text(
                               "Price Details",
                               style: GoogleFonts.tinos(
-                                fontSize: 25,
+                                fontSize: width * 0.065,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.black,
+                                color: const Color.fromARGB(255, 75, 2, 2),
                               ),
                             ),
                           ),
@@ -404,7 +407,7 @@ final message = await provider.registerCompany(
                 child: Text(
                   "Social Media Details",
                   style: GoogleFonts.tinos(
-                    fontSize: 23,
+                    fontSize: width * 0.065,
                     fontWeight: FontWeight.bold,
                     color: const Color.fromARGB(255, 75, 2, 2),
                   ),
@@ -451,7 +454,7 @@ final message = await provider.registerCompany(
                 child: Text(
                   "Description",
                   style: GoogleFonts.tinos(
-                    fontSize: 23,
+                    fontSize: width * 0.065,
                     fontWeight: FontWeight.bold,
                     color: const Color.fromARGB(255, 75, 2, 2),
                   ),
@@ -480,7 +483,7 @@ final message = await provider.registerCompany(
                 child: Text(
                   "Upload Restaurant Logo",
                   style: GoogleFonts.tinos(
-                    fontSize: 23,
+                    fontSize: width * 0.065,
                     fontWeight: FontWeight.bold,
                     color: const Color.fromARGB(255, 75, 2, 2),
                   ),
@@ -519,7 +522,7 @@ final message = await provider.registerCompany(
                 child: Text(
                   "Upload Restaurant Image",
                   style: GoogleFonts.tinos(
-                    fontSize: 23,
+                    fontSize: width * 0.065,
                     fontWeight: FontWeight.bold,
                     color: const Color.fromARGB(255, 75, 2, 2),
                   ),
@@ -568,9 +571,9 @@ final message = await provider.registerCompany(
                   ),
                   onPressed: submitCompanyDetails,
                   child: authProvider.isLoading
-                            ? const SizedBox(
-                                height: 22,
-                                width: 22,
+                            ?  SizedBox(
+                                height: width * 0.06,
+                                width: width * 0.06,
                                 child: CircularProgressIndicator(
                                   color: Colors.white,
                                   strokeWidth: 2,

@@ -250,8 +250,6 @@ class _ContactTextFromContainerState extends State<ContactTextFromContainer> {
                     child:     OutlinedButton(
                       style: OutlinedButton.styleFrom(
                         side: BorderSide(color: Theme.of(context).colorScheme.primary, width: 1.5),
-                      ).copyWith(
-                        overlayColor: MaterialStateProperty.all(colorScheme.primary),
                       ),
                       onPressed: () {
                         // Navigator.pop(context); // Cancel and go back

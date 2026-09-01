@@ -1,9 +1,10 @@
 import 'package:agitha/ControllersFolder/DeliveryBoyRatingController.dart';
 import 'package:agitha/ControllersFolder/UserOrderStatusController.dart';
 import 'package:agitha/ModelsFoder/DeliveryBoyRatingModel.dart';
-import 'package:agitha/viewfolder/Screens/HomePage.dart';
+import 'package:agitha/viewfolder/Screens/UserMainPage.dart';
 import 'package:agitha/viewfolder/User/MyOrdersFolder/PendingOrderFoodDeratils.dart';
 import 'package:agitha/viewfolder/User/ProfileDetails/UserProfile.dart';
+import 'package:agitha/viewfolder/Widgets/ImageErrorContainer.dart';
 import 'package:agitha/viewfolder/Widgets/donts.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -116,7 +117,7 @@ final TextEditingController reviewController = TextEditingController();
           children: [
             if (status != "order_delivered")
              Card(
-            margin: const EdgeInsets.symmetric(horizontal: 12, ),
+            margin: const EdgeInsets.symmetric(horizontal: 12,),
             child:Center(
           child: Padding(
             padding: const EdgeInsets.all(12.0),
@@ -124,16 +125,16 @@ final TextEditingController reviewController = TextEditingController();
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
          
-          const Icon(
+           Icon(
               CupertinoIcons.check_mark_circled_solid,
             color: Colors.green,
-            size: 26,
+            size: screenWidth * 0.06,
           ),
           const SizedBox(width: 10),
           Text(
             "Order Placed Successfully",
             style: GoogleFonts.tinos(
-              fontSize: 18,
+              fontSize: screenWidth * 0.06,
               // fontWeight: FontWeight.bold,
               color: Colors.green,
             ),
@@ -168,7 +169,17 @@ final TextEditingController reviewController = TextEditingController();
                         width: screenWidth * 0.20,
                         height: screenWidth * 0.20,
                         fit: BoxFit.cover,
+
+                        errorBuilder: (context, error, stackTrace) =>
+                                NoInternetWidget(
+                                width: screenWidth * 0.20,
+                                height: screenWidth * 0.20,
+                                iconSize: 30,
+                                textSize: 8,
+
                       ),
+
+                      )
                     ),
                     const SizedBox(width: 12),
                     Expanded(
@@ -242,12 +253,12 @@ final TextEditingController reviewController = TextEditingController();
                               children: [
                                 Row(
                                   children: [
-                                    const Icon(Icons.circle, size: 8),
+                                     Icon(Icons.circle, size: screenWidth * 0.015),
                                     const SizedBox(width: 6),
                                     Text(
                                       item['dishName']?.toString() ?? "No Name",
-                                      style: const TextStyle(
-                                        fontSize: 14,
+                                      style:  TextStyle(
+                                        fontSize: screenWidth * 0.035,
                                         fontWeight: FontWeight.w600,
                                       ),
                                     ),
@@ -258,8 +269,8 @@ final TextEditingController reviewController = TextEditingController();
                                   padding: const EdgeInsets.only(left: 16),
                                   child: Text(
                                     "Quantity: ${item['quantity'] ?? 1}",
-                                    style: const TextStyle(
-                                      fontSize: 13,
+                                    style: TextStyle(
+                                      fontSize: screenWidth * 0.035,
                                       color: Colors.grey,
                                     ),
                                   ),
@@ -460,15 +471,6 @@ final TextEditingController reviewController = TextEditingController();
   },
 
   //alert streme
-
-
-  
-
-
-
-
-
-
 
 ),
 

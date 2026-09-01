@@ -44,8 +44,8 @@ class AdminBlockedUserDetails extends StatelessWidget {
                 if (!snapshot.hasData || snapshot.data!.isEmpty) {
                   return const Center(
                     child: Text(
-                      "No user details found",
-                      style: TextStyle(fontSize: 18,color: Colors.grey),
+                      "No blocked user details found",
+                     
                     ),
                   );
                 }
@@ -67,7 +67,7 @@ class AdminBlockedUserDetails extends StatelessWidget {
            child: ExpansionTile(
               
               leading: CircleAvatar(
-                radius: 45,
+                radius: screenWidth * 0.08,
                 backgroundColor: Colors.grey.shade300,
               
                 // ✅ foregroundImage handles null safely
@@ -80,7 +80,7 @@ class AdminBlockedUserDetails extends StatelessWidget {
                profiles.profileImageUrl!.isEmpty)
          ? Icon(
                Icons.person,
-               size: 45,
+               size:  screenWidth * 0.08,
                color: Colors.grey,
            )
          : null,
@@ -266,6 +266,9 @@ class AdminBlockedUserDetails extends StatelessWidget {
        
         }
        );
+
+
+       
 
               }) 
     );

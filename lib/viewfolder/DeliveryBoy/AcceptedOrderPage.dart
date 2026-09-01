@@ -38,6 +38,9 @@ bool isSliding = false;
     final dborderProvider = Provider.of<DeliveryBoyHomeController>(context, listen: false);
      final orderprovider= Provider.of<OrderController>(context, listen: false);
 
+       final Size size = MediaQuery.of(context).size;
+       final double screenWidth = size.width;
+
      final colorScheme = Theme.of(context).colorScheme;
     return  Scaffold(
       appBar: AppBar( ),
@@ -81,7 +84,7 @@ bool isSliding = false;
                                 child: Text(
                                 "Delivery Items",
                                 style: GoogleFonts.tinos(
-                                  fontSize: 23,
+                                  fontSize: screenWidth * 0.06,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black
                                 ),
@@ -99,14 +102,14 @@ bool isSliding = false;
                                 padding: const EdgeInsets.only(bottom: 8.0),
                                 child: Row(
                                   children: [
-                                    const Icon(Icons.circle,
-                                        size: 10, color: Colors.black),
+                                   Icon(Icons.circle,
+                                        size: screenWidth * 0.04, color: Colors.black),
                                     const SizedBox(width: 8),
                                     Expanded(
                                       child: Text(
                                         "${item['dishName']}  x${item['quantity']}",
                                         style: GoogleFonts.tinos(
-                                          fontSize: 17,
+                                          fontSize:screenWidth * 0.05,
                                           fontWeight: FontWeight.w500,
                                         ),
                                       ),
@@ -114,7 +117,7 @@ bool isSliding = false;
                                     Text(
                                       "₹${item['price']}",
                                       style: GoogleFonts.tinos(
-                                        fontSize: 17,
+                                        fontSize: screenWidth * 0.05,
                                         fontWeight: FontWeight.w600,
                                       ),
                                     ),
@@ -127,46 +130,42 @@ bool isSliding = false;
 
                                if ((order['tip'] ?? 0) > 0)
                            Padding(
-                            padding: const EdgeInsets.only(left: 17.0,top:8,bottom: 8.0,right: 16.0),
+                            padding: const EdgeInsets.only(left: 17.0,right: 16.0),
                             child: Row(children: [
                               Text("Tip:",style: GoogleFonts.tinos(
-                                      fontSize: 18,
+                                      fontSize: screenWidth * 0.045,
                                       fontWeight: FontWeight.w600)),
                                       const Spacer(),
                                       Text(order['tip'].toString(),style: GoogleFonts.tinos(
-                                      fontSize: 18,
+                                      fontSize:screenWidth * 0.05,
                                       fontWeight: FontWeight.w600))
                             ],),
                           ),
 
-
-                            
-
-
                                 Padding(
-                                  padding: const EdgeInsets.all(16.0),
+                                  padding: const EdgeInsets.only(left: 16.0,right: 16.0),
                                   child: Row(
                                     children: [
                                   
                                         Text("Total", style: GoogleFonts.tinos(
-                                                fontSize: 20,
+                                                fontSize:screenWidth * 0.06,
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.black,
                                               ),),
                                               const Spacer(),
 
                                                Padding(
-                                                 padding: const EdgeInsets.only(top:20.0),
+                                                 padding: const EdgeInsets.only(top:8.0),
                                                  child: Column(
                                                    children: [
                                                    
                                                      Text(total.toString(), style: GoogleFonts.tinos(
-                                                      fontSize: 20,
+                                                      fontSize: screenWidth * 0.06,
                                                       fontWeight: FontWeight.bold,
                                                       color: Colors.black, ),),
                                                  
                                                       Text(order["paymentStatus"], style: GoogleFonts.tinos(
-                                                      fontSize: 15,
+                                                      fontSize: screenWidth * 0.04,
                                                       fontWeight: FontWeight.bold,
                                                       color: Colors.grey, ),),
                                                  
@@ -183,29 +182,14 @@ bool isSliding = false;
                                   ),
                                 ),
         
-        
-
-                
-        
-                
-        
-                     
-              
-            
-             
-             
-             
-
-
-
-                  Align(
+         Align(
                    alignment: Alignment.topLeft,
                    child: Padding(
                                 padding: const EdgeInsets.only(left: 16.0,),
                                 child: Text(
                                 "Delivery Location",
                                 style: GoogleFonts.tinos(
-                                  fontSize: 23,
+                                  fontSize: screenWidth * 0.06,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black
                                 ),
@@ -229,7 +213,7 @@ bool isSliding = false;
                                      child: Text(
                                      "Customer Details",
                                      style: GoogleFonts.tinos(
-                                       fontSize: 23,
+                                       fontSize: screenWidth * 0.06,
                                        fontWeight: FontWeight.bold,
                                        color: Colors.black
                                      ),
@@ -246,8 +230,8 @@ bool isSliding = false;
                 
         
            Padding(
-  padding: const EdgeInsets.all(16.0),
-  child: ClipRRect(
+           padding: const EdgeInsets.all(16.0),
+           child: ClipRRect(
     borderRadius: BorderRadius.circular(20),
     child: (order['userphone'] != null &&
             order['userphone'].toString().trim().isNotEmpty &&
@@ -255,22 +239,22 @@ bool isSliding = false;
         ? Image.network(
             order['userphone'],
             fit: BoxFit.cover,
-            width: 100,
-            height: 100,
+            width: screenWidth * 0.20,
+            height: screenWidth * 0.20,
             errorBuilder: (context, error, stackTrace) {
               return Container(
-                width: 100,
-                height: 100,
+                 width: screenWidth * 0.20,
+                 height: screenWidth * 0.20,
                 color: Colors.grey[300],
-                child: const Icon(Icons.person, size: 50, color: Colors.black54),
+                child:  Icon(Icons.person, size: screenWidth * 0.10, color: Colors.black54),
               );
             },
           )
         : Container(
-            width: 100,
-            height: 100,
+            width: screenWidth * 0.20,
+                 height: screenWidth * 0.20,
             color: Colors.grey[300],
-            child: const Icon(Icons.person, size: 50, color: Colors.black54),
+            child:  Icon(Icons.person, size:screenWidth * 0.10, color: Colors.black54),
           ),
   ),
 ),
@@ -286,7 +270,7 @@ bool isSliding = false;
                            child: Text(
                            order['username'],
                            style: GoogleFonts.tinos(
-                             fontSize: 20,
+                             fontSize: screenWidth * 0.06,
                              fontWeight: FontWeight.bold,
                              color: Colors.black
                            ),
@@ -298,7 +282,7 @@ bool isSliding = false;
                              child: Text(
                                order['userphone'],
                              style: GoogleFonts.tinos(
-                               fontSize: 16,
+                               fontSize: screenWidth * 0.05,
                                fontWeight: FontWeight.bold,
                                color: Colors.black
                              ),
@@ -311,7 +295,7 @@ bool isSliding = false;
                              child: TextButton.icon(onPressed: () {
                                     callNumber(order['userphone']);
                                     
-                                  }, icon:  Icon(Icons.phone,color: colorScheme.primary), label:  Text("Call",style: TextStyle(fontSize: 16,color: colorScheme.primary),),
+                                  }, icon:  Icon(Icons.phone,color: colorScheme.primary,size: screenWidth * 0.04,), label:  Text("Call",style: TextStyle(fontSize: screenWidth * 0.04,color: colorScheme.primary),),
                                   style: TextButton.styleFrom(
                                     side:  BorderSide(
                                       color:colorScheme.primary,width: 1
@@ -321,15 +305,7 @@ bool isSliding = false;
                            ),
 
                            const SizedBox(height: 10,),
-        
-        
-                     
-        
-        
-               
-        
-        
-                           
+   
                            
                            ],
                      ),
@@ -396,19 +372,18 @@ bool isSliding = false;
         
         
         
-        
-                                    
+                                
       Padding(
   padding: const EdgeInsets.only(left: 16.0, right: 16.0),
   child: SlideAction(
     text: "Order Completed",
-    textStyle: const TextStyle(color: Colors.white, fontSize: 18),
+    textStyle:  TextStyle(color: Colors.white, fontSize: screenWidth * 0.05),
     outerColor: Theme.of(context).colorScheme.primary,
     innerColor: Colors.white,
     onSubmit: () async {
 
       // 1️⃣ Wait for SlideAction's animation to fully finish
-      await Future.delayed(const Duration(seconds: 1));
+      await Future.delayed(const Duration(seconds: 2));
 
       // 2️⃣ Now run backend logic
       await dborderProvider.changeOrderStatusToDelivered(widget.orderId);

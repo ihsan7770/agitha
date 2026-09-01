@@ -10,8 +10,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class DeliveryBoyRegistration extends StatefulWidget {
-    
- 
   final String? db_id;
   final String? db_name;
   final String? db_age;
@@ -22,19 +20,18 @@ class DeliveryBoyRegistration extends StatefulWidget {
   final String? db_gender;
   final String? db_licenceUrl;
   final String? working_restaurant_docId;
-  const DeliveryBoyRegistration({
-    super.key,
-    this.db_id,
-    this.db_name,
-    this.db_age,
-    this.db_location,
-    this.db_phone,
-    this.db_restaurantname,
-    this.db_gender,
-    this.db_vehicle,
-    this.db_licenceUrl,
-    this.working_restaurant_docId
-                 });
+  const DeliveryBoyRegistration(
+      {super.key,
+      this.db_id,
+      this.db_name,
+      this.db_age,
+      this.db_location,
+      this.db_phone,
+      this.db_restaurantname,
+      this.db_gender,
+      this.db_vehicle,
+      this.db_licenceUrl,
+      this.working_restaurant_docId});
 
   @override
   State<DeliveryBoyRegistration> createState() =>
@@ -42,8 +39,7 @@ class DeliveryBoyRegistration extends StatefulWidget {
 }
 
 class _DeliveryBoyRegistrationState extends State<DeliveryBoyRegistration> {
-
-    bool get isEditMode => widget.db_id != null;
+  bool get isEditMode => widget.db_id != null;
   final _formKey = GlobalKey<FormState>();
 
   final TextEditingController nameController = TextEditingController();
@@ -51,14 +47,11 @@ class _DeliveryBoyRegistrationState extends State<DeliveryBoyRegistration> {
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController locationController = TextEditingController();
 
-
   String? selectedGender;
   String? selectedVehicle;
 
-  
-  String? selectedRestaurantId; 
+  String? selectedRestaurantId;
   String? selectedRestaurantName;
-  
 
   File? idProofImage;
   String? existingImageUrl;
@@ -66,7 +59,7 @@ class _DeliveryBoyRegistrationState extends State<DeliveryBoyRegistration> {
   @override
   void initState() {
     super.initState();
-       if (isEditMode) {
+    if (isEditMode) {
       // Pre-fill values during Update
       nameController.text = widget.db_name ?? "";
       phoneController.text = widget.db_phone ?? "";
@@ -74,12 +67,10 @@ class _DeliveryBoyRegistrationState extends State<DeliveryBoyRegistration> {
       locationController.text = widget.db_location ?? "";
       selectedVehicle = widget.db_vehicle;
       selectedRestaurantName = widget.db_restaurantname;
-      selectedGender=widget.db_gender;
-       existingImageUrl = widget.db_licenceUrl;
-       selectedRestaurantId = widget.working_restaurant_docId;
+      selectedGender = widget.db_gender;
+      existingImageUrl = widget.db_licenceUrl;
+      selectedRestaurantId = widget.working_restaurant_docId;
     }
-
-    
   }
 
   @override
@@ -111,80 +102,81 @@ class _DeliveryBoyRegistrationState extends State<DeliveryBoyRegistration> {
       ),
     );
   }
-Future<void> submitDbDetails() async {
-  final provider = Provider.of<DeliveryBoyProvider>(context, listen: false);
 
-  if (!_formKey.currentState!.validate()) return;
+  Future<void> submitDbDetails() async {
+    final provider = Provider.of<DeliveryBoyProvider>(context, listen: false);
 
-  if (selectedGender == null) {
-    _showSnackBar("Please select gender");
-    return;
-  }
-  if (selectedVehicle == null) {
-    _showSnackBar("Please select vehicle");
-    return;
-  }
-  if (!isEditMode && idProofImage == null) {
-    _showSnackBar("Please upload driving license");
-    return;
-  }
+    if (!_formKey.currentState!.validate()) return;
 
-  try {
-    String responseMessage = "";
-
-    if (isEditMode) {
-      // 🔹 UPDATE MODE
-      responseMessage = await provider.updateDeliveryBoy(
-        db_id: widget.db_id!,
-        db_name: nameController.text.trim(),
-        db_phone: phoneController.text.trim(),
-        db_age: int.parse(ageController.text.trim()),
-        db_restaurantname: selectedRestaurantName.toString(),
-        db_gender: selectedGender!,
-        db_vehicle: selectedVehicle!,
-        db_location: locationController.text.trim(),
-        working_restaurant_docId: selectedRestaurantId.toString(),
-        newDbLicenceImage: idProofImage, // 🚨 only new image if selected
-      );
-
-    } else {
-      // 🟢 SUBMIT MODE
-      responseMessage = await provider.registerDeliveryBoy(
-        db_name: nameController.text.trim(),
-        db_phone: phoneController.text.trim(),
-        db_age: int.parse(ageController.text.trim()),
-        db_restaurantname: selectedRestaurantName.toString(),
-        db_gender: selectedGender!,
-        db_vehicle: selectedVehicle!,
-        db_licenceUrl: idProofImage!,
-        working_restaurant_docId: selectedRestaurantId.toString(),
-        db_location: locationController.text.trim(),
-      );
+    if (selectedGender == null) {
+      _showSnackBar("Please select gender");
+      return;
+    }
+    if (selectedVehicle == null) {
+      _showSnackBar("Please select vehicle");
+      return;
+    }
+    if (!isEditMode && idProofImage == null) {
+      _showSnackBar("Please upload driving license");
+      return;
     }
 
-    _showSnackBar(responseMessage);
+    try {
+      String responseMessage = "";
 
-    if (responseMessage.toLowerCase().contains("success")) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (_) =>
-              isEditMode ? const DeliveryBoyProfile() : const ApproveDeliveryBoy(),
-        ),
-      );
+      if (isEditMode) {
+        // 🔹 UPDATE MODE
+        responseMessage = await provider.updateDeliveryBoy(
+          db_id: widget.db_id!,
+          db_name: nameController.text.trim(),
+          db_phone: phoneController.text.trim(),
+          db_age: int.parse(ageController.text.trim()),
+          db_restaurantname: selectedRestaurantName.toString(),
+          db_gender: selectedGender!,
+          db_vehicle: selectedVehicle!,
+          db_location: locationController.text.trim(),
+          working_restaurant_docId: selectedRestaurantId.toString(),
+          newDbLicenceImage: idProofImage, // 🚨 only new image if selected
+        );
+      } else {
+        // 🟢 SUBMIT MODE
+        responseMessage = await provider.registerDeliveryBoy(
+          db_name: nameController.text.trim(),
+          db_phone: phoneController.text.trim(),
+          db_age: int.parse(ageController.text.trim()),
+          db_restaurantname: selectedRestaurantName.toString(),
+          db_gender: selectedGender!,
+          db_vehicle: selectedVehicle!,
+          db_licenceUrl: idProofImage!,
+          working_restaurant_docId: selectedRestaurantId.toString(),
+          db_location: locationController.text.trim(),
+        );
+      }
+
+      _showSnackBar(responseMessage);
+
+      if (responseMessage.toLowerCase().contains("success")) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (_) => isEditMode
+                ? const DeliveryBoyProfile()
+                : const ApproveDeliveryBoy(),
+          ),
+        );
+      }
+    } catch (e) {
+      _showSnackBar("Error: $e");
     }
-  } catch (e) {
-    _showSnackBar("Error: $e");
   }
-}
-
-
-
 
   @override
   Widget build(BuildContext context) {
     final deliveryboyProvider =
         Provider.of<DeliveryBoyProvider>(context, listen: true);
+    final size = MediaQuery.of(context).size;
+    // final height = size.height;
+    final width = size.width;
 
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
@@ -198,40 +190,35 @@ Future<void> submitDbDetails() async {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
-               if (!isEditMode)
-              Center(
-                child: Text(
-                  "Become a Delivery Partner",
-                  style: GoogleFonts.tinos(
-                    fontSize: 27,
-                    fontWeight: FontWeight.bold,
-                    color: const Color.fromARGB(255, 75, 2, 2),
+              if (!isEditMode)
+                Center(
+                  child: Text(
+                    "Become a Delivery Partner",
+                    style: GoogleFonts.tinos(
+                      fontSize: width * 0.07,
+                      fontWeight: FontWeight.bold,
+                      color: const Color.fromARGB(255, 75, 2, 2),
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                  textAlign: TextAlign.center,
                 ),
-              ),
 
-
-             if (!isEditMode)
-              const SizedBox(height: 10),
+              if (!isEditMode) const SizedBox(height: 10),
               if (!isEditMode)
-              Center(
-                child: Image.asset(
-                  "assets/deliveryboy.png",
-                  fit: BoxFit.cover,
-                  width: 200,
-                  height: 200,
+                Center(
+                  child: Image.asset(
+                    "assets/deliveryboy.png",
+                    fit: BoxFit.cover,
+                    width: width * 0.5,
+                    height: width * 0.5,
+                  ),
                 ),
-              ),
-              if (!isEditMode)
-              const SizedBox(height: 20),
-
+              if (!isEditMode) const SizedBox(height: 20),
 
               Text(
-                isEditMode? 'Update Details':"Enter Some Basic Details",
+                isEditMode ? 'Update Details' : "Enter Some Basic Details",
                 style: GoogleFonts.tinos(
-                  fontSize: 23,
+                  fontSize: width * 0.065,
                   fontWeight: FontWeight.bold,
                   color: const Color.fromARGB(255, 75, 2, 2),
                 ),
@@ -274,59 +261,59 @@ Future<void> submitDbDetails() async {
               ),
               const SizedBox(height: 12),
 
-
               // Restaurant Dropdown
               StreamBuilder<List<Map<String, dynamic>>>(
-      stream: context.read<DeliveryBoyProvider>().fetchCompaniesStream(),
-      builder: (context, snapshot) {
-        // 🌀 Loading state
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
+                stream:
+                    context.read<DeliveryBoyProvider>().fetchCompaniesStream(),
+                builder: (context, snapshot) {
+                  // 🌀 Loading state
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const SizedBox.shrink();
+                  }
 
-        // ❌ No data
-        if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return const Text("No restaurants found");
-        }
+                  // ❌ No data
+                  if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return const Text("No restaurants found");
+                  }
 
-        final companies = snapshot.data!;
+                  final companies = snapshot.data!;
 
-        return DropdownButtonFormField<String>(
-          decoration: const InputDecoration(
-            labelText: "Restaurant Name",
-            border: OutlineInputBorder(),
-          ),
-          value: selectedRestaurantId,
-          items: companies.map((company) {
-            return DropdownMenuItem<String>(
-              value: company['id'], // ✅ Store the document ID
-              child: Text(company['restaurantName'] ?? 'Unknown'),
-            );
-          }).toList(),
-          onChanged: (value) {
-            setState(() {
-              selectedRestaurantId = value;
-              selectedRestaurantName = companies
-                  .firstWhere((c) => c['id'] == value)['restaurantName'];
-            });
+                  return DropdownButtonFormField<String>(
+                    decoration: const InputDecoration(
+                      labelText: "Restaurant Name",
+                      border: OutlineInputBorder(),
+                    ),
+                    value: selectedRestaurantId,
+                    items: companies.map((company) {
+                      return DropdownMenuItem<String>(
+                        value: company['id'], // ✅ Store the document ID
+                        child: Text(company['restaurantName'] ?? 'Unknown'),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        selectedRestaurantId = value;
+                        selectedRestaurantName = companies.firstWhere(
+                            (c) => c['id'] == value)['restaurantName'];
+                      });
 
-            debugPrint("Selected Restaurant ID: $selectedRestaurantId");
-            debugPrint("Selected Restaurant Name: $selectedRestaurantName");
-          },
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return "Please select your Restaurant Name";
-            }
-            return null;
-          },
-        );
-      },
-    ),
+                      debugPrint(
+                          "Selected Restaurant ID: $selectedRestaurantId");
+                      debugPrint(
+                          "Selected Restaurant Name: $selectedRestaurantName");
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Please select your Restaurant Name";
+                      }
+                      return null;
+                    },
+                  );
+                },
+              ),
 
-
-                    
               const SizedBox(height: 20),
-                 TextFormField(
+              TextFormField(
                 controller: locationController,
                 decoration: const InputDecoration(
                   labelText: "Location",
@@ -337,19 +324,11 @@ Future<void> submitDbDetails() async {
               ),
               const SizedBox(height: 12),
 
-
-
-
-
-
-
-
-
               // Gender
               Text(
                 "Gender",
                 style: GoogleFonts.tinos(
-                  fontSize: 23,
+                  fontSize: width * 0.065,
                   fontWeight: FontWeight.bold,
                   color: const Color.fromARGB(255, 75, 2, 2),
                 ),
@@ -371,7 +350,7 @@ Future<void> submitDbDetails() async {
               Text(
                 "Vehicle Type",
                 style: GoogleFonts.tinos(
-                  fontSize: 23,
+                  fontSize: width * 0.065,
                   fontWeight: FontWeight.bold,
                   color: const Color.fromARGB(255, 75, 2, 2),
                 ),
@@ -393,44 +372,43 @@ Future<void> submitDbDetails() async {
               Text(
                 "Upload Driving License",
                 style: GoogleFonts.tinos(
-                  fontSize: 23,
+                  fontSize: width * 0.065,
                   fontWeight: FontWeight.bold,
                   color: const Color.fromARGB(255, 75, 2, 2),
                 ),
               ),
               const SizedBox(height: 10),
-            GestureDetector(
-  onTap: pickImage,
-  child: Container(
-    height: 150,
-    width: double.infinity,
-    decoration: BoxDecoration(
-      border: Border.all(color: Colors.grey),
-      borderRadius: BorderRadius.circular(10),
-    ),
-    child: idProofImage != null
-        ? Image.file(idProofImage!, fit: BoxFit.cover)
-        : (isEditMode && existingImageUrl != null)
-            ? Image.network(existingImageUrl!, fit: BoxFit.cover)
-            : Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Icon(Icons.upload_file, size: 40),
-                  SizedBox(height: 5),
-                  Text("Tap to upload Driving License"),
-                ],
+              GestureDetector(
+                onTap: pickImage,
+                child: Container(
+                  height: 150,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: idProofImage != null
+                      ? Image.file(idProofImage!, fit: BoxFit.cover)
+                      : (isEditMode && existingImageUrl != null)
+                          ? Image.network(existingImageUrl!, fit: BoxFit.cover)
+                          : Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: const [
+                                Icon(Icons.upload_file, size: 40),
+                                SizedBox(height: 5),
+                                Text("Tap to upload Driving License"),
+                              ],
+                            ),
+                ),
               ),
-  ),
-),
 
               const SizedBox(height: 25),
               // Submit Button
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: deliveryboyProvider.isLoading
-                      ? null
-                      : submitDbDetails,
+                  onPressed:
+                      deliveryboyProvider.isLoading ? null : submitDbDetails,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: deliveryboyProvider.isLoading
                         ? Colors.grey
@@ -445,7 +423,7 @@ Future<void> submitDbDetails() async {
                           color: Colors.white,
                         )
                       : Text(
-                            isEditMode ? "Update" : "Submit",
+                          isEditMode ? "Update" : "Submit",
                           style: textTheme.bodyLarge
                               ?.copyWith(color: Colors.white),
                         ),

@@ -4,28 +4,36 @@ import 'package:agitha/ControllersFolder/AddViewJobVaccancyController.dart';
 import 'package:agitha/ControllersFolder/AddressController.dart';
 import 'package:agitha/ControllersFolder/AdminHomeController.dart';
 import 'package:agitha/ControllersFolder/AuthenticationContoller.dart';
+import 'package:agitha/ControllersFolder/CakeDecorationController.dart';
 import 'package:agitha/ControllersFolder/CartController.dart';
 import 'package:agitha/ControllersFolder/CompanyRegistrationController.dart';
+import 'package:agitha/ControllersFolder/DecorationController.dart';
 import 'package:agitha/ControllersFolder/DeliveryBoyController.dart';
 import 'package:agitha/ControllersFolder/DeliveryBoyHomeController.dart';
 import 'package:agitha/ControllersFolder/DeliveryBoyRatingController.dart';
 import 'package:agitha/ControllersFolder/DeliveryBoyViewController.dart';
 import 'package:agitha/ControllersFolder/FoodRatingController.dart';
+import 'package:agitha/ControllersFolder/ForgetPasswordController.dart';
 import 'package:agitha/ControllersFolder/HomeViewCompanyController.dart';
 import 'package:agitha/ControllersFolder/InstructionController.dart';
 import 'package:agitha/ControllersFolder/JobApplicationController.dart';
 import 'package:agitha/ControllersFolder/MediaController.dart';
 import 'package:agitha/ControllersFolder/MessageController.dart';
 import 'package:agitha/ControllersFolder/OrdersController.dart';
+import 'package:agitha/ControllersFolder/PhoneNumberController.dart';
 import 'package:agitha/ControllersFolder/RatingController.dart';
+import 'package:agitha/ControllersFolder/RestaurantReservationController.dart';
 import 'package:agitha/ControllersFolder/RestaurantRatingController.dart';
+import 'package:agitha/ControllersFolder/RestaurentEventBookingController.dart';
 import 'package:agitha/ControllersFolder/RestouarntVeiwController.dart';
 import 'package:agitha/ControllersFolder/RestourentDelivaryBoyController.dart';
 import 'package:agitha/ControllersFolder/RestourentHomeController.dart';
 import 'package:agitha/ControllersFolder/SubscribtionController.dart';
 import 'package:agitha/ControllersFolder/UserAdminsideController.dart';
+import 'package:agitha/ControllersFolder/UserEventBookingController.dart';
 import 'package:agitha/ControllersFolder/UserOrderStatusController.dart';
 import 'package:agitha/ControllersFolder/UserRegistrationController.dart';
+import 'package:agitha/ControllersFolder/UserReservationController.dart';
 import 'package:agitha/ControllersFolder/ViewDishesController.dart';
 import 'package:agitha/ModelsFoder/StripePaymentClass.dart';
 import 'package:agitha/viewfolder/Admin/AboutFolder/AboutFormFeild.dart';
@@ -53,7 +61,7 @@ import 'package:agitha/viewfolder/DeliveryBoy/DeliveryBoyMainPage.dart';
 import 'package:agitha/viewfolder/DeliveryBoy/DeliveryBoyProfile.dart';
 import 'package:agitha/viewfolder/DeliveryBoy/DeliveryBoyRegistration.dart';
 import 'package:agitha/viewfolder/DeliveryBoy/PreviousOrderPage.dart';
-import 'package:agitha/viewfolder/Screens/HomePage.dart';
+import 'package:agitha/viewfolder/Screens/UserMainPage.dart';
 import 'package:agitha/viewfolder/Screens/SplashScreen.dart';
 import 'package:agitha/viewfolder/SubCompany/AddFoodFolder.dart/AddFoodItem.dart';
 import 'package:agitha/viewfolder/SubCompany/AddFoodFolder.dart/NormalFoodItems.dart';
@@ -66,7 +74,7 @@ import 'package:agitha/viewfolder/SubCompany/CompanyReservationFolder/Reservatio
 import 'package:agitha/viewfolder/SubCompany/CompanyResgistration.dart';
 import 'package:agitha/viewfolder/SubCompany/FoodOrdersFolder/FoodOrdersTapBarPage.dart';
 import 'package:agitha/viewfolder/SubCompany/CompanyReservationFolder/ReservationDetailsPage.dart';
-import 'package:agitha/viewfolder/SubCompany/CompanyReservationFolder/ReservationPaymentDetails.dart';
+import 'package:agitha/viewfolder/SubCompany/CompanyReservationFolder/ReservationBookedDetails.dart';
 import 'package:agitha/viewfolder/SubCompany/RestuarantApprovalpage.dart';
 import 'package:agitha/viewfolder/User/AboutUsPage.dart';
 import 'package:agitha/viewfolder/User/BookEventAndReservationPage.dart';
@@ -81,13 +89,15 @@ import 'package:agitha/viewfolder/User/FoodOrderingFolder/OrderStatusPage.dart';
 
 import 'package:agitha/viewfolder/User/CareersFolder/Careers.dart';
 import 'package:agitha/viewfolder/User/CareersFolder/Job_DetailsPage.dart';
-import 'package:agitha/viewfolder/User/Forgot_password/CodeGettingPage.dart';
+import 'package:agitha/viewfolder/User/Forgot_password/OtpCodeGettingPage.dart';
 import 'package:agitha/viewfolder/User/ContactUsPage.dart';
 import 'package:agitha/viewfolder/User/Forgot_password/ForgotPasswordFirst.dart';
 import 'package:agitha/viewfolder/User/LoginPage.dart';
 import 'package:agitha/viewfolder/User/Media.dart';
 import 'package:agitha/viewfolder/User/Forgot_password/ResetPassword.dart';
 import 'package:agitha/viewfolder/User/MyOrdersFolder/TotalFoodOrderDetails.dart';
+import 'package:agitha/viewfolder/User/SignupFolder/OtpPage.dart';
+
 import 'package:agitha/viewfolder/User/ProfileDetails/ProfileCreate.dart';
 import 'package:agitha/viewfolder/User/UserBlockPage.dart';
 import 'package:agitha/viewfolder/User/UserReservationFolder/ReservationPaymentPage.dart';
@@ -103,7 +113,7 @@ import 'package:agitha/viewfolder/User/UserSettingsFolder/UserSettings.dart';
 import 'package:agitha/check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_stripe/flutter_stripe.dart';
+// import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -112,7 +122,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 void main()async {
   WidgetsFlutterBinding.ensureInitialized();
-  Stripe.publishableKey = "pk_test_51SXIihPNgXcEyktDNYFLSVoTj8ghAcw4uJH0mlCXVk1n3iA1Kik4SVHSygU1GlJBEObmTukWI5hCikXFo8K0Tem800y05mdwZp";
+   
+   
+   //worked in phone
+    // Stripe.publishableKey = "pk_test_51SXIihPNgXcEyktDNYFLSVoTj8ghAcw4uJH0mlCXVk1n3iA1Kik4SVHSygU1GlJBEObmTukWI5hCikXFo8K0Tem800y05mdwZp";
+ 
+ 
+ 
+ 
+ 
   // // For Android AppCompat theme compatibility
   // Stripe.merchantIdentifier = 'merchant.com.example.agitha';
   
@@ -173,18 +191,21 @@ void main()async {
        ChangeNotifierProvider(create: (_) =>  RestaurantRatingProvider()), 
         ChangeNotifierProvider(create: (_) =>  CartController()), 
         ChangeNotifierProvider(create: (_) =>  OrderController()),
-        ChangeNotifierProvider(create: (_) => PaymentProvider()),  
+        // ChangeNotifierProvider(create: (_) => PaymentProvider()),  
         ChangeNotifierProvider(create: (_) => DeliveryBoyHomeController()),
         ChangeNotifierProvider(create: (_) => UserOrderStatusProvider()),  
         ChangeNotifierProvider(create: (_) => DeliveryBoyRatingProvider()),
-        
-    ],
+        ChangeNotifierProvider(create: (_) => RestaurantReservationController()),
+        ChangeNotifierProvider(create: (_) => UserReservationProvider()),  
+        ChangeNotifierProvider(create: (_) => UserEventProvider()),  
+        ChangeNotifierProvider(create: (_) => RestaurantEventController()),
+        ChangeNotifierProvider(create: (_) => ForgotPasswordProvider()), 
+        ChangeNotifierProvider(create: (_) =>  DecorationProvider()),
+        ChangeNotifierProvider(create: (_) =>  CakeDecorationProvider()),
+        ChangeNotifierProvider(create: (_) =>  PhoneAuthService()),
+     ],
       child: const MyApp())
     );
-    
-    
-    
-    
     
     
  
@@ -222,11 +243,11 @@ class MyApp extends StatelessWidget {
         fontSize: 16,
         fontWeight: FontWeight.w500,
       ),),
-
-     textTheme: TextTheme(
-       bodySmall: GoogleFonts.tinos(fontSize: 14, color: Colors.white, fontWeight: FontWeight.bold),  
-        bodyMedium: GoogleFonts.roboto(fontSize: 14, color: Colors.black),
-          bodyLarge: GoogleFonts.tinos(fontSize: 16, color: Colors.black87)
+ 
+      textTheme: TextTheme(
+        bodySmall: GoogleFonts.tinos(fontSize: 14, color: Colors.white, fontWeight: FontWeight.bold),  
+         bodyMedium: GoogleFonts.roboto(fontSize: 14, color: Colors.black),
+           bodyLarge: GoogleFonts.tinos(fontSize: 16, color: Colors.black87)
 
          
         ),
@@ -238,13 +259,13 @@ class MyApp extends StatelessWidget {
     //const HomePage
     // DeliveryBoyResgistration
     // DeliveryBoyMainPage
-    // CompanyMainPage
+    // CompanyMainPage 
     // Reservation
     // OrderStatousPage
       
       ),
       
-      home:HomePage()
+      home:const SplashScreen()
       ,
     );
   }

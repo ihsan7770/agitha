@@ -38,11 +38,26 @@ class _TotalFoodOrderDetailsState extends State<TotalFoodOrderDetails> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController reviewController = TextEditingController();
   TextEditingController dbreviewController = TextEditingController();
+  
+String formatOrderCount(int count) {
+  if (count >= 1000000) {
+    return "${(count / 1000000).floor()}M+";
+  } else if (count >= 1000) {
+    return "${(count / 1000).floor()}K+";
+  } else if (count >= 10) {
+    return "${(count / 10).floor() * 10}+";
+  } else {
+    return "$count"; // no + for less than 10
+  }
+}
+
+
 
     @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
      final restaurantRatingController = Provider.of<RestaurantRatingProvider>(context, listen: false);
+
       
     
      
@@ -50,6 +65,7 @@ class _TotalFoodOrderDetailsState extends State<TotalFoodOrderDetails> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Order Details"),
+        centerTitle: true,
       ),
       body: StreamBuilder<Map<String, dynamic>?>(
         stream: OrderController().totalPreviousOrderByIdStream(widget.orderId),
@@ -478,7 +494,28 @@ class _TotalFoodOrderDetailsState extends State<TotalFoodOrderDetails> {
                               child: Icon(Icons.delivery_dining),
                             ),
                             title: Text(deliveryBoy['db_name'] ?? '',style: const TextStyle(fontSize: 18,fontWeight: FontWeight.w500),),
-                            subtitle: const Text("10+ orders delivered",style: TextStyle(fontSize: 12,fontWeight: FontWeight.w500,color:Colors.grey),),
+                            subtitle: StreamBuilder<int>(
+  stream:OrderController(). completedOrdersCountStream(deliveryBoy['db_userId']),
+  builder: (context, snapshot) {
+    final count = snapshot.data ?? 0;
+    
+// show count
+    return Text(
+      "${formatOrderCount(count)} orders delivered",
+      style: const TextStyle(
+        fontSize: 12,
+        fontWeight: FontWeight.w500,
+        color: Colors.grey,
+      ),
+    );
+  },
+),
+
+                           
+                           
+                           
+                           
+                           
                             trailing: Container(
                            margin: const EdgeInsets.all(8),
                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),

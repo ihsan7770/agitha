@@ -143,6 +143,7 @@ Future<void> submitJobDetails() async {
     _ResponsibilityController.text = widget.jobResponsibility ?? "";
     _RequrementsController  .text = widget.jobRequirements ?? "";
     _LocationController.text=widget.jobLocation ?? '';
+    _selectedRole = widget.jobType;
   }
 
   @override
@@ -171,34 +172,17 @@ Future<void> submitJobDetails() async {
    final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     return  Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+      title:  Text(
+                  isEditMode ? "Edit job vaccancy" : "Add job vaccancy", ),
+                  centerTitle: true,
+                  ),
+                  
       body: SingleChildScrollView(
         child: Column(
           children: [
         
               Align(
-              alignment: Alignment.topLeft,
-               child: Padding(
-                   padding: const EdgeInsets.only(left: 16.0,bottom: 8.0),
-                   child:isEditMode? Text(
-                         "Edit job vaccancy",
-                         style: GoogleFonts.tinos(
-                           fontSize: 30,
-                           fontWeight: FontWeight.bold,
-                           color: Colors.black,
-                         ),
-                       ):Text(
-                         "Add job vaccancy",
-                         style: GoogleFonts.tinos(
-                           fontSize: 30,
-                           fontWeight: FontWeight.bold,
-                           color: Colors.black,
-                         ),
-                       )
-                 ),
-             ),
-
-                 Align(
               alignment: Alignment.topLeft,
                child: Padding(
                    padding: const EdgeInsets.only(left: 16.0,),
@@ -213,9 +197,6 @@ Future<void> submitJobDetails() async {
                  ),
              ),
 
-
-        
-        
               Form(
                 key: _formKey  ,
                 child: Padding(

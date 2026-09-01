@@ -36,72 +36,76 @@ class _ReferEarnPageState extends State<ReferEarnPage> {
   Widget build(BuildContext context) {
 
      final colorScheme = Theme.of(context).colorScheme;
+      final size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(
-      
+       appBar: AppBar(
+        title: const Text("Refer & Earn"),
+        centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-
-         
-            const SizedBox(height: 40),
-           Image.asset(referImage),
-            const SizedBox(height: 12),
-
-            
-         
-
-            const SizedBox(height: 24),
-
-            
-            const Text(
-              "Invite your friends & earn rewards when they join using your link.",
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 16, color: Colors.grey),
-            ),
-
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+        
            
-
-           
-         
-
-            const SizedBox(height: 20),
-
+              const SizedBox(height: 40),
+             Image.asset(referImage),
+              const SizedBox(height: 12),
+        
+              
            
         
-
-
-          const ReferCodeWidget(),
-
-           const SizedBox(height: 30),
-
-SizedBox(
-  width: double.infinity,  
-  height: 40,  
-  child: ElevatedButton.icon(
-    onPressed: () => _shareApp(context),
-    icon: const Icon(Icons.share, size: 18), // smaller icon
-    label: const Text(
-      "Share",
-      style: TextStyle(fontSize: 14), // smaller text
-    ),
-    style: ElevatedButton.styleFrom(
-      backgroundColor: colorScheme.primary,
-      foregroundColor: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      padding: EdgeInsets.zero, // let SizedBox control size
-    ),
-  ),
-),
-
-
-
-          ],
+              const SizedBox(height: 24),
+        
+              
+               Text(
+                "Invite your friends & earn rewards when they join using your link.",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: size.width * 0.045, color: Colors.grey),
+              ),
+        
+             
+        
+             
+           
+        
+              const SizedBox(height: 20),
+        
+             
+          
+        
+        
+            const ReferCodeWidget(),
+        
+             const SizedBox(height: 30),
+        
+        SizedBox(
+          width: double.infinity,  
+          height: 40,  
+          child: ElevatedButton.icon(
+            onPressed: () => _shareApp(context),
+            icon: const Icon(Icons.share, size: 18), // smaller icon
+            label: const Text(
+        "Share",
+        style: TextStyle(fontSize: 14), // smaller text
+            ),
+            style: ElevatedButton.styleFrom(
+        backgroundColor: colorScheme.primary,
+        foregroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        padding: EdgeInsets.zero, // let SizedBox control size
+            ),
+          ),
+        ),
+        
+        
+        
+            ],
+          ),
         ),
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:agitha/ControllersFolder/OrdersController.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -22,243 +23,233 @@ class PreviousOrdersPage extends StatelessWidget {
         
 
           if (orders.isEmpty) {
-            return Center(
-              child: Text("No new orders",
-                  style: GoogleFonts.tinos(fontSize: 20)),
+            return const Center(
+              child: Text("No previous orders",
+                 ),
             );
           }
 
           return ListView.builder(
-            padding: const EdgeInsets.all(12),
-            itemCount: orders.length,
-            itemBuilder: (context, index) {
-              final order = orders[index];
-              final items = (order["items"] ?? []) as List;
-              final deliveryBoy = order['deliveryBoy'];
+  padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.03),
+  itemCount: orders.length,
+  itemBuilder: (context, index) {
+    final order = orders[index];
+    final items = (order["items"] ?? []) as List;
+    final deliveryBoy = order['deliveryBoy'];
 
-              // -----------------------------------------------------
-              // CALCULATE TOTAL AMOUNT
-              // -----------------------------------------------------
-              double total = 0;
-              for (var item in items) {
-                double price = (item["price"] ?? 0).toDouble();
-                int qty = item["quantity"] ?? 1;
-                total += price * qty;
-              }
-                total=total+order['tip'];
-              return
-              
-               Stack(
-                 children: [ 
-                  
-                  
-                  Container(
-                  margin: const EdgeInsets.only(bottom: 16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
-                      )
-                    ],
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
 
-            
-            
-            Card(
-    // margin: EdgeInsets.symmetric(horizontal: 1, vertical: 8),
-    child: ListTile(
-     
+    // -----------------------------------------------------
+    // CALCULATE TOTAL AMOUNT
+    // -----------------------------------------------------
+    double total = 0;
+    for (var item in items) {
+      double price = (item["price"] ?? 0).toDouble();
+      int qty = item["quantity"] ?? 1;
+      total += price * qty;
+    }
+    total += order['tip'] ?? 0;
 
-      title: Text(
-        "Delivery Boy",
-        style: TextStyle(fontWeight: FontWeight.bold),
-      ),
-
-       subtitle: Column(
-  crossAxisAlignment: CrossAxisAlignment.start,
-  children: [
-    if (deliveryBoy != null) ...[
-      Text(deliveryBoy['db_name'] ?? "Unknown", style: TextStyle(fontWeight: FontWeight.w500)),
-      Text(deliveryBoy['db_phone'] ?? "No phone", style: TextStyle(color: Colors.black54)),
-
-
-       
-
-
-    ] else ...[
-      Text("Not Assigned Yet", style: TextStyle(color: Colors.orange)),
-    ],
-  ],
-),
-
-      trailing: const Row(
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      Icon(Icons.check_circle, size: 18, color: Colors.green),
-      SizedBox(width: 4),
-      Text(
-        "Delivered",
-        style: TextStyle(
-          fontSize: 14,
-          color: Colors.green,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    ],
-  )
-    ),
-  ),
-
-
-
-
-                        //----------------------------------------------------
-                        // HEADER: CUSTOMER NAME + PHONE
-                        //----------------------------------------------------
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              order['username'],
-                              style: GoogleFonts.tinos(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black87,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 4),
-                        Text(order["userphone"],
-                            style: GoogleFonts.tinos(
-                                fontSize: 16, color: Colors.black54)),            
-
-                                
-
-
-                             
-
-                              
-                 
-                        const SizedBox(height: 18),
-                 
-                        //----------------------------------------------------
-                        // ORDER ITEMS
-                        //----------------------------------------------------
-                        Text("Items:",
-                            style: GoogleFonts.tinos(
-                                fontSize: 18, fontWeight: FontWeight.w600)),
-                        const SizedBox(height: 8),
-                 
-                        Column(
-                          children: items.map((item) {
-                            return Padding(
-                              padding: const EdgeInsets.only(bottom: 8.0),
-                              child: Row(
-                                children: [
-                                  const Icon(Icons.circle,
-                                      size: 10, color: Colors.black),
-                                  const SizedBox(width: 8),
-                                  Expanded(
-                                    child: Text(
-                                      "${item['dishName']}  x${item['quantity']}",
-                                      style: GoogleFonts.tinos(
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ),
-                                  Text(
-                                    "₹${item['price']}",
-                                    style: GoogleFonts.tinos(
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                 
-                        
-                        
-                 
-               Padding(
-                    padding: const EdgeInsets.only(left: 16.0, top: 10.0, bottom: 8.0),
-                    child: Align(
-                      alignment: Alignment.topLeft,
-                      child: Text(
-                        "Order Placed:${DateFormat('MMMM d, yyyy – hh:mm a').format(
-                          DateTime.parse(order['createdAt']),
-                        )}",
-                        style: GoogleFonts.tinos(
-                          fontSize: 15,
-                          color: Colors.grey,
-                        ),
+    return Stack(
+      children: [
+        Container(
+          margin: EdgeInsets.only(bottom: screenHeight * 0.02),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(screenWidth * 0.04),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: screenWidth * 0.025,
+                offset: Offset(0, screenHeight * 0.005),
+              )
+            ],
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(screenWidth * 0.03),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // ---------------- Delivery Boy Card ----------------
+                Card(
+                  child: ListTile(
+                    title: Text(
+                      "Delivery Boy",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: screenWidth * 0.045,
                       ),
                     ),
-                  ),
-                            
-                            
-
-                 
-                        //----------------------------------------------------
-                        // TOTAL PRICE BOX
-                        //----------------------------------------------------
-                        Padding(
-                          padding: const EdgeInsets.only(left: 16.0, bottom: 8.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              if ((order['tip'] ?? 0) > 0)
-                              Text("Tip: ₹${order['tip'].toString()}",
-                                  style: GoogleFonts.tinos(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w600)),
-                             
-                              Text("Total: ₹${total.toStringAsFixed(2)}",
-                                  style: GoogleFonts.tinos(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black)),
-                            ],
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (deliveryBoy != null) ...[
+                          Text(
+                            deliveryBoy['db_name'] ?? "Unknown",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: screenWidth * 0.04,
+                            ),
+                          ),
+                          Text(
+                            deliveryBoy['db_phone'] ?? "No phone",
+                            style: TextStyle(
+                              color: Colors.black54,
+                              fontSize: screenWidth * 0.038,
+                            ),
+                          ),
+                        ] else ...[
+                          Text(
+                            "Not Assigned Yet",
+                            style: TextStyle(
+                              color: Colors.orange,
+                              fontSize: screenWidth * 0.04,
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.check_circle,
+                            size: screenWidth * 0.045, color: Colors.green),
+                        SizedBox(width: screenWidth * 0.01),
+                        Text(
+                          "Delivered",
+                          style: TextStyle(
+                            fontSize: screenWidth * 0.04,
+                            color: Colors.green,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                 
-                        const SizedBox(height: 16),
-                 
-                    
-          
-                        
                       ],
                     ),
                   ),
-                               ),
+                ),
+
+                SizedBox(height: screenHeight * 0.015),
+
+                // ---------------- Customer Name & Phone ----------------
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      order['username'],
+                      style: GoogleFonts.tinos(
+                        fontSize: screenWidth * 0.05,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: screenHeight * 0.005),
+                Text(
+                  order["userphone"],
+                  style: GoogleFonts.tinos(
+                    fontSize: screenWidth * 0.042,
+                    color: Colors.black54,
+                  ),
+                ),
+
+                SizedBox(height: screenHeight * 0.02),
+
+                // ---------------- Order Items ----------------
+                Text(
+                  "Items:",
+                  style: GoogleFonts.tinos(
+                      fontSize: screenWidth * 0.045,
+                      fontWeight: FontWeight.w600),
+                ),
+                SizedBox(height: screenHeight * 0.01),
+                Column(
+                  children: items.map((item) {
+                    return Padding(
+                      padding:
+                          EdgeInsets.only(bottom: screenHeight * 0.008),
+                      child: Row(
+                        children: [
+                          Icon(Icons.circle,
+                              size: screenWidth * 0.025, color: Colors.black),
+                          SizedBox(width: screenWidth * 0.02),
+                          Expanded(
+                            child: Text(
+                              "${item['dishName']}  x${item['quantity']}",
+                              style: GoogleFonts.tinos(
+                                fontSize: screenWidth * 0.042,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                          Text(
+                            "₹${item['price']}",
+                            style: GoogleFonts.tinos(
+                              fontSize: screenWidth * 0.042,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                ),
+
+                // ---------------- Ordered Date ----------------
+                Padding(
+                  padding: EdgeInsets.only(
+                      left: screenWidth * 0.04,
+                      top: screenHeight * 0.01,
+                      bottom: screenHeight * 0.008),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      "Ordered: ${DateFormat('MMMM d, yyyy – hh:mm a').format((order['createdAt'] as Timestamp).toDate())}",
+                      style: GoogleFonts.tinos(
+                        fontSize: screenWidth * 0.038,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ),
+                ),
+
+                // ---------------- Tip & Total ----------------
+                Padding(
+                  padding: EdgeInsets.only(
+                      left: screenWidth * 0.04, bottom: screenHeight * 0.008),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if ((order['tip'] ?? 0) > 0)
+                        Text(
+                          "Tip: ₹${order['tip'].toString()}",
+                          style: GoogleFonts.tinos(
+                              fontSize: screenWidth * 0.038,
+                              fontWeight: FontWeight.w600),
+                        ),
+                      Text(
+                        "Total: ₹${total.toStringAsFixed(2)}",
+                        style: GoogleFonts.tinos(
+                            fontSize: screenWidth * 0.045,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black),
+                      ),
+                    ],
+                  ),
+                ),
+
+                SizedBox(height: screenHeight * 0.02),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  },
+);
 
 
-
-                                   
-    
-
-
- 
-                               
-                               
-                               
-                                ]
-               );
-            },
-          );
         },
       ),
       

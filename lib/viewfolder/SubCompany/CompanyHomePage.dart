@@ -1,16 +1,15 @@
-
 import 'package:agitha/ControllersFolder/AuthenticationContoller.dart';
 import 'package:agitha/ControllersFolder/RestourentHomeController.dart';
 import 'package:agitha/ModelsFoder/CompanyRegistrationModel.dart';
-import 'package:agitha/viewfolder/Screens/HomePage.dart';
 import 'package:agitha/viewfolder/SubCompany/AddFoodFolder.dart/AddFoodItem.dart';
 import 'package:agitha/viewfolder/SubCompany/AddFoodFolder.dart/FoodItemTabBar.dart';
+import 'package:agitha/viewfolder/SubCompany/CakeDecorationDetails.dart/CakeDecorationForm.dart';
 import 'package:agitha/viewfolder/SubCompany/CompanyDeliveryBoyFolder/CompanyViewDeliveryBoy.dart';
 import 'package:agitha/viewfolder/SubCompany/CompanyProfileFolder/CompanyProfile.dart';
+import 'package:agitha/viewfolder/SubCompany/DecorationFolder.dart/DecorationFormPage.dart';
 import 'package:agitha/viewfolder/SubCompany/RestaurantRating_ReviewDetails.dart';
-
+import 'package:agitha/viewfolder/Widgets/ImageErrorContainer.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -22,312 +21,289 @@ class CompanyHomePage extends StatefulWidget {
 }
 
 class _CompanyHomePageState extends State<CompanyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-     final provider = Provider.of<RestaurantHomeProvider>(context);
-     final restaurant = provider.restaurant;
-    
-    return  Scaffold(
-      
-        appBar: AppBar(),
-      drawer: Drawer(child: ListView(
-        padding: EdgeInsets.zero,
-        children: [
+ @override
+Widget build(BuildContext context) {
+  final screenWidth = MediaQuery.of(context).size.width;
+  final screenHeight = MediaQuery.of(context).size.height;
 
+  return Scaffold(
+    body: StreamBuilder<CompanyRegistrationModel?>(
+      stream: context.read<RestaurantHomeProvider>().restaurantStream(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
+        if (!snapshot.hasData || snapshot.data == null) {
+          return const Center(child: Text("No restaurant data found"));
+        }
 
-StreamBuilder<CompanyRegistrationModel?>(
-  stream: context.read<RestaurantHomeProvider>().restaurantStream(),
-  builder: (context, snapshot) {
-    if (snapshot.connectionState == ConnectionState.waiting) {
-      return const Center(child: CircularProgressIndicator());
-    }
+        final restaurant = snapshot.data!;
 
-    if (!snapshot.hasData || snapshot.data == null) {
-      return const Center(child: Text("No restaurant data found"));
-    }
+        return SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
 
-    final restaurant = snapshot.data!;
-
-    return Container(
-      height: 180,
-      width: double.infinity,
-      // margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-      decoration: BoxDecoration(
-        borderRadius:const BorderRadius.only(bottomLeft:Radius.circular(20),bottomRight: Radius.circular(20)),
-        gradient: LinearGradient(
-          colors: [Colors.red.shade800, Colors.red.shade400],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.red.withOpacity(0.3),
-            blurRadius: 8,
-            offset: const Offset(0, 5),
-          ),
-        ],
-      ),
-      child: Stack(
-        children: [
-          // ✨ Decorative faded fork & spoon icon (optional aesthetic)
-          Positioned(
-            right: -20,
-            top: -10,
-            child: Icon(
-              Icons.restaurant_menu,
-              size: 120,
-              color: Colors.white.withOpacity(0.1),
-            ),
-          ),
-
-          // 🌟 Content
-          Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  restaurant.restaurantName,
-                  style: GoogleFonts.tinos(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
+              /// 🔥 Banner Image
+              ClipRRect(
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(screenWidth * 0.06),
+                  bottomRight: Radius.circular(screenWidth * 0.06),
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  restaurant.brandType,
-                  style: GoogleFonts.tinos(
-                    fontSize: 16,
-                    color: Colors.white.withOpacity(0.9),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  children:  [
-                    const Icon(
-                      Icons.star,
-                      color: Colors.yellow,
-                      size: 20,
-                    ),
-                    const SizedBox(width: 5),
-                    Text(
-                      restaurant.rating.toString(),
-                      style:  GoogleFonts.tinos(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                child: Image.network(
+                  restaurant.restaurantImageUrl,
+                  height: screenHeight * 0.28,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) =>
+                      NoInternetWidget(
+                        width: double.infinity,
+                        height: screenHeight * 0.28,
+                        iconSize: screenWidth * 0.08,
+                        textSize: screenWidth * 0.035,
                       ),
+                ),
+              ),
+
+              SizedBox(height: screenHeight * 0.02),
+
+              /// 🔥 Restaurant Info
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      radius: screenWidth * 0.1,
+                      backgroundImage: NetworkImage(restaurant.logoUrl),
+                      backgroundColor: Colors.grey.shade200,
+                    ),
+                    SizedBox(width: screenWidth * 0.04),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          restaurant.restaurantName,
+                          style: GoogleFonts.tinos(
+                            fontSize: screenWidth * 0.055,
+                            fontWeight: FontWeight.bold,
+                            color: const Color.fromARGB(255, 75, 2, 2),
+                          ),
+                        ),
+                        Text(
+                          restaurant.brandType,
+                          style: GoogleFonts.tinos(
+                            fontSize: screenWidth * 0.04,
+                          ),
+                        ),
+                        Row(
+                          children: [
+                            Icon(Icons.star,
+                                color: Colors.orange,
+                                size: screenWidth * 0.045),
+                            SizedBox(width: screenWidth * 0.01),
+                            Text(
+                              restaurant.rating.toStringAsFixed(1),
+                              style: GoogleFonts.tinos(
+                                fontSize: screenWidth * 0.04,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
+              ),
+
+              SizedBox(height: screenHeight * 0.04),
+
+              /// 🔥 Quick Actions Title
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
+                child: Text(
+                  "Quick Actions",
+                  style: GoogleFonts.tinos(
+                    fontSize: screenWidth * 0.055,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+
+              SizedBox(height: screenHeight * 0.02),
+
+              /// 🔥 Quick Actions Grid
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
+                child: GridView.count(
+                  crossAxisCount: screenWidth < 600 ? 3 : 4,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  mainAxisSpacing: screenWidth * 0.04,
+                  crossAxisSpacing: screenWidth * 0.04,
+                  childAspectRatio: 1,
+                  children: [
+                    _actionButton(
+                      icon: Icons.person,
+                      label: "Profile",
+                      screenWidth: screenWidth,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => const CompanyProfile()),
+                        );
+                      },
+                    ),
+
+                    _actionButton(
+                      icon: Icons.delivery_dining,
+                      label: "Delivery Boy",
+                      screenWidth: screenWidth,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) =>
+                                  const CompanyViewDeliveryBoys()),
+                        );
+                      },
+                    ),
+
+                    _actionButton(
+                      icon: Icons.fastfood,
+                      label: "Add Food",
+                      screenWidth: screenWidth,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => const AddFoodItem()),
+                        );
+                      },
+                    ),
+
+                    _actionButton(
+                      icon: Icons.fastfood_rounded,
+                      label: "Food Items",
+                      screenWidth: screenWidth,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => const FoodItemTabBar()),
+                        );
+                      },
+                    ),
+
+                    _actionButton(
+                      icon: Icons.auto_awesome,
+                      label: "Decoration",
+                      screenWidth: screenWidth,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => const DecorationFormPage()),
+                        );
+                      },
+                    ),
+
+                    _actionButton(
+                      icon: Icons.cake,
+                      label: "Cake",
+                      screenWidth: screenWidth,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) =>
+                                  const CakeDecorationFormPage()),
+                        );
+                      },
+                    ),
+
+                    _actionButton(
+                      icon: Icons.reviews,
+                      label: "Reviews",
+                      screenWidth: screenWidth,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) =>
+                                  RestaurantRating_ReviewPage()),
+                        );
+                      },
+                    ),
+
+                    _actionButton(
+                      icon: Icons.logout,
+                      label: "Logout",
+                      screenWidth: screenWidth,
+                      onTap: () {
+                        AuthenticationController().logout(context);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+
+              SizedBox(height: screenHeight * 0.04),
+            ],
+          ),
+        );
+      },
+    ),
+  );
+}
+
+
+
+
+  /// 🔘 Reusable Action Button
+ Widget _actionButton({
+  required IconData icon,
+  required String label,
+  required VoidCallback onTap,
+  required double screenWidth,
+}) {
+  return InkWell(
+    onTap: onTap,
+    borderRadius: BorderRadius.circular(screenWidth * 0.04),
+    child: Container(
+      decoration: BoxDecoration(
+        color: Colors.red.shade50,
+        borderRadius: BorderRadius.circular(screenWidth * 0.04),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 4,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            icon,
+            size: screenWidth * 0.08,
+            color: Colors.red.shade700,
+          ),
+          SizedBox(height: screenWidth * 0.02),
+          Text(
+            label,
+            textAlign: TextAlign.center,
+            style: GoogleFonts.tinos(
+              fontSize: screenWidth * 0.035,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ],
       ),
-    );
-  },
-),
+    ),
+  );
+}
 
-      
-
-
-          
-
-
-
-           
-          // Profile
-          ListTile(
-            leading: const Icon(Icons.person, color: Colors.black87),
-            title: const Text('Profile'),
-            onTap: () {
-             Navigator.push(context, MaterialPageRoute(builder:(context)=> const CompanyProfile ()));
-            },
-          ),
-
-          // Delivery Boy Details
-          ListTile(
-            leading: const Icon(Icons.delivery_dining, color: Colors.black87),
-            title: const Text('Delivery Boy Details'),
-            onTap: () {
-
-            Navigator.push(
-             context,
-            MaterialPageRoute(
-            builder: (context) => const CompanyViewDeliveryBoys(),
-               ),
-             );
-             
-
-
-             
-              
-            },
-          ),
-
-
-     
-
-          // Add food item
-          ListTile(
-            leading: const Icon(Icons.event_available, color: Colors.black87),
-            title: const Text('Add food item'),
-            onTap: () {
-               Navigator.push(context, MaterialPageRoute(builder:(context)=> const AddFoodItem()));
-            },
-          ),
-
-
-            // Add food item
-          ListTile(
-            leading: const Icon(Icons.fastfood_rounded, color: Colors.black87),
-            title: const Text('Total Food Items'),
-            onTap: () {
-               Navigator.push(context, MaterialPageRoute(builder:(context)=> const FoodItemTabBar ()));
-            },
-          ),
-
-          
-            ListTile(
-                  leading: const Icon(Icons.reviews, color: Colors.black87),
-                  title: const Text('Ratings & Reviews'),
-                  onTap: () {
-                   Navigator.push(context, MaterialPageRoute(builder:(context)=> RestaurantRating_ReviewPage()));
-                  },
-                ),
-
-
-             // Logout
-          ListTile(
-            leading: const Icon(Icons.logout, color: Colors.black87),
-            title: const Text('Logout'),
-            onTap: () {
-              AuthenticationController().logout(context);
-            },
-          ),
-
-         
-        ],
-      ), 
-      
-       ),
-        body:SingleChildScrollView(
-          child: Column(children: [
-          
-             Padding(
-               padding: const EdgeInsets.all(12.0),
-               child: ClipRRect(
-               borderRadius: BorderRadius.circular(20), 
-               child: Image.asset(
-               "assets/projectimages/2nd.jpg", 
-               fit: BoxFit.cover,               
-               width: double.infinity,          
-               height: 300,                     
-                  ),
-                 ),
-             ),
-          
-          
-          
-               Padding(
-                            padding: const EdgeInsets.only(left:16.0,right:16.0, top: 40),
-                            child: Text(
-                            "Total Orders",
-                            style: GoogleFonts.tinos(
-                              fontSize: 38,
-                              fontWeight: FontWeight.bold,
-                              color: const Color.fromARGB(255, 75, 2, 2),
-                            ),
-                                            ),
-                          ),
-          
-                            Padding(
-                            padding: const EdgeInsets.only(left:16.0,right:16.0, top: 6),
-                            child: Text(
-                            "23",
-                            style: GoogleFonts.tinos(
-                              fontSize: 38,
-                              fontWeight: FontWeight.bold,
-                              color: Color.fromARGB(255, 80, 79, 79)
-                            ),
-                                            ),
-                          ),
-          
-          
-          
-          
-          
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Column(
-                                  children: [
-                                    Padding(
-                                    padding: const EdgeInsets.only(left:16.0,right:16.0, top: 10),
-                                    child: Text(
-                                    "Total Seats",
-                                    style: GoogleFonts.tinos(
-                                      fontSize: 25,
-                                      fontWeight: FontWeight.bold,
-                                      color: const Color.fromARGB(255, 75, 2, 2),
-                                    ),
-                                                    ),
-                                                            ),
-                                    
-                                    Padding(
-                                    padding: const EdgeInsets.only(left:16.0,right:16.0, top: 6),
-                                    child: Text(
-                                    "50",
-                                    style: GoogleFonts.tinos(
-                                      fontSize: 25,
-                                      fontWeight: FontWeight.bold,
-                                      color: Color.fromARGB(255, 80, 79, 79)
-                                    ),
-                                                    ),
-                                                            ),
-                                  ],
-                                ),
-                                
-                                
-                                                        
-                                Column(
-                                  children: [
-                                    Padding(
-                                    padding: const EdgeInsets.only(left:16.0,right:16.0, top: 10),
-                                    child: Text(
-                                    "Balance Seats",
-                                    style: GoogleFonts.tinos(
-                                      fontSize: 25,
-                                      fontWeight: FontWeight.bold,
-                                      color: const Color.fromARGB(255, 75, 2, 2),
-                                    ),
-                                                    ),
-                                                            ),
-                                    
-                                    Padding(
-                                    padding: const EdgeInsets.only(left:16.0,right:16.0, top: 6),
-                                    child: Text(
-                                    "25",
-                                    style: GoogleFonts.tinos(
-                                      fontSize: 25,
-                                      fontWeight: FontWeight.bold,
-                                      color: Color.fromARGB(255, 80, 79, 79)
-                                    ),
-                                                    ),
-                                                            ),
-                                  ],
-                                ),
-                              ],
-                            ),
-          
-          ],),
-        )
-    );
-
-   
-  }
 }

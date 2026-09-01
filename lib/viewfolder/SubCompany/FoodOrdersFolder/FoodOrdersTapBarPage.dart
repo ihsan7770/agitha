@@ -1,49 +1,52 @@
-import 'package:agitha/viewfolder/SubCompany/CompanyDeliveryBoyFolder/AvailableDeliveryBoysPage.dart';
-import 'package:agitha/viewfolder/SubCompany/CompanyHomePage.dart';
 import 'package:agitha/viewfolder/SubCompany/FoodOrdersFolder/NewOrdersPage.dart';
 import 'package:agitha/viewfolder/SubCompany/FoodOrdersFolder/PendingOrdersPage.dart';
 import 'package:agitha/viewfolder/SubCompany/FoodOrdersFolder/PrevousOrdersPage.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
-class FoodOrdersTabBarPage extends StatefulWidget {
+class FoodOrdersTabBarPage extends StatelessWidget {
   const FoodOrdersTabBarPage({super.key});
 
   @override
-  State<FoodOrdersTabBarPage> createState() => _FoodOrdersPageState();
-}
-
-class _FoodOrdersPageState extends State<FoodOrdersTabBarPage> {
-  
-
-  @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final tabFontSize = screenWidth * 0.035;
 
     return DefaultTabController(
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-       automaticallyImplyLeading: false,
-          
-          bottom: const TabBar(
+          automaticallyImplyLeading: false,
+          bottom: TabBar(
             tabs: [
-              Tab(text: "New Orders"),
-              Tab(text: "Delivery Statous"),
-              Tab(text: "Previous Orders",)
+              Tab(
+                child: Text(
+                  "New Orders",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: tabFontSize),
+                ),
+              ),
+              Tab(
+                child: Text(
+                  "Delivery Status",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: tabFontSize),
+                ),
+              ),
+              Tab(
+                child: Text(
+                  "Previous Orders",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: tabFontSize),
+                ),
+              ),
             ],
           ),
         ),
         body: const TabBarView(
           children: [
-            
-            NewOrdersPage (),
-
-            //Second Tab  Pending Orders Page
+            NewOrdersPage(),
             PendingOrdersPage(),
-
-           
-            //third
-            PreviousOrdersPage()
+            PreviousOrdersPage(),
           ],
         ),
       ),

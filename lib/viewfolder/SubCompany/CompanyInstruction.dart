@@ -14,13 +14,14 @@ class CompanyInstrutions extends StatefulWidget {
 }
 
 class _CompanyInstrutionsState extends State<CompanyInstrutions> {
-      late InstructionProvider instructionProvider;
-     @override
+  late InstructionProvider instructionProvider;
+
+  @override
   void initState() {
     super.initState();
-    instructionProvider = Provider.of<InstructionProvider>(context, listen: false);
+    instructionProvider =
+        Provider.of<InstructionProvider>(context, listen: false);
 
-   
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await instructionProvider.fetchAllInstruction();
       setState(() {});
@@ -29,27 +30,33 @@ class _CompanyInstrutionsState extends State<CompanyInstrutions> {
 
   @override
   Widget build(BuildContext context) {
-     final instructionProvider = Provider.of<InstructionProvider>(context);
-       final instructionList = instructionProvider.instructionList
-              .where((instruction) => instruction.role == 'Restaurant')
-              .toList();
+    final instructionProvider = Provider.of<InstructionProvider>(context);
+    final instructionList = instructionProvider.instructionList
+        .where((instruction) => instruction.role == 'Restaurant')
+        .toList();
+
     final colorScheme = Theme.of(context).colorScheme;
+
+    // ✅ MediaQuery added
+    final media = MediaQuery.of(context);
+    final height = media.size.height;
+    final width = media.size.width;
 
     return Scaffold(
       body: Stack(
         children: [
           /// Main scroll content
           SingleChildScrollView(
-            padding: const EdgeInsets.only(bottom: 120), // space for bottom buttons
+            padding: EdgeInsets.only(bottom: height * 0.15),
             child: Column(
               children: [
                 Container(
                   width: double.infinity,
-                  decoration: const BoxDecoration(
-                    color: Color.fromARGB(255, 241, 2, 2),
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 241, 2, 2),
                     borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(25),
-                      bottomRight: Radius.circular(25),
+                      bottomLeft: Radius.circular(width * 0.06),
+                      bottomRight: Radius.circular(width * 0.06),
                     ),
                   ),
                   child: Column(
@@ -61,27 +68,31 @@ class _CompanyInstrutionsState extends State<CompanyInstrutions> {
                           onPressed: () {
                             Navigator.pop(context);
                           },
-                          icon: const Icon(Icons.arrow_back, color: Colors.white, size: 28),
+                          icon: Icon(Icons.arrow_back,
+                              color: Colors.white, size: width * 0.07),
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: width * 0.04),
                         child: Text(
                           "Hello!",
                           style: GoogleFonts.tinos(
-                            fontSize: 30,
+                            fontSize: width * 0.075,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: height * 0.01),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: width * 0.04,
+                            vertical: height * 0.015),
                         child: Text(
                           "Before you create an account, please read and accept our instructions.",
                           style: GoogleFonts.tinos(
-                            fontSize: 18,
+                            fontSize: width * 0.045,
                             fontWeight: FontWeight.w500,
                             color: Colors.white,
                           ),
@@ -91,17 +102,17 @@ class _CompanyInstrutionsState extends State<CompanyInstrutions> {
                   ),
                 ),
 
-                const SizedBox(height: 20),
+                SizedBox(height: height * 0.03),
 
-                // Body content
+                /// Instructions Title
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  padding: EdgeInsets.symmetric(horizontal: width * 0.04),
                   child: Align(
                     alignment: Alignment.topLeft,
                     child: Text(
                       "Instructions",
                       style: GoogleFonts.tinos(
-                        fontSize: 28,
+                        fontSize: width * 0.07,
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
                       ),
@@ -110,11 +121,12 @@ class _CompanyInstrutionsState extends State<CompanyInstrutions> {
                 ),
 
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 5 ),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: width * 0.04, vertical: height * 0.01),
                   child: Text(
                     "Please read these instructions carefully before using the Agitha mobile application as a restaurant partner",
                     style: GoogleFonts.tinos(
-                      fontSize: 16,
+                      fontSize: width * 0.04,
                       color: Colors.black,
                       height: 1.5,
                     ),
@@ -122,217 +134,124 @@ class _CompanyInstrutionsState extends State<CompanyInstrutions> {
                   ),
                 ),
 
+                /// Loading / Empty / List
                 instructionProvider.isLoading
-                  ? const Padding(
-                      padding: EdgeInsets.all(40.0),
-                      child: Center(child: CircularProgressIndicator()),
-                    )
-                  :instructionProvider.instructionList.isEmpty
-                      ? const Padding(
-                          padding: EdgeInsets.all(40.0),
-                          child: Center(child: Text("No Instructions uploaded yet.")),
-                        )
-                      :
-                      
-                       
-                      ListView.builder(
-                          physics: const NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: instructionList.length,
-                          itemBuilder: (context, index) {
-                            final instructions = instructionList[index];
+                    ? Padding(
+                        padding: EdgeInsets.all(width * 0.1),
+                        child: const Center(
+                            child: CircularProgressIndicator()),
+                      )
+                    : instructionList.isEmpty
+                        ? Padding(
+                            padding: EdgeInsets.all(width * 0.1),
+                            child: const Center(
+                                child: Text(
+                                    "No Instructions uploaded yet.")),
+                          )
+                        : ListView.builder(
+                            physics:
+                                const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: instructionList.length,
+                            itemBuilder: (context, index) {
+                              final instructions =
+                                  instructionList[index];
 
-                            return Padding(
-                              padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 8.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  // Section Title
-                                  Text(
-                                    "${index + 1}. ${instructions.title}",
-                                    style: GoogleFonts.tinos(
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
+                              return Padding(
+                                padding: EdgeInsets.only(
+                                  left: width * 0.04,
+                                  right: width * 0.04,
+                                  top: height * 0.01,
+                                ),
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "${index + 1}. ${instructions.title}",
+                                      style: GoogleFonts.tinos(
+                                        fontSize: width * 0.055,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                      ),
                                     ),
-                                  ),
-                                  // Section Content
-                                  Text(
-                                    instructions.instruction,
-                                    style: GoogleFonts.tinos(
-                                      fontSize: 16,
-                                      color: Colors.black,
-                                      height: 1.5,
+                                    SizedBox(height: height * 0.005),
+                                    Text(
+                                      instructions.instruction,
+                                      style: GoogleFonts.tinos(
+                                        fontSize: width * 0.04,
+                                        color: Colors.black,
+                                        height: 1.5,
+                                      ),
+                                      textAlign: TextAlign.justify,
                                     ),
-                                    textAlign: TextAlign.justify,
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-
-                // Section 1
-                // Padding(
-                //   padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 16),
-                //   child: Align(
-                //     alignment: Alignment.topLeft,
-                //     child: Text(
-                //       "1. Conditions of Use",
-                //       style: GoogleFonts.tinos(
-                //         fontSize: 22,
-                //         fontWeight: FontWeight.bold,
-                //         color: Colors.black,
-                //       ),
-                //     ),
-                //   ),
-                // ),
-                // Padding(
-                //   padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 6),
-                //   child: Text(
-                //     "The app is designed to provide a seamless and user-friendly experience, with all core features fully functional. It is stable and optimized for smooth performance across supported devices, ensuring minimal crashes or bugs. The user interface is intuitive, making navigation simple and efficient.",
-                //     style: GoogleFonts.tinos(
-                //       fontSize: 16,
-                //       color: Colors.black,
-                //       height: 1.5,
-                //     ),
-                //     textAlign: TextAlign.justify,
-                //   ),
-                // ),
-
-                // // Section 2
-                // Padding(
-                //   padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 16),
-                //   child: Align(
-                //     alignment: Alignment.topLeft,
-                //     child: Text(
-                //       "2. Use of the Service",
-                //       style: GoogleFonts.tinos(
-                //         fontSize: 22,
-                //         fontWeight: FontWeight.bold,
-                //         color: Colors.black,
-                //       ),
-                //     ),
-                //   ),
-                // ),
-                // Padding(
-                //   padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 6),
-                //   child: Text(
-                //     "The app is designed to provide a seamless and user-friendly experience, with all core features fully functional. It is stable and optimized for smooth performance across supported devices.",
-                //     style: GoogleFonts.tinos(
-                //       fontSize: 16,
-                //       color: Colors.black,
-                //       height: 1.5,
-                //     ),
-                //     textAlign: TextAlign.justify,
-                //   ),
-                // ),
-
-                // // Section 3
-                // Padding(
-                //   padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 16),
-                //   child: Align(
-                //     alignment: Alignment.topLeft,
-                //     child: Text(
-                //       "3. Privacy Policy",
-                //       style: GoogleFonts.tinos(
-                //         fontSize: 22,
-                //         fontWeight: FontWeight.bold,
-                //         color: Colors.black,
-                //       ),
-                //     ),
-                //   ),
-                // ),
-                // Padding(
-                //   padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 6),
-                //   child: Text(
-                //     "The app is designed to provide a seamless and user-friendly experience, ensuring user privacy and data protection through secure practices.",
-                //     style: GoogleFonts.tinos(
-                //       fontSize: 16,
-                //       color: Colors.black,
-                //       height: 1.5,
-                //     ),
-                //     textAlign: TextAlign.justify,
-                //   ),
-                // ),
-
-                // // Section 4
-                // Padding(
-                //   padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 16),
-                //   child: Align(
-                //     alignment: Alignment.topLeft,
-                //     child: Text(
-                //       "4. Termination",
-                //       style: GoogleFonts.tinos(
-                //         fontSize: 22,
-                //         fontWeight: FontWeight.bold,
-                //         color: Colors.black,
-                //       ),
-                //     ),
-                //   ),
-                // ),
-                // Padding(
-                //   padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 6),
-                //   child: Text(
-                //     "It is stable and optimized for smooth performance across supported devices, ensuring minimal crashes or bugs. The user interface is intuitive, making navigation simple and efficient.",
-                //     style: GoogleFonts.tinos(
-                //       fontSize: 16,
-                //       color: Colors.black,
-                //       height: 1.5,
-                //     ),
-                //     textAlign: TextAlign.justify,
-                //   ),
-                // ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
               ],
             ),
           ),
 
-          /// Bottom stacked buttons
+          /// Bottom Buttons
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
               color: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+              padding: EdgeInsets.symmetric(
+                horizontal: width * 0.04,
+                vertical: height * 0.02,
+              ),
               child: Row(
                 children: [
                   Expanded(
                     child: OutlinedButton(
                       style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        side: BorderSide(color: colorScheme.primary, width: 1.5),
+                        padding: EdgeInsets.symmetric(
+                            vertical: height * 0.02),
+                        side: BorderSide(
+                            color: colorScheme.primary, width: 1.5),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius:
+                              BorderRadius.circular(width * 0.03),
                         ),
                       ),
                       onPressed: () {
-                         AuthenticationController().logout(context);
+                        AuthenticationController().logout(context);
                       },
-                      child: const Text(
+                      child: Text(
                         "Decline",
-                        style: TextStyle(fontSize: 18),
+                        style:
+                            TextStyle(fontSize: width * 0.045),
                       ),
                     ),
                   ),
-                  const SizedBox(width: 16),
+                  SizedBox(width: width * 0.04),
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () {
-                          Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (_) => const CompanyResgistration()),
-                    );
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) =>
+                                  const CompanyResgistration()),
+                        );
                       },
                       style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        padding: EdgeInsets.symmetric(
+                            vertical: height * 0.02),
                         backgroundColor: colorScheme.primary,
                         foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius:
+                              BorderRadius.circular(width * 0.03),
                         ),
                       ),
-                      child: const Text(
+                      child: Text(
                         "Agree",
-                        style: TextStyle(fontSize: 18),
+                        style:
+                            TextStyle(fontSize: width * 0.045),
                       ),
                     ),
                   ),

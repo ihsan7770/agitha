@@ -162,16 +162,16 @@ class CareersPage extends StatelessWidget {
                                                   listen: false)
                                               .checkLogin(context);
 
-                                      if (loggedIn) {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => JobForm(
-                                              appliedJobTitle: job.jobTitle.toString(),
-                                            ),
-                                          ),
-                                        );
-                                      }
+                                      // if (loggedIn) {
+                                      //   Navigator.push(
+                                      //     context,
+                                      //     MaterialPageRoute(
+                                      //       builder: (context) => JobForm(
+                                      //         appliedJobTitle: job.jobTitle.toString(),
+                                      //       ),
+                                      //     ),
+                                      //   );
+                                      // }
                                     },
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: colorScheme.primary,

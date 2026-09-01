@@ -88,24 +88,17 @@ class _MediaFormFieldState extends State<MediaFormField> {
 
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title:  Text(
+                  isEditMode ? "Update Media" : "Add Media", ),
+                  centerTitle: true,
+                  
+                  ),
+                  
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Align(
-              alignment: Alignment.topLeft,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 16.0, top: 16.0),
-                child: Text(
-                  isEditMode ? "Update Media" : "Add Media",
-                  style: GoogleFonts.tinos(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-              ),
-            ),
+         
 
             Form(
               key: _formKey,

@@ -690,6 +690,17 @@ Stream<Map<String, dynamic>?> foodByDishIdStream(String dishId) {
       });
 }
 
+//get number a deliver boy delivered 
+Stream<int> completedOrdersCountStream(String deliveryBoyId) {
+  return FirebaseFirestore.instance
+      .collection('previousOrders')
+      .where('deliveryBoyId', isEqualTo: deliveryBoyId)
+      .where('deliverystatous', isEqualTo: 'order_delivered')
+      .snapshots()
+      .map((snapshot) => snapshot.docs.length);
+}
+
+
 
 
 

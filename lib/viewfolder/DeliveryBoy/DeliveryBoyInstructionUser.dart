@@ -1,7 +1,6 @@
 import 'package:agitha/ControllersFolder/AuthenticationContoller.dart';
 import 'package:agitha/ControllersFolder/InstructionController.dart';
 import 'package:agitha/viewfolder/DeliveryBoy/DeliveryBoyRegistration.dart';
-import 'package:agitha/viewfolder/SubCompany/CompanyResgistration.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -10,53 +9,55 @@ class DeliveryBoyInstructionsUser extends StatefulWidget {
   const DeliveryBoyInstructionsUser({super.key});
 
   @override
-  State<DeliveryBoyInstructionsUser> createState() => _DeliveryBoyInstrutionsState();
+  State<DeliveryBoyInstructionsUser> createState() =>
+      _DeliveryBoyInstrutionsState();
 }
 
-class _DeliveryBoyInstrutionsState extends State<DeliveryBoyInstructionsUser> {
-    late InstructionProvider instructionProvider;
-     @override
+class _DeliveryBoyInstrutionsState
+    extends State<DeliveryBoyInstructionsUser> {
+  late InstructionProvider instructionProvider;
+
+  @override
   void initState() {
     super.initState();
-    instructionProvider = Provider.of<InstructionProvider>(context, listen: false);
+    instructionProvider =
+        Provider.of<InstructionProvider>(context, listen: false);
 
-   
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await instructionProvider.fetchAllInstruction();
       setState(() {});
     });
   }
 
-
-
-
-
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final instructionProvider = Provider.of<InstructionProvider>(context);
-       final instructionList = instructionProvider.instructionList
-              .where((instruction) => instruction.role == 'DeliveryBoy')
-              .toList();
+
+    final instructionList = instructionProvider.instructionList
+        .where((instruction) => instruction.role == 'DeliveryBoy')
+        .toList();
+
+    // ✅ MediaQuery Added
+    final media = MediaQuery.of(context);
+    final height = media.size.height;
+    final width = media.size.width;
 
     return Scaffold(
       body: Stack(
         children: [
           /// Main scroll content
           SingleChildScrollView(
-            padding: const EdgeInsets.only(bottom: 120), // space for bottom buttons
-            child: 
-            
-            
-            Column(
+            padding: EdgeInsets.only(bottom: height * 0.15),
+            child: Column(
               children: [
                 Container(
                   width: double.infinity,
-                  decoration: const BoxDecoration(
-                    color: Color.fromARGB(255, 241, 2, 2),
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 241, 2, 2),
                     borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(25),
-                      bottomRight: Radius.circular(25),
+                      bottomLeft: Radius.circular(width * 0.06),
+                      bottomRight: Radius.circular(width * 0.06),
                     ),
                   ),
                   child: Column(
@@ -68,27 +69,32 @@ class _DeliveryBoyInstrutionsState extends State<DeliveryBoyInstructionsUser> {
                           onPressed: () {
                             Navigator.pop(context);
                           },
-                          icon: const Icon(Icons.arrow_back, color: Colors.white, size: 28),
+                          icon: Icon(Icons.arrow_back,
+                              color: Colors.white, size: width * 0.07),
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: width * 0.04),
                         child: Text(
                           "Hello!",
                           style: GoogleFonts.tinos(
-                            fontSize: 30,
+                            fontSize: width * 0.075,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: height * 0.01),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical:5),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: width * 0.04,
+                          vertical: height * 0.01,
+                        ),
                         child: Text(
                           "Before you create an account, please read and accept our instructions.",
                           style: GoogleFonts.tinos(
-                            fontSize: 18,
+                            fontSize: width * 0.045,
                             fontWeight: FontWeight.w500,
                             color: Colors.white,
                           ),
@@ -98,17 +104,18 @@ class _DeliveryBoyInstrutionsState extends State<DeliveryBoyInstructionsUser> {
                   ),
                 ),
 
-                const SizedBox(height: 20),
+                SizedBox(height: height * 0.03),
 
-                // Body content
+                /// Instructions Title
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: width * 0.04),
                   child: Align(
                     alignment: Alignment.topLeft,
                     child: Text(
                       "Instructions",
                       style: GoogleFonts.tinos(
-                        fontSize: 28,
+                        fontSize: width * 0.07,
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
                       ),
@@ -117,11 +124,13 @@ class _DeliveryBoyInstrutionsState extends State<DeliveryBoyInstructionsUser> {
                 ),
 
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: width * 0.04,
+                      vertical: height * 0.01),
                   child: Text(
                     "Delivery partners are requested to read these instructions carefully before using the Agitha mobile application.",
                     style: GoogleFonts.tinos(
-                      fontSize: 16,
+                      fontSize: width * 0.04,
                       color: Colors.black,
                       height: 1.5,
                     ),
@@ -129,107 +138,126 @@ class _DeliveryBoyInstrutionsState extends State<DeliveryBoyInstructionsUser> {
                   ),
                 ),
 
+                /// Loading / Empty / List
+                instructionProvider.isLoading
+                    ? Padding(
+                        padding: EdgeInsets.all(width * 0.1),
+                        child: const Center(
+                            child: CircularProgressIndicator()),
+                      )
+                    : instructionList.isEmpty
+                        ? Padding(
+                            padding: EdgeInsets.all(width * 0.1),
+                            child: const Center(
+                                child: Text(
+                                    "No Instructions uploaded yet.")),
+                          )
+                        : ListView.builder(
+                            physics:
+                                const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: instructionList.length,
+                            itemBuilder: (context, index) {
+                              final instructions =
+                                  instructionList[index];
 
-               instructionProvider.isLoading
-                  ? const Padding(
-                      padding: EdgeInsets.all(40.0),
-                      child: Center(child: CircularProgressIndicator()),
-                    )
-                  :instructionProvider.instructionList.isEmpty
-                      ? const Padding(
-                          padding: EdgeInsets.all(40.0),
-                          child: Center(child: Text("No Instructions uploaded yet.")),
-                        )
-                      :
-                      
-                       
-                      ListView.builder(
-                          physics: const NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: instructionList.length,
-                          itemBuilder: (context, index) {
-                            final instructions = instructionList[index];
-
-                            return Padding(
-                              padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 8.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  // Section Title
-                                  Text(
-                                    "${index + 1}. ${instructions.title}",
-                                    style: GoogleFonts.tinos(
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
+                              return Padding(
+                                padding: EdgeInsets.only(
+                                  left: width * 0.04,
+                                  right: width * 0.04,
+                                  top: height * 0.01,
+                                ),
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "${index + 1}. ${instructions.title}",
+                                      style: GoogleFonts.tinos(
+                                        fontSize: width * 0.055,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                      ),
                                     ),
-                                  ),
-                                  // Section Content
-                                  Text(
-                                    instructions.instruction,
-                                    style: GoogleFonts.tinos(
-                                      fontSize: 16,
-                                      color: Colors.black,
-                                      height: 1.5,
+                                    SizedBox(height: height * 0.005),
+                                    Text(
+                                      instructions.instruction,
+                                      style: GoogleFonts.tinos(
+                                        fontSize: width * 0.04,
+                                        color: Colors.black,
+                                        height: 1.5,
+                                      ),
+                                      textAlign: TextAlign.justify,
                                     ),
-                                    textAlign: TextAlign.justify,
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-          
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
               ],
             ),
           ),
 
-          /// Bottom stacked buttons
+          /// Bottom Buttons
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
               color: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+              padding: EdgeInsets.symmetric(
+                horizontal: width * 0.04,
+                vertical: height * 0.02,
+              ),
               child: Row(
                 children: [
                   Expanded(
                     child: OutlinedButton(
                       style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        side: BorderSide(color: colorScheme.primary, width: 1.5),
+                        padding: EdgeInsets.symmetric(
+                            vertical: height * 0.02),
+                        side: BorderSide(
+                            color: colorScheme.primary,
+                            width: 1.5),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius:
+                              BorderRadius.circular(width * 0.03),
                         ),
                       ),
                       onPressed: () {
-                         AuthenticationController().logout(context);
+                        AuthenticationController().logout(context);
                       },
-                      child: const Text(
+                      child: Text(
                         "Decline",
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(
+                            fontSize: width * 0.045),
                       ),
                     ),
                   ),
-                  const SizedBox(width: 16),
+                  SizedBox(width: width * 0.04),
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () {
-                          Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (_) => const DeliveryBoyRegistration()),
-                    );
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) =>
+                                const DeliveryBoyRegistration(),
+                          ),
+                        );
                       },
                       style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        padding: EdgeInsets.symmetric(
+                            vertical: height * 0.02),
                         backgroundColor: colorScheme.primary,
                         foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius:
+                              BorderRadius.circular(width * 0.03),
                         ),
                       ),
-                      child: const Text(
+                      child: Text(
                         "Agree",
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(
+                            fontSize: width * 0.045),
                       ),
                     ),
                   ),

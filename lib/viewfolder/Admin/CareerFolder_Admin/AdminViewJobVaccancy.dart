@@ -30,7 +30,12 @@ class _EditJobVaccancyState extends State<EditJobVaccancy> {
             onPressed: () => Navigator.pop(context),
             child: const Text('Cancel'),
           ),
-          TextButton(
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+          backgroundColor:
+              Theme.of(context).colorScheme.primary,
+        ),
+
             onPressed: () async {
               Navigator.pop(context);
               await Provider.of<AddJobVaccancyProvider>(context, listen: false)
@@ -39,41 +44,13 @@ class _EditJobVaccancyState extends State<EditJobVaccancy> {
                 const SnackBar(content: Text("Job deleted successfully")),
               );
             },
-            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+            child:  Text('Delete', style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
     );
   }
 
-  // ✅ Handle menu actions
-  void _handleMenuAction(String value, AddJobVaccancys job) {
-    if (value == 'update') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) =>  AddJobVaccancy(
-          documentId:job.documentId,
-          jobTitle: job.jobTitle,
-          jobCode: job.jobCode,
-          jobType: job.jobType,
-          jobLocation: job.jobLocation,
-          jobDescription: job.jobDescription,
-          jobRequirements: job.jobRequirements,
-          jobResponsibility: job.jobResponsibility,
-          department: job.department,
-          salaryRange: job.salaryRange,
-
-
-
-
-
-
-        )),
-      );
-    } else if (value == 'delete') {
-      _showDeleteDialog(context, job.documentId.toString());
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,25 +59,14 @@ class _EditJobVaccancyState extends State<EditJobVaccancy> {
 
     return Scaffold(
       appBar: AppBar(
+        title: const Text("Opened Job Vacancies"),
+        centerTitle: true,
       
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Align(
-              alignment: Alignment.topLeft,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 16.0, bottom: 8.0),
-                child: Text(
-                  "Opened Job Vacancies",
-                  style: GoogleFonts.tinos(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-              ),
-            ),
+           
 
             // ✅ Stream of jobs
             StreamBuilder<List<AddJobVaccancys>>(
@@ -138,8 +104,8 @@ class _EditJobVaccancyState extends State<EditJobVaccancy> {
                         title: Text(
                           job.jobTitle.toString(),
                           style: GoogleFonts.tinos(
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w400,
                             color: Colors.black,
                           ),
                         ),
@@ -150,40 +116,11 @@ class _EditJobVaccancyState extends State<EditJobVaccancy> {
                         leading: Text(
                           "${index + 1}.",
                           style: GoogleFonts.tinos(
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-                        // onExpansionChanged: (expanded) {
-                        //   setState(() => _isExpanded = expanded);
-                        // },
-                        trailing: PopupMenuButton<String>(
-                          icon: const Icon(Icons.more_vert),
-                          onSelected: (value) =>
-                              _handleMenuAction(value, job), // 👈 handles update/delete
-                          itemBuilder: (context) => [
-                            PopupMenuItem(
-                              value: 'update',
-                              child: Text(
-                                "Update",
-                                style: GoogleFonts.tinos(
-                                    fontSize: 20, fontWeight: FontWeight.w600),
-                              ),
-                            ),
-                            const PopupMenuDivider(),
-                            PopupMenuItem(
-                              value: 'delete',
-                              child: Text(
-                                "Delete",
-                                style: GoogleFonts.tinos(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.red,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                      
                         childrenPadding:
                             const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                         children: [
@@ -305,6 +242,74 @@ class _EditJobVaccancyState extends State<EditJobVaccancy> {
                               textAlign: TextAlign.justify,
                             ),
                           ),
+
+
+                            /// ACTION BUTTONS ROW
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                        OutlinedButton(
+                        onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => AddJobVaccancy(
+                              documentId: job.documentId,
+                              jobTitle: job.jobTitle,
+                              jobCode: job.jobCode,
+                              jobType: job.jobType,
+                              jobLocation: job.jobLocation,
+                              jobDescription: job.jobDescription,
+                              jobRequirements: job.jobRequirements,
+                              jobResponsibility: job.jobResponsibility,
+                              department: job.department,
+                              salaryRange: job.salaryRange,
+                            ),
+                          ),
+                        );
+                      },
+                      style: OutlinedButton.styleFrom(
+                        side: BorderSide(
+                          color: colorScheme.primary, // Outline color
+                          width: 1.5,                    // Thickness of the border
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20), // Rounded corners
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 12,
+                        ),
+                      ),
+                      child: Text(
+                        "Update",
+                        style: TextStyle(
+                          color: colorScheme.primary, // Text color matches outline
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                    )                    ,                    
+
+
+                                              const SizedBox(width: 10),
+                                              ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:Theme.of(context).colorScheme.primary,
+                            ),
+                            onPressed: () {
+                              _showDeleteDialog(
+                                  context, job.documentId.toString());
+                            },
+                            child: const Text(
+                              "Delete",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ],
+                      ),
+
+
                         ],
                       ),
                     );

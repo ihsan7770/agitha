@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:agitha/ControllersFolder/UserRegistrationController.dart';
-import 'package:agitha/viewfolder/Screens/HomePage.dart';
+import 'package:agitha/viewfolder/Screens/UserMainPage.dart';
 import 'package:agitha/viewfolder/User/ProfileDetails/UserProfile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -338,7 +338,7 @@ onPressed: isEditMode
         )
     : () => Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const HomePage()),
+          MaterialPageRoute(builder: (context) => const UserMainPage()),
         ),
 
           

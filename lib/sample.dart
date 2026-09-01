@@ -1,3 +1,17 @@
+// errorBuilder: (context, error, stackTrace) =>
+//                                 NoInternetWidget(
+//                                 width: screenWidth * 0.15,
+//                                 height: screenWidth * 0.15,
+//                                 iconSize: 30,
+//                                 textSize: 8,
+//                                )
+
+
+
+  // appBar: AppBar(
+  //       title: const Text("Bookings"),
+  //       centerTitle: true,
+  //     ),
 
 
 // "  ₹  ",
@@ -5,6 +19,7 @@
 // style: ElevatedButton.styleFrom(
 //           backgroundColor:
 //               Theme.of(context).colorScheme.primary,
+
 //         ),
 
 //  final authProvider = Provider.of<perticularProvider>(context);
@@ -242,8 +257,72 @@
             //     ),
         
         
+/////////////////////////////////////////////////////////////////////////////////
 
+// current day current time
 
+// Stream<List<ReservationModel>> getPaidReservationsStream() {
+//   final user = FirebaseAuth.instance.currentUser;
 
+//   if (user == null) {
+//     debugPrint("🔹 No user logged in.");
+//     return const Stream.empty();
+//   }
 
+//   final now = DateTime.now();
+//   final startOfDay = DateTime(now.year, now.month, now.day);
+//   final endOfDay = DateTime(now.year, now.month, now.day, 23, 59, 59);
+
+//   return FirebaseFirestore.instance
+//       .collection('reservations')
+//       .where('restaurantId', isEqualTo: user.uid)
+//       .where('paymentStatus', isEqualTo: 'paid')
+//       .where('status', whereIn: ['approved', 'pending'])
+//       .where('date', isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
+//       .where('date', isLessThanOrEqualTo: Timestamp.fromDate(endOfDay))
+//       .snapshots()
+//       .map((snapshot) {
+//         debugPrint("🔹 Fetched ${snapshot.docs.length} reservation(s).");
+
+//         final List<ReservationModel> list = [];
+
+//         for (final doc in snapshot.docs) {
+//           try {
+//             final data = doc.data();
+
+//             // 🔹 Reservation start time
+//             final reservationTime =
+//                 (data['time'] as Timestamp).toDate();
+
+//             debugPrint(
+//               "⏰ Reservation ${doc.id} time: $reservationTime | Now: $now",
+//             );
+
+//             // 🔹 Keep only upcoming reservations
+//             if (reservationTime.isAfter(now) ||
+//                 reservationTime.isAtSameMomentAs(now)) {
+//               list.add(
+//                 ReservationModel.fromMap(data, doc.id),
+//               );
+//             }
+//           } catch (e, stackTrace) {
+//             debugPrint("⚠️ Error parsing reservation ${doc.id}: $e");
+//             debugPrint(stackTrace.toString());
+//           }
+//         }
+
+//         // ✅ SORT BY NEAREST TIME
+//         list.sort((a, b) {
+//           final timeA = a.time; // DateTime
+//           final timeB = b.time; // DateTime
+//           return timeA.compareTo(timeB);
+//         });
+
+//         debugPrint("✅ Sorted reservations count: ${list.length}");
+//         return list;
+//       })
+//       .handleError((error) {
+//         debugPrint("❌ Stream error: $error");
+//       });
+// }
 
