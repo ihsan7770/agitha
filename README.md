@@ -1,16 +1,30 @@
-# agitha
+# Agitha
 
-A new Flutter project.
+Agitha is a Flutter-based food ordering and restaurant management application. It allows users to explore restaurants, view food items, add items to their cart, place orders, make restaurant reservations, and book events. The project also includes admin features for managing restaurants, food items, orders, reservations, and other application activities.
 
-## Getting Started
+## Features
 
-This project is a starting point for a Flutter application.
+- Browse restaurants and food items
+- Add food items to cart
+- Place and manage orders
+- Address and location management
+- Food ratings and reviews
+- Restaurant reservations
+- Event booking
+- User profile management
+- User authentication
+- Admin management features
 
-A few resources to get you started if this is your first Flutter project:
+## Technologies Used
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- Flutter
+- Dart
+- Firebase
+- Cloud Firestore
+- Firebase Authentication
+- Firebase Storage
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+
+![Agitha Home Screen](screenshots/agitha-home.png)
+
