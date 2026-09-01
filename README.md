@@ -26,5 +26,5 @@ Agitha is a Flutter-based food ordering and restaurant management application. I
 
 
 
-![Agitha Home Screen](screenshots/agitha-home.png)
+![Agitha Home Screen](agitha.png)
 
